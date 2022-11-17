@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-// import { Colors } from "react-native-webview";
+
 import Color from "../consts/Color";
 
 const OnBoardScrenns = ({ navigation }) => {
@@ -21,12 +21,12 @@ const OnBoardScrenns = ({ navigation }) => {
       >
         <View style={style.dateils}>
           <Text
-            style={{ fontSize: 30, fontWeghit: "bold" }}
+            style={{fontSize:30 }}
           >
             Working Space
           </Text>
           <Text
-            style={{  fontSize: 20, fontWeghit: "bold" }}
+            style={{fontWeight: "bold" }}
           >
             Working with us
           </Text>

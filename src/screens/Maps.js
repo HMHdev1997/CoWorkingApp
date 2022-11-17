@@ -19,9 +19,9 @@
 //       alignItems: 'center',
 //       justifyContent: 'center',
 //     },
-//     map: {
-//       width: Dimensions.get('window').width,
-//       height: Dimensions.get('window').height,
-//     },
+//     // map: {
+//     //   width: Dimensions.get('window').width,
+//     //   height: Dimensions.get('window').height,
+//     // },
 // })
 // export default Maps;
