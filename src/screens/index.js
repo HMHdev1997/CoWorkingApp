@@ -8,7 +8,7 @@ import Login from "./Login";
 import HomeSreens from "./HomeSreens";
 import OnBoardScrenns from "./OnBoardScreens";
 import Profile from "./Profile";
-// import Maps from "./Maps";
+import Maps from "./Maps";
 import 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
@@ -32,7 +32,7 @@ const HomeDrawer =()=>{
         <Drawer.Screen name="HomeSreens" component={HomeSreens} />
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Login" component={Login} />
-        {/* <Drawer.Screen name="Maps" component={Maps} /> */}
+        <Drawer.Screen name="Maps" component={Maps} />
         
       </Drawer.Navigator>  
   ); 
