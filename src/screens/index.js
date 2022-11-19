@@ -9,6 +9,7 @@ import HomeSreens from "./HomeSreens";
 import OnBoardScrenns from "./OnBoardScreens";
 import Profile from "./Profile";
 import Maps from "./Maps";
+import Calendars from "./Calendars";
 import 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +34,7 @@ const HomeDrawer =()=>{
         <Drawer.Screen name="Profile" component={Profile} />
         <Drawer.Screen name="Login" component={Login} />
         <Drawer.Screen name="Maps" component={Maps} />
+        <Drawer.Screen name="Calanders" component={Calendars} />
         
       </Drawer.Navigator>  
   ); 
