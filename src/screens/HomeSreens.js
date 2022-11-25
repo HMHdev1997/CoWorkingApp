@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import Hearder from "../navigation/Header";
 
 
 const HomeSreens = ({route, navigation }) => {
@@ -56,23 +57,11 @@ const HomeSreens = ({route, navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
-      <View style={style.header}>
-        <View style={{ paddingBottom: 15 }}>
-          <Text style={{ fontSize: 30, fontWeight: "bold" }}>Xin Chào</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Text
-              style={{ fontSize: 25, fontWeight: "bold", color: Color.red }}
-            >
-             {account}
-            </Text>
-          </View>
-        </View>
-        <TouchableOpacity >
-          <Icon name="person-outline" size={45} color={Color.grey} />
-        </TouchableOpacity>
-      </View>
+     
+      <Hearder/>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={style.searchInputContainer}>
+       
+        {/* <View style={style.searchInputContainer}>
           <Icon
             name="search"
             size={35}
@@ -83,8 +72,8 @@ const HomeSreens = ({route, navigation }) => {
             placeholder="Search"
             style={{ fontSize: 20, paddingLeft: 10 }}
           />
-        </View>
-        <CategoryList />
+        </View> */}
+        <CategoryList/>
       </ScrollView>
     </SafeAreaView>
   );
@@ -92,13 +81,7 @@ const HomeSreens = ({route, navigation }) => {
 
 
 const style = StyleSheet.create({
-  header: {
-    marginTop: 20,
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
+
   searchInputContainer: {
     height: 50,
     backgroundColor: Color.grey,
@@ -113,7 +96,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 20,
-    marginTop: 30,
+    marginTop: 90,
   },
   categoryListText: {
     fontSize: 17,
