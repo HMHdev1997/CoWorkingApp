@@ -1,9 +1,9 @@
 import React from "react";
 import { Text } from "react-native";
 
-const Bookings =() =>{
+const Settings =() =>{
     return(
         <Text> booking</Text>
     );
 }
-export default Bookings;
+export default Settings;

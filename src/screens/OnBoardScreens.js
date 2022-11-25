@@ -33,7 +33,7 @@ const OnBoardScrenns = ({ navigation }) => {
           <Text style={{ lineHeight: 20, marginTop: 15 }}>
             Chia sẻ không gian làm việc chung
           </Text>
-          <TouchableOpacity activeOpacity={0.7} onPress={()=>navigation.navigate('HomeDrawer')}>
+          <TouchableOpacity activeOpacity={0.7} onPress={()=>navigation.navigate('Home')}>
             <View style={style.btn}>
               <Text style={{ fontWeight: "bold" }}>Get Started</Text>
             </View>

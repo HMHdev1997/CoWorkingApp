@@ -67,7 +67,7 @@ const HomeSreens = ({route, navigation }) => {
             </Text>
           </View>
         </View>
-        <TouchableOpacity onPress={()=>{navigation.openDrawer();}}>
+        <TouchableOpacity >
           <Icon name="person-outline" size={45} color={Color.grey} />
         </TouchableOpacity>
       </View>
