@@ -67,11 +67,11 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
                   <Text style={{ fontSize: 20, fontWeight: "800" }}>0P</Text>
                 </View>
               </View>
-              <Text>Su dung toi 31/12/2022</Text>
+              <Text>Sử dụng tới 31/12/2022</Text>
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row-reverse", right: "5%" }}>
-            <CustomButton name={"Nap"} onPress={() => { }} />
+            <CustomButton name={"Nạp"} onPress={() => { }} />
           </View>
 
         </View>

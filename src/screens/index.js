@@ -11,6 +11,7 @@ import Profile from "./Profile";
 
 import Tabs from "../navigation/Tabs";
 import 'react-native-gesture-handler';
+import AddPhotoScreen from "./AddPhotoScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,6 +25,7 @@ const RootComponent = ({ navigation }) => {
         <Stack.Screen name="OnBoard" component={OnBoardScrenns}  />       
         <Stack.Screen name="Home" component={Tabs} />
         <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="AddPhotoScreen" key='AddPhotoScreen' component={AddPhotoScreen} />
       </Stack.Navigator> 
     </NavigationContainer>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faAdd, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import CustomInput from "../custom_component/CustomInput";
 import CustomButton from "../custom_component/CustomButton";
+import CustomAvatar from "../custom_component/CustomAvatar";
 
 
 
@@ -25,7 +26,7 @@ const Profile = () => {
   const [phone, setPhone] = useState("");
   const [bday, setBDay] = useState("");
   const [gender, setGender] = useState("");
-
+	const [avatarUri, setAvatarUri] = useState(null)
 
   const ProfileList = [
     {
@@ -37,7 +38,7 @@ const Profile = () => {
     {
       name: "Email",
       value: email,
-      setValue: setEmail, 
+      setValue: setEmail,
       isNotNull: true,
     },
     {
@@ -59,6 +60,15 @@ const Profile = () => {
       isNotNull: true,
     },
   ]
+
+  const onChangeAvatarPress = () => {
+		navigation.navigate("AddPhotoScreen", { onPhotoCallback })
+	}
+
+  const onPhotoCallback = useCallback((data) => {
+
+		setAvatarUri(data);
+	}, [])
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={style.titleBar}>
@@ -67,20 +77,19 @@ const Profile = () => {
         </TouchableOpacity>
       </View>
       <View style={{ alignItems: "center" }}>
-        <FontAwesomeIcon style={style.icon} size={150} icon={faUserCircle} color={Color.grey} />
+      <CustomAvatar isEdit={true} size={100} source1={avatarUri ? avatarUri : ""} onPress={onChangeAvatarPress}></CustomAvatar>
+
       </View>
-      <View style={style.add}>
-        <FontAwesomeIcon style={style.icon} size={20} icon={faAdd} color={Color.grey} />
-      </View>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: "5%" }}>
           {
-            ProfileList.map((e) => <CustomInput width='90%' name={e.name} value={e.value} setValue={e.setValue} isNotNullable={e.isNotNull}></CustomInput>)
+            ProfileList.map((e, i) => <CustomInput key={i} isName={true} width='90%' name={e.name} value={e.value} setValue={e.setValue} isNotNullable={e.isNotNull}></CustomInput>)
           }
 
         </View>
       </ScrollView>
-      <View style={{marginBottom: "10%"}}>
+      <View style={{ marginBottom: "10%" }}>
         <CustomButton name={"Lưu thay đổi"}></CustomButton>
       </View>
     </SafeAreaView>

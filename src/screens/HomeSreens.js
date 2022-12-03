@@ -11,7 +11,87 @@ import {
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Hearder from "../navigation/Header";
+import CustomLabel from "../custom_component/CustomLabel";
 
+const eventList = [
+  {
+    title: "Sông Hồng Hotel",
+    description: "Long Biên, Hà Nội",
+    source: require("../images/hotel/hongriversun.jpg"),
+  },
+  {
+    title: "Le Cafe Hotel",
+    description: "Ba Đình, Hà Nội",
+    source: require("../images/hotel/lecafe.png"),
+  },
+  {
+    title: "Trống Đồng Hotel",
+    description: "",
+    source: require("../images/hotel/trongdong.jpg"),
+  },
+  {
+    title: "Acoustic Hotel",
+    description: "",
+    source: require("../images/hotel/acoustic.jpg"),
+  },
+  {
+    title: "Bendecir Hotel",
+    description: "",
+    source: require("../images/hotel/bendecir.jpg"),
+  },
+  {
+    title: "Bishub Hotel",
+    description: "",
+    source: require("../images/hotel/bishub.jpg"),
+  },
+  {
+    title: "Melia Hotel",
+    description: "",
+    source: require("../images/hotel/melia.jpg"),
+  },
+]
+
+const topRateList = [
+  {
+    title: "Acoustic Hotel",
+    description: "",
+    source: require("../images/hotel/acoustic.jpg"),
+  },
+  {
+    title: "Bendecir Hotel",
+    description: "",
+    source: require("../images/hotel/bendecir.jpg"),
+  },
+  {
+    title: "Bishub Hotel",
+    description: "",
+    source: require("../images/hotel/bishub.jpg"),
+  },
+]
+
+const LuxuryList = [
+ 
+  {
+    title: "Bishub Hotel",
+    description: "",
+    source: require("../images/hotel/bishub.jpg"),
+  },
+  {
+    title: "Melia Hotel",
+    description: "",
+    source: require("../images/hotel/melia.jpg"),
+  },
+  {
+    title: "Acoustic Hotel",
+    description: "",
+    source: require("../images/hotel/acoustic.jpg"),
+  },
+  {
+    title: "Bendecir Hotel",
+    description: "",
+    source: require("../images/hotel/bendecir.jpg"),
+  },
+]
 
 const HomeSreens = ({route, navigation }) => {
   const category = ["All", "Top Rated", "Luxury"];
@@ -75,6 +155,12 @@ const HomeSreens = ({route, navigation }) => {
           />
         </View> */}
         <CategoryList/>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginTop: "5%"}}>
+          {selectedCategoryIndex == 0 && eventList.map((e, i) => <CustomLabel key={i} title={e.title} source={e.source} description={e.description}></CustomLabel>)}
+          {selectedCategoryIndex == 1 && topRateList.map((e, i) => <CustomLabel key={i} title={e.title} source={e.source} description={e.description}></CustomLabel>)}
+          {selectedCategoryIndex == 2 && LuxuryList.map((e, i) => <CustomLabel key={i} title={e.title} source={e.source} description={e.description}></CustomLabel>)}
+
+        </ScrollView>
       </ScrollView>
     </SafeAreaView>
   );

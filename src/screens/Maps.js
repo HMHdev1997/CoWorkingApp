@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions, TextInput, Text, Pressable } from "react-native";
+import { View, StyleSheet, Dimensions, TextInput, Text, Pressable,Keyboard } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Button } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Color from "../consts/Color";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faLocation, faLocationArrow, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { faLocation, faLocationArrow, faMapLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
+import CustomInput from "../custom_component/CustomInput";
 const Maps = () => {
   const [mapRegion, setMapRegion] = useState({
     latitude: 21.0273,
@@ -28,8 +29,6 @@ const Maps = () => {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
-    console.log(location.coords.latitude)
-    console.log(location.coords.longitude)
   };
   // useEffect(() => {
   //   userLocation();
@@ -37,23 +36,18 @@ const Maps = () => {
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} region={mapRegion}>
-        <Marker coordinate={mapRegion} title="Marker"  pinColor={Color.lightblue}/>
+      <MapView style={styles.map} region={mapRegion} onPress={Keyboard.dismiss}>
+        <Marker coordinate={mapRegion} title="Marker" pinColor={Color.lightblue} />
       </MapView>
       {/* <Button title="Get Location" onPress={userLocation}> </Button> */}
 
-      <View style={{ position: "absolute", top: 10, width: "100%" }}>
-        <TextInput
-          style={styles.txtSearch}
-          placeholder={"Tìm Kiếm"}
-          placeholderTextColor={"#666"}
-        ></TextInput>
-        {/* <Icon
-            name="search"
-            size={35}
-            color={Color.grey}
-            // style={{ marginLeft: 10, alignItems: "center" }}
-          /> */}
+      <View style={{ position: "absolute", top: 10, width: "100%", flexDirection: "row", marginTop: "10%" }}>
+        <View style={{ flex: 5 }}>
+          <CustomInput width='90%' style={styles.txtSearch} name={"Tìm Kiếm"} isNotNullable={false}></CustomInput>
+        </View>
+        <Pressable style={{ flex: 1, marginVertical: Dimensions.get('screen').height * 0.02 }}>
+          <FontAwesomeIcon size={30} icon={faSearch} color={Color.lightblue}></FontAwesomeIcon>
+        </Pressable>
       </View>
       <Pressable onPress={userLocation} style={{ position: "absolute", bottom: "5%", flexDirection: "row-reverse", width: "100%", right: "5%" }}>
         <FontAwesomeIcon size={50} icon={faMapLocationDot} color={Color.lightblue} />
@@ -76,8 +70,7 @@ const styles = StyleSheet.create({
   },
   txtSearch: {
     borderRadius: 20,
-    marginTop: 35,
-    margin: 20,
+    marginLeft: 20,
     color: "#000",
     borderColor: "#666",
     backgroundColor: "#FFF",

@@ -50,7 +50,7 @@ const Settings = () => {
             <Hearder />
             <SafeAreaView style={{marginTop: "10%"}}>
                 <ScrollView showsVerticalScrollIndicator={false} >
-                    {SettingsList.map((s) => <CustomSetting text={s.name} icon={s.icon} />)}
+                    {SettingsList.map((s, i) => <CustomSetting key={i} text={s.name} icon={s.icon} />)}
                 </ScrollView>
             </SafeAreaView>
         </View>

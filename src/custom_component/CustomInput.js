@@ -5,10 +5,10 @@ import Color from "../consts/Color"
 import CustomLine from "./CustomLine";
 import { Dimensions } from "react-native";
 
-const CustomInput = ({name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, multiline, numberOfLines, style, onFocus}) => {
+const CustomInput = ({name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, multiline, numberOfLines, style, onFocus, isName}) => {
   return (
     <View style = {{marginVertical: Dimensions.get('screen').height * 0.01}}>
-      <View ><Text style={styles.name}>{name}{isNotNullable ? " (*)" : ""}:</Text></View>
+      {isName &&<View ><Text style={styles.name}>{name}{isNotNullable ? " (*)" : ""}:</Text></View>}
       <TextInput
         style={[styles.input, { width: width ? width : "100%", height: height ? height : 40 }, style]}
         keyboardType={isNumber ? 'numeric' : 'default'}
@@ -21,7 +21,7 @@ const CustomInput = ({name, value, placeholder, secureTextEntry, setValue, width
         numberOfLines={numberOfLines}
         onFocus={onFocus}
       />
-      <CustomLine color = {Color.lightblue} style = {{width: width || '100%', marginTop: -10}}></CustomLine>
+      {isName && <CustomLine color = {Color.lightblue} style = {{width: width || '100%', marginTop: -10}}></CustomLine>}
     </View>
   )
 
