@@ -8,14 +8,14 @@ import Color from "../consts/Color"
 const isIOS = Platform.OS === "ios"
 const WIDTH = Dimensions.get('screen').width
 const HEIGHT = Dimensions.get('screen').height
-const defaultFunction = ()=>{}
+const defaultFunction = () => { }
 const ShadowView = (props) => {
     const FROM_COLOR = props?.fromColor || 'black';
     const TO_COLOR = props?.toColor || 'white';
     return (
         <Pressable style={[props.style, isIOS ? styles.shadowProp : styles.elevation, styles.card]} onPress={props?.onPress || defaultFunction}>
-        {
-            props.isGradient &&
+            {
+                props.isGradient &&
                 <Svg style={[{
                     width: '100%',
                     height: '100%'
@@ -28,8 +28,8 @@ const ShadowView = (props) => {
                     </Defs>
                     <Rect rx={15} width={props.width || "100%"} height="100%" fill="url(#grad)" />
                 </Svg>
-        }
-{ props.children }
+            }
+            {props.children}
 
         </Pressable >
     )
