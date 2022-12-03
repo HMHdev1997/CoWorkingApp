@@ -91,7 +91,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
               <Text>Check-in nhanh</Text>
 
             </Pressable>
-            <Pressable style={{ flex: 1, alignItems: "center" }}>
+            <Pressable style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("Bookings")}}>
               <FontAwesomeIcon style={style.icon} size={30} icon={faBookBookmark} color={Color.lightblue} />
               <Text>Booking</Text>
             </Pressable>
