@@ -7,6 +7,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "./Login";
 
 import OnBoardScrenns from "./OnBoardScreens";
+import Profile from "./Profile";
+
 import Tabs from "../navigation/Tabs";
 import 'react-native-gesture-handler';
 
@@ -21,6 +23,7 @@ const RootComponent = ({ navigation }) => {
       <Stack.Navigator initialRouteName="OnBoard" screenOptions={{headerShown:false}}>
         <Stack.Screen name="OnBoard" component={OnBoardScrenns}  />       
         <Stack.Screen name="Home" component={Tabs} />
+        <Stack.Screen name="Profile" component={Profile} />
       </Stack.Navigator> 
     </NavigationContainer>
   );

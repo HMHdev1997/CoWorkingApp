@@ -8,6 +8,8 @@ import Maps from "../screens/Maps";
 import Bookings from "../screens/Bookings";
 import Calendars from "../screens/Calendars";
 import { ColorSpace } from "react-native-reanimated";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faBookBookmark, faCalendar, faGear, faHome, faMap } from "@fortawesome/free-solid-svg-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,61 +34,39 @@ const Tabs = () => {
       tabOptions={tabOptions}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused }) => {
-          const tintColor = focused ? Color.primary : Color.grey;
+          const tintColor = focused ? Color.lightblue : Color.grey;
 
           switch (route.name) {
             case "HomeSreens":
               return (
-                <Image
-                  source={require('../images/homeIcon.png')}
-                  resizeMode="contain"
-                  style={{ tintColor: tintColor, height: 35, width: 35 }}
-                />
+                <FontAwesomeIcon size={30} icon={faHome} color={tintColor} />
               );
             case "Maps":
               return (
-                <Image
-                  source={require("../images/mapIcon.png")}
-                  resizeMode="contain"
-                  style={{ tintColor: tintColor, height: 35, width: 35 }}
-                />
+                <FontAwesomeIcon size={30} icon={faMap} color={tintColor} />
               );
-              case "Bookings":
-                return (
-                  <Image
-                    source={require("../images/addIcon.png")}
-                    resizeMode="contain"
-                    style={{ tintColor: tintColor, height: 35, width: 35 }}
-                  />
-                );
+            case "Bookings":
+              return (
+                <FontAwesomeIcon size={30} icon={faBookBookmark} color={tintColor} />
+              );
             case "Calendars":
               return (
-                <Image
-                  source={require("../images/calendarIcon.png")}
-                  resizeMode="contain"
-                  style={{ tintColor: tintColor, height: 35, width: 35 }}
-                />
+                <FontAwesomeIcon size={30} icon={faCalendar} color={tintColor} />
               );
             case "Settings":
               return (
-                <Image
-                  source={require("../images/settingsIcon.png")}
-                  resizeMode="contain"
-                  style={{ tintColor: tintColor, height: 35, width: 35 }}
-                />
+                <FontAwesomeIcon size={30} icon={faGear} color={tintColor} />
               );
           }
         },
       })}
     >
-        <Tab.Screen name ='HomeSreens' component={HomeSreens} options={{headerShown: false}} />
-        <Tab.Screen name ='Maps' component={Maps}  options={{headerShown: false}}/>
-        <Tab.Screen name ='Bookings' component={Bookings}  options={{headerShown: false}}/>
-        <Tab.Screen name ='Calendars' component={Calendars}  options={{headerShown: false}}/>
-        <Tab.Screen name ='Settings' component={Settings}  options={{headerShown: false}}/>
-             
+      <Tab.Screen name='HomeSreens' component={HomeSreens} options={{ headerShown: false }} />
+      <Tab.Screen name='Maps' component={Maps} options={{ headerShown: false }} />
+      <Tab.Screen name='Bookings' component={Bookings} options={{ headerShown: false }} />
+      <Tab.Screen name='Calendars' component={Calendars} options={{ headerShown: false }} />
+      <Tab.Screen name='Settings' component={Settings} options={{ headerShown: false }} />
 
-       
     </Tab.Navigator>
   );
 };

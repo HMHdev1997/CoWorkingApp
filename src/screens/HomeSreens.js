@@ -42,13 +42,14 @@ const HomeSreens = ({route, navigation }) => {
                 <View
                   style={{
                     height: 3,
-                    width: 30,
+                    width: "100%",
                     backgroundColor: Color.primary,
                     marginTop: 2,
                   }}
                 ></View>
               )}
             </View>
+            
           </TouchableOpacity>
         ))}
       </View>
@@ -58,8 +59,8 @@ const HomeSreens = ({route, navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
      
-      <Hearder/>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <Hearder isShowFunction={true} isShowMassage={true}/>
+      <ScrollView showsVerticalScrollIndicator={false} >
        
         {/* <View style={style.searchInputContainer}>
           <Icon
@@ -96,10 +97,12 @@ const style = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginHorizontal: 20,
-    marginTop: 90,
+    marginTop: "10%",
   },
   categoryListText: {
+    paddingHorizontal: 20,
     fontSize: 17,
+    alignItems: "center",
     fontWeight: "bold",
   },
 });

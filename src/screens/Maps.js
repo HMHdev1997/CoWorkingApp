@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions, TextInput, Text } from "react-native";
+import { View, StyleSheet, Dimensions, TextInput, Text, Pressable } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Button } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Color from "../consts/Color";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faLocation, faLocationArrow, faMapLocationDot } from "@fortawesome/free-solid-svg-icons";
 const Maps = () => {
   const [mapRegion, setMapRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
+    latitude: 21.0273,
+    longitude: 105.84604,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
@@ -26,18 +28,20 @@ const Maps = () => {
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421,
     });
+    console.log(location.coords.latitude)
+    console.log(location.coords.longitude)
   };
-  useEffect(() => {
-    userLocation();
-  }, []);
+  // useEffect(() => {
+  //   userLocation();
+  // }, []);
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} region={mapRegion}>
-        <Marker coordinate={mapRegion} title="Marker" />
+        <Marker coordinate={mapRegion} title="Marker"  pinColor={Color.lightblue}/>
       </MapView>
       {/* <Button title="Get Location" onPress={userLocation}> </Button> */}
-      
+
       <View style={{ position: "absolute", top: 10, width: "100%" }}>
         <TextInput
           style={styles.txtSearch}
@@ -51,6 +55,9 @@ const Maps = () => {
             // style={{ marginLeft: 10, alignItems: "center" }}
           /> */}
       </View>
+      <Pressable onPress={userLocation} style={{ position: "absolute", bottom: "5%", flexDirection: "row-reverse", width: "100%", right: "5%" }}>
+        <FontAwesomeIcon size={50} icon={faMapLocationDot} color={Color.lightblue} />
+      </Pressable>
     </View>
   );
 };
