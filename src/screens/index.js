@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "./Login";
+import DetailsScreen from "./DetailsScreen";
 
 import OnBoardScrenns from "./OnBoardScreens";
 import Profile from "./Profile";
@@ -26,6 +27,7 @@ const RootComponent = ({ navigation }) => {
         <Stack.Screen name="Home" component={Tabs} />
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="AddPhotoScreen" key='AddPhotoScreen' component={AddPhotoScreen} />
+        <Stack.Screen name ="DetailsScreen" component={DetailsScreen} />
       </Stack.Navigator> 
     </NavigationContainer>
   );

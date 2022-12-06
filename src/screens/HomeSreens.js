@@ -7,189 +7,372 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  FlatList,
+  Dimensions,
+  Image,
+  Animated,
 } from "react-native";
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Hearder from "../navigation/Header";
 import CustomLabel from "../custom_component/CustomLabel";
+import Working from "../consts/Working";
+import { Colors } from "react-native/Libraries/NewAppScreen";
+const { width } = Dimensions.get("screen");
+const cardWidth = width / 1.8;
 
-const eventList = [
-  {
-    title: "Sông Hồng Hotel",
-    description: "Long Biên, Hà Nội",
-    source: require("../images/hotel/hongriversun.jpg"),
-  },
-  {
-    title: "Le Cafe Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/lecafe.png"),
-  },
-  {
-    title: "Trống Đồng Hotel",
-    description: "",
-    source: require("../images/hotel/trongdong.jpg"),
-  },
-  {
-    title: "Acoustic Hotel",
-    description: "",
-    source: require("../images/hotel/acoustic.jpg"),
-  },
-  {
-    title: "Bendecir Hotel",
-    description: "",
-    source: require("../images/hotel/bendecir.jpg"),
-  },
-  {
-    title: "Bishub Hotel",
-    description: "",
-    source: require("../images/hotel/bishub.jpg"),
-  },
-  {
-    title: "Melia Hotel",
-    description: "",
-    source: require("../images/hotel/melia.jpg"),
-  },
-]
-
-const topRateList = [
-  {
-    title: "Acoustic Hotel",
-    description: "",
-    source: require("../images/hotel/acoustic.jpg"),
-  },
-  {
-    title: "Bendecir Hotel",
-    description: "",
-    source: require("../images/hotel/bendecir.jpg"),
-  },
-  {
-    title: "Bishub Hotel",
-    description: "",
-    source: require("../images/hotel/bishub.jpg"),
-  },
-]
-
-const LuxuryList = [
+const HomeSreens = ({ route, navigation }) => {
  
-  {
-    title: "Bishub Hotel",
-    description: "",
-    source: require("../images/hotel/bishub.jpg"),
-  },
-  {
-    title: "Melia Hotel",
-    description: "",
-    source: require("../images/hotel/melia.jpg"),
-  },
-  {
-    title: "Acoustic Hotel",
-    description: "",
-    source: require("../images/hotel/acoustic.jpg"),
-  },
-  {
-    title: "Bendecir Hotel",
-    description: "",
-    source: require("../images/hotel/bendecir.jpg"),
-  },
-]
-
-const HomeSreens = ({route, navigation }) => {
-  const category = ["All", "Top Rated", "Luxury"];
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const { account } = route?.params || {};
+  const scrollX = React.useRef(new Animated.Value(0)).current;
 
-
-  const CategoryList = () => {
+ 
+  const Cart = ({ Working, index }) => {
     return (
-      <View style={style.categoryListContainer}>
-        {category.map((item, index) => (
-          <TouchableOpacity
-            key={index}
-            activeOpacity={0.8}
-            onPress={() => setSelectedCategoryIndex(index)}
+      <TouchableOpacity activeOpacity={1}    onPress={() => navigation.navigate('DetailsScreen', Working)}>
+          <View style={{ ...style.cart }}>
+        <Animated.View style={{ ...style.cardOverLay, opacity: 0 }} />
+        <View style={style.priceTag}>
+          <Text
+            style={{ color: Color.white, fontSize: 20, fontWeight: "bold" }}
+          >
+            {" "}
+            ${Working.price}
+          </Text>
+        </View>
+
+        <Image source={Working.Image} style={style.cardImage} />
+        <View style={style.cardDetails}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
             <View>
-              <Text
-                style={{
-                  ...style.categoryListText,
-                  color:
-                    selectedCategoryIndex == index ? Color.primary : Color.grey,
-                }}
-              >
-                {item}
+              <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                {Working.name}
               </Text>
-              {selectedCategoryIndex == index && (
-                <View
-                  style={{
-                    height: 3,
-                    width: "100%",
-                    backgroundColor: Color.primary,
-                    marginTop: 2,
-                  }}
-                ></View>
-              )}
+              <Text style={{ fontWeight: "bold", fontSize: 13 }}>
+                {Working.location}
+              </Text>
             </View>
-            
-          </TouchableOpacity>
-        ))}
+            <Icon name="bookmark-border" size={26} color={Colors.primary} />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 10,
+            }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Icon name="star" size={15} color={Colors.orange} />
+              <Icon name="star" size={15} color={Colors.orange} />
+              <Icon name="star" size={15} color={Colors.orange} />
+              <Icon name="star" size={15} color={Colors.orange} />
+              <Icon name="star" size={15} color={Colors.grey} />
+            </View>
+            <Text style={{ fontSize: 13, color: Colors.grey }}>365reviews</Text>
+          </View>
+        </View>
+      </View>
+      </TouchableOpacity>
+      
+    );
+  };
+  const OficeCart = ({ Working }) => {
+    return (
+      <View style={style.topHotelCard}>
+        <View
+          style={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            zIndex: 1,
+            flexDirection: "row",
+          }}
+        >
+          <Icon name="star" size={15} color={Colors.orange} />
+          <Text
+            style={{ color: Colors.dark, fontWeight: "bold", fontSize: 15 }}
+          >
+            5.0
+          </Text>
+        </View>
+        <Image style={style.topHotelCardImage} source={Working.Image} />
+        <View
+          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
+        >
+          <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+            {Working.name}
+          </Text>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Colors.grey }}>
+            {Working.location}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+  const OfficeEvenCart = ({ Working }) => {
+    return (
+      <View style={style.topHotelCard}>
+        <View
+          style={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            zIndex: 1,
+            flexDirection: "row",
+          }}
+        >
+          <Icon name="star" size={15} color={Colors.orange} />
+          <Text
+            style={{ color: Colors.dark, fontWeight: "bold", fontSize: 15 }}
+          >
+            5.0
+          </Text>
+        </View>
+        <Image style={style.topHotelCardImage} source={Working.Image} />
+        <View
+          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
+        >
+          <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+            {Working.name}
+          </Text>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Colors.grey }}>
+            {Working.location}
+          </Text>
+        </View>
+      </View>
+    );
+  };
+  const SlotCart = ({ Working }) => {
+    return (
+      <View style={style.topHotelCard}>
+        <View
+          style={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            zIndex: 1,
+            flexDirection: "row",
+          }}
+        >
+          <Icon name="star" size={15} color={Colors.orange} />
+          <Text
+            style={{ color: Colors.dark, fontWeight: "bold", fontSize: 15 }}
+          >
+            5.0
+          </Text>
+        </View>
+        <Image style={style.topHotelCardImage} source={Working.Image} />
+        <View
+          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
+        >
+          <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+            {Working.name}
+          </Text>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Colors.grey }}>
+            {Working.location}
+          </Text>
+        </View>
       </View>
     );
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
-     
-      <Hearder isShowFunction={true} isShowMassage={true}/>
-      <ScrollView showsVerticalScrollIndicator={false} >
-       
-        {/* <View style={style.searchInputContainer}>
-          <Icon
-            name="search"
-            size={35}
-            color={Color.light}
-            style={{ marginLeft: 10, alignItems: "center" }}
+      <Hearder isShowFunction={true} isShowMassage={true} />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* <CategoryList /> */}
+        {/* Hệ thống co Working Space */}
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 20,
+              marginTop: 10,
+            }}
+          >
+            <Text
+              style={{ fontWeight: "bold", color: Color.dark, fontSize: 15 }}
+            >
+              Hệ thống CoWorking Space
+            </Text>
+            <Text style={{ color: Color.blue }}> Xem Thêm </Text>
+          </View>
+          <FlatList
+            horizontal
+            data={Working}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: 20,
+              marginTop: 20,
+              paddingBottom: 30,
+            }}
+            renderItem={({ item }) => <Cart Working={item} />}
           />
-          <TextInput
-            placeholder="Search"
-            style={{ fontSize: 20, paddingLeft: 10 }}
+        </View>
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{ fontWeight: "bold", color: Color.dark, fontSize: 15 }}
+            >
+              Văn phòng chọn gói
+            </Text>
+            <Text style={{ color: Color.blue }}> Xem Thêm </Text>
+          </View>
+          <FlatList
+            data={Working}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: 20,
+              marginTop: 20,
+              paddingBottom: 30,
+              flexDirection: "column",
+            }}
+            renderItem={({ item }) => <OficeCart Working={item} />}
           />
-        </View> */}
-        <CategoryList/>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} style={{marginTop: "5%"}}>
-          {selectedCategoryIndex == 0 && eventList.map((e, i) => <CustomLabel key={i} title={e.title} source={e.source} description={e.description}></CustomLabel>)}
-          {selectedCategoryIndex == 1 && topRateList.map((e, i) => <CustomLabel key={i} title={e.title} source={e.source} description={e.description}></CustomLabel>)}
-          {selectedCategoryIndex == 2 && LuxuryList.map((e, i) => <CustomLabel key={i} title={e.title} source={e.source} description={e.description}></CustomLabel>)}
-
-        </ScrollView>
+        
+        </View>
+        {/* không gian sự kiện */}
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{ fontWeight: "bold", color: Color.dark, fontSize: 15 }}
+            >
+              Không gian tổ chức sự kiện
+            </Text>
+            <Text style={{ color: Color.blue }}> Xem Thêm </Text>
+          </View>
+          <FlatList
+            data={Working}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: 20,
+              marginTop: 20,
+              paddingBottom: 30,
+              flexDirection: "column",
+            }}
+            renderItem={({ item }) => <OfficeEvenCart Working={item} />}
+          />
+        </View>
+        {/* Vị trí ngồi */}
+        <View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginHorizontal: 20,
+            }}
+          >
+            <Text
+              style={{ fontWeight: "bold", color: Color.dark, fontSize: 15 }}
+            >
+              Vị trí ngồi
+            </Text>
+            <Text style={{ color: Color.blue }}> Xem Thêm </Text>
+          </View>
+          <FlatList
+            data={Working}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingLeft: 20,
+              marginTop: 20,
+              paddingBottom: 30,
+              flexDirection: "column",
+            }}
+            renderItem={({ item }) => <SlotCart Working={item} />}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 };
 
-
 const style = StyleSheet.create({
-
-  searchInputContainer: {
-    height: 50,
-    backgroundColor: Color.grey,
-    marginTop: 5,
-    marginLeft: 20,
+ 
+  cart: {
+    height: 280,
+    width: cardWidth,
+    elevation: 15,
     marginRight: 20,
-    borderRadius: 30,
-    flexDirection: "row",
+    borderRadius: 15,
+    backgroundColor: Color.white,
+  },
+  cardImage: {
+    height: 200,
+    width: "100%",
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+  },
+  priceTag: {
+    height: 60,
+    width: 80,
+    backgroundColor: Colors.primary,
+    position: "absolute",
+    zIndex: 1,
+    right: 0,
+    borderTopRightRadius: 15,
+    borderBottomLeftRadius: 15,
+    justifyContent: "center",
     alignItems: "center",
   },
-  categoryListContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginHorizontal: 20,
-    marginTop: "10%",
+  topHotelCardImage: {
+    height: 80,
+    width: "100%",
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
   },
-  categoryListText: {
-    paddingHorizontal: 20,
-    fontSize: 17,
-    alignItems: "center",
-    fontWeight: "bold",
+  cardDetails: {
+    height: 100,
+    borderRadius: 15,
+    backgroundColor: Colors.white,
+    position: "absolute",
+    bottom: 0,
+    padding: 20,
+    width: "100%",
+  },
+  cardOverLay: {
+    height: 280,
+    backgroundColor: Colors.white,
+    position: "absolute",
+    zIndex: 100,
+    width: cardWidth,
+    borderRadius: 15,
+  },
+  topHotelCard: {
+    flexDirection: "row",
+    height: 120,
+    width: 330,
+    backgroundColor: Colors.white,
+    elevation: 15,
+    marginHorizontal: 10,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  topHotelCardImage: {
+    height: 100,
+    width: 150,
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
 });
 export default HomeSreens;
