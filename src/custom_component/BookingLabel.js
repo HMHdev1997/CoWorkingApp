@@ -6,12 +6,13 @@ import Color from "../consts/Color"
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faUsd } from '@fortawesome/free-solid-svg-icons';
 import CustomButton from './CustomButton';
+
 const WIDTH = Dimensions.get('screen').width
 const HEIGHT = Dimensions.get('screen').height
 
 
 
-const BookingLabel = ({ title, description, source, onPress, checkinTime, price }) => {
+const BookingLabel = ({ title, description, source, onPress, checkinTime, price, navigation }) => {
     return (
         <ShadowView style={styles.label} onPress={onPress}>
             <View style={styles.imageView}>
@@ -40,10 +41,10 @@ const BookingLabel = ({ title, description, source, onPress, checkinTime, price 
                 <View style={{ flex: 3 }}>
                     <Text style={styles.title}>{title}</Text>
                     <Text style={styles.text}>{description}</Text>
-                </View>
-                <View style={{ flex: 2 }}>
-                    <CustomButton name={"Đặt lịch ngay"}></CustomButton>
-                </View>
+                </View>              
+                <View style={{ flex: 2 }}>                  
+                        <CustomButton name={"Đặt lịch ngay"}  ></CustomButton>                                                                      
+                </View>                         
             </View>
         </ShadowView>
     )
