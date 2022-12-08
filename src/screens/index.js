@@ -28,6 +28,7 @@ const RootComponent = ({ navigation }) => {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="AddPhotoScreen" key='AddPhotoScreen' component={AddPhotoScreen} />
         <Stack.Screen name ="DetailsScreen" component={DetailsScreen} />
+        <Stack.Screen name ="LoginScreen" component={Login} />
       </Stack.Navigator> 
     </NavigationContainer>
   );

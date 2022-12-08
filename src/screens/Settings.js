@@ -3,54 +3,83 @@ import React from "react";
 import { Text, View, SafeAreaView, ScrollView } from "react-native";
 import CustomSetting from "../custom_component/CustomSetting";
 import Hearder from "../navigation/Header";
+import { signOut } from 'firebase/auth';
+import { logoutSuccess } from "../redux/action/Actions";
+import {  useDispatch } from 'react-redux';
+import {  showToast, TYPE_NOTI } from '../consts/common';
+import { auth } from "../consts/firebase";
 
-const SettingsList = [
-    {
-        name: "Giới thiệu",
-        icon: faInfo
-    },
-    {
-        name: "Hướng dẫn sử dụng",
-        icon: faBook
-    },
-    {
-        name: "Hỗ trợ",
-        icon: faBlenderPhone
-    },
-    {
-        name: "Thông tin cá nhân",
-        icon: faUser
-    },
-    {
-        name: "Lịch sử point",
-        icon: faBarChart
-    },
-    {
-        name: "Thay đổi mật khẩu",
-        icon: faShield
-    },
-    {
-        name: "Chia sẻ nhận quà",
-        icon: faGift
-    },
-    {
-        name: "Đánh giá",
-        icon: faStar
-    },
-    {
-        name: "Đăng xuất",
-        icon: faSignOut
-    },
 
-]
+const Settings = ({ navigation }) => {
+    const dispatch = useDispatch()  
 
-const Settings = () => {
+    const onLogout = async () => {
+        signOut(auth)
+            .then(() => {
+                dispatch(logoutSuccess())
+                showToast(TYPE_NOTI.SUCCESS, null, 'Đăng xuất thành công')
+                navigation.navigate("LoginScreen")
+            })
+            .catch(error => {
+                console.log('[ERROR][updateUserFail] ' + error)
+                showToast(TYPE_NOTI.ERROR, null, 'Đăng xuất thất bại')
+            })
+    }
+    const SettingsList = [
+        {
+            name: "Giới thiệu",
+            icon: faInfo,
+            onPress: () => { }
+        },
+        {
+            name: "Hướng dẫn sử dụng",
+            icon: faBook,
+            onPress: () => { }
+        },
+        {
+            name: "Hỗ trợ",
+            icon: faBlenderPhone,
+            onPress: () => { }
+        },
+        {
+            name: "Thông tin cá nhân",
+            icon: faUser,
+            onPress: () => { }
+        },
+        {
+            name: "Lịch sử point",
+            icon: faBarChart,
+            onPress: () => { }
+        },
+        {
+            name: "Thay đổi mật khẩu",
+            icon: faShield,
+            onPress: () => { }
+        },
+        {
+            name: "Chia sẻ nhận quà",
+            icon: faGift,
+            onPress: () => { }
+        },
+        {
+            name: "Đánh giá",
+            icon: faStar,
+            onPress: () => { }
+        },
+        {
+            name: "Đăng xuất",
+            icon: faSignOut,
+            onPress: onLogout
+        },
+
+    ]
+
     return (
         <View>
             <Hearder />
-            <SafeAreaView style={{marginTop: "10%"}}>
+            <SafeAreaView style={{ marginTop: "10%" }}>
                 <ScrollView showsVerticalScrollIndicator={false} >
-                    {SettingsList.map((s, i) => <CustomSetting key={i} text={s.name} icon={s.icon} />)}
+                    {SettingsList.map((s, i) => <CustomSetting key={i} text={s.name} icon={s.icon} onPress={s.onPress} />)}
                 </ScrollView>
             </SafeAreaView>
         </View>

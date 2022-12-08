@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBarcode, faBookBookmark, faBookJournalWhills, faChartBar, faChartColumn, faCheckCircle, faCheckToSlot, faPerson, faPersonRifle, faQrcode, faUsd, faUser, faUserCheck, faUserCircle, faWallet } from "@fortawesome/free-solid-svg-icons";
 import CustomButton from "../custom_component/CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import { auth } from "../consts/firebase";
 const Hearder = ({ isShowFunction, isShowMassage }) => {
   const navigation = useNavigation()
   return (
@@ -42,7 +43,11 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
 
         </View>
         <TouchableOpacity style={{ paddingTop: "5%" }} onPress={() => {
-          navigation.navigate("Profile")
+          if (auth.currentUser) {
+            navigation.navigate("Profile")
+          } else {
+            navigation.navigate("LoginScreen")
+          }
         }}>
           <FontAwesomeIcon style={style.icon} size={50} icon={faUserCircle} color={Color.grey} />
         </TouchableOpacity>

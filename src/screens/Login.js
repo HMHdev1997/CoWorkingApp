@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import {
   SafeAreaView,
   View,
@@ -9,15 +9,72 @@ import {
   Dimensions,
   StyleSheet,
   Image,
+  ScrollView,
 } from "react-native";
-
+import { showToast, TYPE_NOTI, isEmpty } from "../consts/common.js"
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../consts/firebase'
 import { TextInput } from "react-native-gesture-handler";
+import { store } from "../redux/store/store.js";
+import { loginInit } from "../redux/action/Actions"
+import { useDispatch, useSelector } from 'react-redux';
+import { isNull } from "../consts/common.js";
 const windowsHeight = Dimensions.get("window").height;
 const windowsWith = Dimensions.get("window").width;
 
+let loading = false
+let error = ""
+let unSubcribeStore = () => { }
 const Login = ({ navigation }) => {
   const [getPasswordVisible, setPasswordVisible] = useState(false);
   const [getAccount, setAccount] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch()
+
+ 
+  const onLogin = () => {
+    console.log('onLoginPress');
+    if (isEmpty(getAccount) || isEmpty(password)) {
+      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền hết thông tin");
+      return
+    }
+    unSubcribeStore = store.subscribe(() => {
+      loading = store.getState().user.loading
+      error = store.getState().user.error;
+
+      if (error && !loading) {
+        showToast(TYPE_NOTI.ERROR, null, error);
+      }
+      setIsLoading(loading)
+      if (!loading) {
+        unSubcribeStore();
+      }
+    })
+
+    
+    dispatch(loginInit(getAccount, password))
+    setAccount("")
+    setPassword("")
+  }
+
+  useEffect(() => {
+    const unSubcribe = onAuthStateChanged(auth, user => {
+      if (user) {
+        showToast(TYPE_NOTI.SUCCESS, null, 'Đăng nhập thành công')
+        if (isNull(user.displayName)) {
+          navigation.replace("Profile")
+        } else {
+          navigation.replace("Home")
+        }
+      }
+    })
+    return () => {
+      unSubcribe();
+      unSubcribeStore();
+    }
+  }, [])
+
   return (
     <ImageBackground
       style={{ width: "100%", height: "100%" }}
@@ -25,7 +82,7 @@ const Login = ({ navigation }) => {
       source={require("../images/onboarding_image.jpg")}
     >
       <SafeAreaView style={{ flex: 1 }}>
-        <View style={{ width: "100%", height: "100%" }}>
+        <ScrollView style={{ width: "100%", height: "100%" }} keyboardShouldPersistTaps='handled'>
           {/* Account & Password */}
           <View style={style.viewLogin}>
             {/*Account*/}
@@ -47,6 +104,8 @@ const Login = ({ navigation }) => {
                   paddingRight: 45,
                 }}
                 secureTextEntry={getPasswordVisible ? false : true}
+                value={password}
+                onChangeText={setPassword}
               />
               <TouchableOpacity
                 style={style.imagePassword}
@@ -73,9 +132,7 @@ const Login = ({ navigation }) => {
               {/* login */}
               <TouchableOpacity
                 style={style.btnLogin}
-                onPress={() =>
-                  navigation.navigate("HomeSreens", { account: getAccount })
-                }
+                onPress={onLogin}
               >
                 <Text style={{}}>Đăng Nhập</Text>
               </TouchableOpacity>
@@ -88,7 +145,7 @@ const Login = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </SafeAreaView>
     </ImageBackground>
   );
