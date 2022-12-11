@@ -67,7 +67,7 @@ const DetailsScreen = ({ navigation, route }) => {
             <Icon name="place" color={Color.white} size={28} />
           </View>
           <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.name}</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.Name}</Text>
             <Text
               style={{
                 fontSize: 12,
@@ -76,7 +76,7 @@ const DetailsScreen = ({ navigation, route }) => {
                 marginTop: 5,
               }}
             >
-              {item.location}
+              {item.Address}
             </Text>
             <View
               style={{
@@ -97,16 +97,16 @@ const DetailsScreen = ({ navigation, route }) => {
                   4.0
                 </Text>
               </View>
-              <Text style={{ fontSize: 13, color: Color.grey }}>365reviews</Text>
+              <Text style={{ fontSize: 13, color: Color.grey }}>{item.ViewCount} reviews</Text>
             </View>
             <View style={{ marginTop: 20 }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 15 }}> Giới thiệu</Text>
+              <Text style={{ fontWeight: 'bold', fontSize: 15 }}>Giới thiệu</Text>
               <Text style={{ marginTop: 5, lineHeight: 20, color: Color.grey, fontSize: 14 }}
                 numberOfLines={maxLine}
                 ellipsizeMode="tail"
                 onLayout={(event) => onLayout(event)}
               >
-                {item.details}
+                {item.Detail}
               </Text>
               <TouchableOpacity
                 onPress={onPressShowMore} style={{ alignSelf: "center" }}>
@@ -134,7 +134,7 @@ const DetailsScreen = ({ navigation, route }) => {
       </ScrollView>
       <View style={style.cardDetails}>
         <View style={{ flex: 1, flexDirection: "column", alignItems: "center" }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 5 }}> Check in: {item.price}P/lượt</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 5 }}> Check in: {item.Price}P/lượt</Text>
           <View style={{ flexDirection: "row", marginTop: 20 }}>
             <Icon name="star" size={20} color={Color.grey} />
             <Icon name="star" size={20} color={Color.grey} />
@@ -145,7 +145,7 @@ const DetailsScreen = ({ navigation, route }) => {
         </View>
 
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          <CustomButton name={"Đặt lịch ngay"} />
+          <CustomButton name={"Đặt lịch"} />
         </View>
       </View>
     </View>
@@ -199,7 +199,7 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
   },
   cardDetails: {
-    height: 150,
+    height: 200,
     borderRadius: 25,
     backgroundColor: Color.white,
     borderWidth: 0.5,

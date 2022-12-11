@@ -1,6 +1,6 @@
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Pressable,
   Text,
@@ -17,10 +17,11 @@ import CustomInput from "../custom_component/CustomInput";
 const WIDTH = Dimensions.get("screen").width;
 const HEIGHT = Dimensions.get("screen").height;
 import Working from "../consts/Working";
-
+import { useSelector } from "react-redux";
 const CategoryList = () => {
   const category = ["tất cả","HOT", "đã lưu"];
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
+  
   return (
     <View style={styles.categoryListContainer}>
       {category.map((item, index) => (
@@ -56,61 +57,13 @@ const CategoryList = () => {
   );
 };
 
-const eventList = [
-  {
-    title: "Sông Hồng Hotel",
-    description: "Long Biên, Hà Nội",
-    source: require("../images/hotel/hongriversun.jpg"),
-    checkinTime: "08:00-20:00",
-    price: "80",
-  },
-  {
-    title: "Le Cafe Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/lecafe.png"),
-    checkinTime: "08:00-20:00",
-    price: "60",
-  },
-  {
-    title: "Trống Đồng Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/trongdong.jpg"),
-    checkinTime: "08:00-20:00",
-    price: "99",
-  },
-  {
-    title: "Acoustic Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/acoustic.jpg"),
-    checkinTime: "08:00-20:00",
-    price: "129",
-  },
-  {
-    title: "Bendecir Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/bendecir.jpg"),
-    checkinTime: "08:00-20:00",
-    price: "59",
-  },
-  {
-    title: "Bishub Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/bishub.jpg"),
-    checkinTime: "08:00-20:00",
-    price: "72",
-  },
-  {
-    title: "Melia Hotel",
-    description: "Ba Đình, Hà Nội",
-    source: require("../images/hotel/melia.jpg"),
-    checkinTime: "08:00-20:00",
-    price: "50",
-  },
-];
-
 const Bookings = ({ navigation }) => {
   const [search, setSearch] = useState("");
-  const [searchedList, setSList] = useState(eventList);
+  const [searchedList, setSList] = useState([]);
+  const {officeList} = useSelector((state) => state.officeList)
+  useEffect(() => {
+    setSList(officeList)
+  }, [officeList])
   const onSearch = () => {
     Keyboard.dismiss();
     if (search == "") {
@@ -164,15 +117,15 @@ const Bookings = ({ navigation }) => {
       <CategoryList />
 
       <ScrollView>
-        {searchedList.map((e, i) => (
+        {officeList.map((e, i) => (
           <BookingLabel
             key={i}
-            title={e.title}
-            source={e.source}
-            description={e.description}
-            checkinTime={e.checkinTime}
-            price={e.price}
-            onPress={() => navigation.navigate("DetailsScreen", Working)}
+            title={e.Name}
+            source={e.Image}
+            description={e.Detail}
+            checkinTime={"08:00-20:00"}
+            price={e.Price}
+            onPress={() => navigation.navigate("DetailsScreen", e)}
           ></BookingLabel>
         ))}
         <View style={{ height: HEIGHT * 0.2 }}></View>

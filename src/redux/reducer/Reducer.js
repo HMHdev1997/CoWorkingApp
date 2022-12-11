@@ -95,4 +95,44 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
     }
 }
 
-export { userReducer, userInfoReducer } 
+const initialOfficeListState = {
+    loading: false,
+    officeList: [],
+    error: null
+}
+const officeListReducer = (state = initialOfficeListState, action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GET_OFFICE_LIST_START:
+            const newState = {
+                ...state,
+                error: null,
+                loading: true
+            }
+            return newState
+        case ACTION_TYPE.GET_OFFICE_LIST_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                officeList: [...action.payload]
+            }
+        case ACTION_TYPE.GET_OFFICE_LIST_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+                officeList: [],
+            }
+        case ACTION_TYPE.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                officeList: []
+            }
+        default:
+            return state
+
+    }
+}
+export { userReducer, userInfoReducer, officeListReducer } 

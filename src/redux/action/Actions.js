@@ -1,8 +1,8 @@
 import { ACTION_TYPE } from "./Const";
-import { auth } from "../../consts/firebase";
+import { auth, database } from "../../consts/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
 import { handleErrorAuth } from "../../consts/common"
-import { doc, DocumentData, DocumentSnapshot, getDoc, getFirestore, updateDoc, setDoc } from "firebase/firestore";
+import { doc, query, limit, DocumentData, DocumentSnapshot, getDoc, getFirestore, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
 
 
 // Login
@@ -130,7 +130,7 @@ const getUserInit = () => {
         dispatch(getUserStart())
         // const expoToken = await registerForPushNotificationsAsync()
         const docRef = doc(getFirestore(), "Customers", auth.currentUser?.uid);
-    
+
         try {
             const docSnap = await getDoc(docRef)
             if (docSnap.exists()) {
@@ -142,9 +142,59 @@ const getUserInit = () => {
                 // dispatch(getUserFail({error: "No document"}))
             }
         } catch (error) {
-            dispatch(getUserFail(error))
+            dispatch(getUserFail(error.message))
         }
     }
 }
 
-export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit }
+// Get user info
+const getOfficeListStart = () => ({
+    type: ACTION_TYPE.GET_OFFICE_LIST_START
+})
+
+const getOfficeListSuccess = (list) => ({
+    type: ACTION_TYPE.GET_OFFICE_LIST_SUCCESS,
+    payload: list
+})
+
+const getOfficeListFail = (error) => ({
+    type: ACTION_TYPE.GET_OFFICE_LIST_FAIL,
+    payload: error
+})
+
+const getOfficeListInit = () => {
+    return async function (dispatch) {
+        dispatch(getOfficeListStart())
+        const OfficeRef = collection(database, "Office");
+
+        const q = query(OfficeRef, limit(10));
+
+        getDocs(q)
+            .then((querySnapshot) => {
+
+                const List = querySnapshot.docs.map((doc) => {
+                    const data = doc?._document.data.value.mapValue.fields
+
+                    if (data) {
+                        const objectK = Object.keys(data)
+                        const newO = { ...data }
+
+                        objectK.forEach((e) => {
+                            newO[e] = data[e][Object.keys(data[e])[0]]
+                        })
+                        // console.log("0111", '[OK][createUserFail] ' + JSON.stringify(newO))
+                        return {...newO, Image: require("../../images/hotel/lecafe.png")}
+                    }
+                    return  {Image: require("../../images/hotel/lecafe.png")};
+                });
+                dispatch(getOfficeListSuccess(List))
+
+            })
+            .catch((e) => {
+                console.log('[ERROR][createUserFail] ' + e.message)
+                dispatch(getOfficeListFail(e.message))
+            })
+    }
+}
+
+export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit }

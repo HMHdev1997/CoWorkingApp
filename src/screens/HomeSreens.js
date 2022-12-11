@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,68 +17,77 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Hearder from "../navigation/Header";
 import CustomLabel from "../custom_component/CustomLabel";
 import Working from "../consts/Working";
+import { useDispatch, useSelector } from "react-redux";
+import { getOfficeListInit } from "../redux/action/Actions";
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
 
 const HomeSreens = ({ route, navigation }) => {
- 
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(getOfficeListInit())
+  }, [])
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const { account } = route?.params || {};
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const {officeList} = useSelector((state) => state.officeList)
+  useEffect(() => {
+    // console.log(officeList)
+  }, [officeList])
 
- 
   const Cart = ({ Working, index }) => {
     return (
-      <TouchableOpacity activeOpacity={1}    onPress={() => navigation.navigate('DetailsScreen', Working)}>
-          <View style={{ ...style.cart }}>
-        <Animated.View style={{ ...style.cardOverLay, opacity: 0 }} />
-        <View style={style.priceTag}>
-          <Text
-            style={{ color: Color.white, fontSize: 20, fontWeight: "bold" }}
-          >
-            {" "}
-            ${Working.price}
-          </Text>
-        </View>
+      <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('DetailsScreen', Working)}>
+        <View style={{ ...style.cart }}>
+          <Animated.View style={{ ...style.cardOverLay, opacity: 0 }} />
+          <View style={style.priceTag}>
+            <Text
+              style={{ color: Color.white, fontSize: 20, fontWeight: "bold" }}
+            >
+              {" "}
+              ${Working.Price}
+            </Text>
+          </View>
 
-        <Image source={Working.Image} style={style.cardImage} />
-        <View style={style.cardDetails}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <View>
-              <Text style={{ fontWeight: "bold", fontSize: 17 }}>
-                {Working.name}
-              </Text>
-              <Text style={{ fontWeight: "bold", fontSize: 13 }}>
-                {Working.location}
-              </Text>
+          <Image source={Working.Image} style={style.cardImage} />
+          <View style={style.cardDetails}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View>
+                <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                  {Working.Name}
+                </Text>
+                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
+                  {Working.Address}
+                </Text>
+              </View>
+              <Icon name="bookmark-border" size={26} color={Color.primary} />
             </View>
-            <Icon name="bookmark-border" size={26} color={Color.primary} />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginTop: 10,
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              <Icon name="star" size={15} color={Color.orange} />
-              <Icon name="star" size={15} color={Color.orange} />
-              <Icon name="star" size={15} color={Color.orange} />
-              <Icon name="star" size={15} color={Color.orange} />
-              <Icon name="star" size={15} color={Color.grey} />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginTop: 10,
+              }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <Icon name="star" size={15} color={Color.orange} />
+                <Icon name="star" size={15} color={Color.orange} />
+                <Icon name="star" size={15} color={Color.orange} />
+                <Icon name="star" size={15} color={Color.orange} />
+                <Icon name="star" size={15} color={Color.grey} />
+              </View>
+              <Text style={{ fontSize: 13, color: Color.grey }}>{Working.ViewCount} reviews</Text>
             </View>
-            <Text style={{ fontSize: 13, color: Color.grey }}>365reviews</Text>
           </View>
         </View>
-      </View>
       </TouchableOpacity>
-      
+
     );
   };
   const OficeCart = ({ Working }) => {
+    console.log(111, Working)
     return (
       <View style={style.topHotelCard}>
         <View
@@ -102,10 +111,10 @@ const HomeSreens = ({ route, navigation }) => {
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-            {Working.name}
+            {Working.Name}
           </Text>
           <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
-            {Working.location}
+            {Working.Address}
           </Text>
         </View>
       </View>
@@ -135,10 +144,10 @@ const HomeSreens = ({ route, navigation }) => {
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-            {Working.name}
+            {Working.Name}
           </Text>
           <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
-            {Working.location}
+            {Working.Address}
           </Text>
         </View>
       </View>
@@ -168,10 +177,10 @@ const HomeSreens = ({ route, navigation }) => {
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-            {Working.name}
+            {Working.Name}
           </Text>
           <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
-            {Working.location}
+            {Working.Address}
           </Text>
         </View>
       </View>
@@ -202,7 +211,7 @@ const HomeSreens = ({ route, navigation }) => {
           </View>
           <FlatList
             horizontal
-            data={Working}
+            data={officeList}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               paddingLeft: 20,
@@ -228,7 +237,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={Working}
+            data={officeList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -239,7 +248,7 @@ const HomeSreens = ({ route, navigation }) => {
             }}
             renderItem={({ item }) => <OficeCart Working={item} />}
           />
-          
+
         </View>
         {/* không gian sự kiện */}
         <View>
@@ -258,7 +267,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={Working}
+            data={officeList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -287,7 +296,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={Working}
+            data={officeList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -305,7 +314,7 @@ const HomeSreens = ({ route, navigation }) => {
 };
 
 const style = StyleSheet.create({
- 
+
   cart: {
     height: 280,
     width: cardWidth,
