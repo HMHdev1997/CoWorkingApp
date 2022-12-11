@@ -1,4 +1,5 @@
 import Toast from "react-native-toast-message";
+import { Dimensions } from "react-native";
 export const isEmpty = (str) => {
   return (!str || str.length === 0);
 }
@@ -6,6 +7,9 @@ export const isEmpty = (str) => {
 export const isNull = (value) => {
   return (value === null || value === undefined)
 }
+
+export const windowsHeight = Dimensions.get("window").height;
+export const windowsWith = Dimensions.get("window").width;
 
 export const TYPE_NOTI = {
   SUCCESS: 'success',

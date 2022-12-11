@@ -1,6 +1,6 @@
 import { ACTION_TYPE } from "./Const";
 import { auth } from "../../consts/firebase";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
 import { handleErrorAuth } from "../../consts/common"
 // Login
 const loginStart = () => ({
@@ -32,9 +32,41 @@ const loginInit = (email, password) => {
 
     }
 }
+
 // Logout
 const logoutSuccess = () => ({
     type: ACTION_TYPE.LOGOUT_SUCCESS,
 })
 
-export { loginInit, logoutSuccess }
+// Register
+const registerStart = () => ({
+    type: ACTION_TYPE.REGISTER_START
+})
+
+const registerSuccess = (user) => ({
+    type: ACTION_TYPE.REGISTER_SUCCESS,
+    payload: user
+})
+
+const registerFail = (error) => ({
+    type: ACTION_TYPE.REGISTER_FAIL,
+    payload: error
+})
+
+const registerInit = (email, password) => {
+    return function (dispatch) {
+        dispatch(registerStart())
+        createUserWithEmailAndPassword(auth, email, password)
+            .then(({ user }) => {
+                dispatch(registerSuccess(user))
+            })
+            .catch((error) => {
+                console.log('[ERROR][registerFail] ' + error.code)
+                console.log('[ERROR][registerFail] ' + error.message)
+
+                dispatch(registerFail(handleErrorAuth(error.code)))
+            })
+    }
+}
+
+export { loginInit, logoutSuccess, registerInit }

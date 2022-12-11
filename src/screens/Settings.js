@@ -5,13 +5,14 @@ import CustomSetting from "../custom_component/CustomSetting";
 import Hearder from "../navigation/Header";
 import { signOut } from 'firebase/auth';
 import { logoutSuccess } from "../redux/action/Actions";
-import {  useDispatch } from 'react-redux';
-import {  showToast, TYPE_NOTI } from '../consts/common';
+import { useDispatch } from 'react-redux';
+import { showToast, TYPE_NOTI } from '../consts/common';
 import { auth } from "../consts/firebase";
+import { windowsHeight } from "../consts/common";
 
 
 const Settings = ({ navigation }) => {
-    const dispatch = useDispatch()  
+    const dispatch = useDispatch()
 
     const onLogout = async () => {
         signOut(auth)
@@ -21,7 +22,7 @@ const Settings = ({ navigation }) => {
                 navigation.navigate("LoginScreen")
             })
             .catch(error => {
-                console.log('[ERROR][updateUserFail] ' + error)
+                console.log('[ERROR][Logout Fail] ' + error)
                 showToast(TYPE_NOTI.ERROR, null, 'Đăng xuất thất bại')
             })
     }
@@ -78,9 +79,10 @@ const Settings = ({ navigation }) => {
         <View>
             <Hearder />
             <SafeAreaView style={{ marginTop: "10%" }}>
-                <ScrollView showsVerticalScrollIndicator={false} >
+                <ScrollView style={{maxHeight: "99%" }}>
                     {SettingsList.map((s, i) => <CustomSetting key={i} text={s.name} icon={s.icon} onPress={s.onPress} />)}
                 </ScrollView>
+
             </SafeAreaView>
         </View>
     );

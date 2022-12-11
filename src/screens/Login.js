@@ -10,15 +10,18 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  TextInput,
 } from "react-native";
 import { showToast, TYPE_NOTI, isEmpty } from "../consts/common.js"
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../consts/firebase'
-import { TextInput } from "react-native-gesture-handler";
 import { store } from "../redux/store/store.js";
 import { loginInit } from "../redux/action/Actions"
 import { useDispatch, useSelector } from 'react-redux';
 import { isNull } from "../consts/common.js";
+import Color from "../consts/Color"
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 const windowsHeight = Dimensions.get("window").height;
 const windowsWith = Dimensions.get("window").width;
 
@@ -32,9 +35,8 @@ const Login = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch()
 
- 
+
   const onLogin = () => {
-    console.log('onLoginPress');
     if (isEmpty(getAccount) || isEmpty(password)) {
       showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền hết thông tin");
       return
@@ -52,9 +54,9 @@ const Login = ({ navigation }) => {
       }
     })
 
-    
+
     dispatch(loginInit(getAccount, password))
-    setAccount("")
+    // setAccount("")
     setPassword("")
   }
 
@@ -76,78 +78,68 @@ const Login = ({ navigation }) => {
   }, [])
 
   return (
-    <ImageBackground
-      style={{ width: "100%", height: "100%" }}
-      imageStyle={{ opacity: 0.6 }}
-      source={require("../images/onboarding_image.jpg")}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView style={{ width: "100%", height: "100%" }} keyboardShouldPersistTaps='handled'>
-          {/* Account & Password */}
-          <View style={style.viewLogin}>
-            {/*Account*/}
-            <View style={style.txtAccount}>
-              <Text style={{ fontWeight: "bold" }}>Tài Khoản: </Text>
-              <TextInput
-                style={{ height: "100%", width: "70%", borderBottomWidth: 1 }}
-                value={getAccount}
-                onChangeText={setAccount}
-              />
-            </View>
-            <View style={style.txtPassword}>
-              <Text style={{ fontWeight: "bold" }}>Mật Khẩu: </Text>
-              <TextInput
-                style={{
-                  height: "100%",
-                  width: "70%",
-                  borderBottomWidth: 1,
-                  paddingRight: 45,
-                }}
-                secureTextEntry={getPasswordVisible ? false : true}
-                value={password}
-                onChangeText={setPassword}
-              />
-              <TouchableOpacity
-                style={style.imagePassword}
-                onPress={() => {
-                  setPasswordVisible(!getPasswordVisible);
-                }}
-              >
-                {getPasswordVisible ? (
-                  <Image
-                    source={require("../images/hide.png")}
-                    style={{ height: "100%", width: "100%" }}
-                  />
-                ) : (
-                  <Image
-                    source={require("../images/view.png")}
-                    style={{ height: "100%", width: "100%" }}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            {/* btn login & register */}
-            <View style={style.Login}>
-              {/* login */}
-              <TouchableOpacity
-                style={style.btnLogin}
-                onPress={onLogin}
-              >
-                <Text style={{}}>Đăng Nhập</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={style.btnLogin}>
-                <Text style={{}}>Đăng Ký</Text>
-              </TouchableOpacity>
-              {/* Forget Password */}
-              <TouchableOpacity>
-                <Text style={{ marginTop: 15, left: 10 }}>Quên Mật khẩu? </Text>
-              </TouchableOpacity>
-            </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView style={{ width: "100%", height: "100%" }} keyboardShouldPersistTaps='handled'>
+        {/* Account & Password */}
+        <View style={style.viewLogin}>
+          {/*Account*/}
+          <View style={style.txtAccount}>
+            <Text style={{ fontWeight: "bold" }}>Tài Khoản: </Text>
+            <TextInput
+              style={{ height: "100%", width: "70%", borderBottomWidth: 1 }}
+              value={getAccount}
+              onChangeText={setAccount}
+            />
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    </ImageBackground>
+          <View style={style.txtPassword}>
+            <Text style={{ fontWeight: "bold" }}>Mật Khẩu: </Text>
+            <TextInput
+              style={{
+                height: "100%",
+                width: "70%",
+                borderBottomWidth: 1,
+                paddingRight: 45,
+              }}
+              secureTextEntry={getPasswordVisible ? false : true}
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TouchableOpacity
+              style={style.imagePassword}
+              onPress={() => {
+                setPasswordVisible(!getPasswordVisible);
+              }}
+            >
+              {getPasswordVisible ? (
+                <FontAwesomeIcon size={25} icon={faEyeSlash} color={Color.dark}></FontAwesomeIcon>
+              ) : (
+                <FontAwesomeIcon size={25} icon={faEye} color={Color.dark}></FontAwesomeIcon>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* btn login & register */}
+          <View style={style.Login}>
+            {/* login */}
+            <TouchableOpacity
+              style={style.btnLogin}
+              onPress={onLogin}
+            >
+              <Text style={{}}>Đăng Nhập</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={style.btnLogin} onPress={() => {
+                navigation.replace("RegisterScreen")
+              }}>
+              <Text style={{}}>Đăng Ký</Text>
+            </TouchableOpacity>
+            {/* Forget Password */}
+            <TouchableOpacity>
+              <Text style={{ marginTop: 15, left: 10 }} onPress={() => { }}>Quên Mật khẩu? </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -197,7 +189,7 @@ const style = StyleSheet.create({
     marginTop: 20,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#87ceeb",
+    backgroundColor: Color.lightblue,
   },
 });
 

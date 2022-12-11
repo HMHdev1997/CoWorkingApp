@@ -17,7 +17,6 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Hearder from "../navigation/Header";
 import CustomLabel from "../custom_component/CustomLabel";
 import Working from "../consts/Working";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
 
@@ -55,7 +54,7 @@ const HomeSreens = ({ route, navigation }) => {
                 {Working.location}
               </Text>
             </View>
-            <Icon name="bookmark-border" size={26} color={Colors.primary} />
+            <Icon name="bookmark-border" size={26} color={Color.primary} />
           </View>
           <View
             style={{
@@ -65,13 +64,13 @@ const HomeSreens = ({ route, navigation }) => {
             }}
           >
             <View style={{ flexDirection: "row" }}>
-              <Icon name="star" size={15} color={Colors.orange} />
-              <Icon name="star" size={15} color={Colors.orange} />
-              <Icon name="star" size={15} color={Colors.orange} />
-              <Icon name="star" size={15} color={Colors.orange} />
-              <Icon name="star" size={15} color={Colors.grey} />
+              <Icon name="star" size={15} color={Color.orange} />
+              <Icon name="star" size={15} color={Color.orange} />
+              <Icon name="star" size={15} color={Color.orange} />
+              <Icon name="star" size={15} color={Color.orange} />
+              <Icon name="star" size={15} color={Color.grey} />
             </View>
-            <Text style={{ fontSize: 13, color: Colors.grey }}>365reviews</Text>
+            <Text style={{ fontSize: 13, color: Color.grey }}>365reviews</Text>
           </View>
         </View>
       </View>
@@ -91,9 +90,9 @@ const HomeSreens = ({ route, navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Icon name="star" size={15} color={Colors.orange} />
+          <Icon name="star" size={15} color={Color.orange} />
           <Text
-            style={{ color: Colors.dark, fontWeight: "bold", fontSize: 15 }}
+            style={{ color: Color.dark, fontWeight: "bold", fontSize: 15 }}
           >
             5.0
           </Text>
@@ -105,7 +104,7 @@ const HomeSreens = ({ route, navigation }) => {
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
             {Working.name}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Colors.grey }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
             {Working.location}
           </Text>
         </View>
@@ -124,9 +123,9 @@ const HomeSreens = ({ route, navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Icon name="star" size={15} color={Colors.orange} />
+          <Icon name="star" size={15} color={Color.orange} />
           <Text
-            style={{ color: Colors.dark, fontWeight: "bold", fontSize: 15 }}
+            style={{ color: Color.dark, fontWeight: "bold", fontSize: 15 }}
           >
             5.0
           </Text>
@@ -138,7 +137,7 @@ const HomeSreens = ({ route, navigation }) => {
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
             {Working.name}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Colors.grey }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
             {Working.location}
           </Text>
         </View>
@@ -157,9 +156,9 @@ const HomeSreens = ({ route, navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Icon name="star" size={15} color={Colors.orange} />
+          <Icon name="star" size={15} color={Color.orange} />
           <Text
-            style={{ color: Colors.dark, fontWeight: "bold", fontSize: 15 }}
+            style={{ color: Color.dark, fontWeight: "bold", fontSize: 15 }}
           >
             5.0
           </Text>
@@ -171,7 +170,7 @@ const HomeSreens = ({ route, navigation }) => {
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
             {Working.name}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Colors.grey }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
             {Working.location}
           </Text>
         </View>
@@ -240,7 +239,7 @@ const HomeSreens = ({ route, navigation }) => {
             }}
             renderItem={({ item }) => <OficeCart Working={item} />}
           />
-        
+          
         </View>
         {/* không gian sự kiện */}
         <View>
@@ -324,7 +323,7 @@ const style = StyleSheet.create({
   priceTag: {
     height: 60,
     width: 80,
-    backgroundColor: Colors.primary,
+    backgroundColor: Color.primary,
     position: "absolute",
     zIndex: 1,
     right: 0,
@@ -342,7 +341,7 @@ const style = StyleSheet.create({
   cardDetails: {
     height: 100,
     borderRadius: 15,
-    backgroundColor: Colors.white,
+    backgroundColor: Color.white,
     position: "absolute",
     bottom: 0,
     padding: 20,
@@ -350,7 +349,7 @@ const style = StyleSheet.create({
   },
   cardOverLay: {
     height: 280,
-    backgroundColor: Colors.white,
+    backgroundColor: Color.white,
     position: "absolute",
     zIndex: 100,
     width: cardWidth,
@@ -360,7 +359,7 @@ const style = StyleSheet.create({
     flexDirection: "row",
     height: 120,
     width: 330,
-    backgroundColor: Colors.white,
+    backgroundColor: Color.white,
     elevation: 15,
     marginHorizontal: 10,
     borderRadius: 10,

@@ -43,7 +43,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
 
         </View>
         <TouchableOpacity style={{ paddingTop: "5%" }} onPress={() => {
-          if (auth.currentUser) {
+          if (auth?.currentUser) {
             navigation.navigate("Profile")
           } else {
             navigation.navigate("LoginScreen")
