@@ -46,4 +46,53 @@ const userReducer = (state = initialUserState, action) => {
     }
 }
 
-export { userReducer } 
+const initialUserInfoState = {
+    loading: false,
+    userInfo: null,
+    error: null
+}
+
+const userInfoReducer = (state = initialUserInfoState, action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GET_USER_INFO_START:
+        case ACTION_TYPE.CREATE_USER_INFO_START:
+        case ACTION_TYPE.UPDATE_USER_INFO_START:
+            const newState = {
+                ...state,
+                error: null,
+                loading: true
+            }
+            return newState
+        case ACTION_TYPE.GET_USER_INFO_SUCCESS:
+        case ACTION_TYPE.CREATE_USER_INFO_SUCCESS:
+        case ACTION_TYPE.UPDATE_USER_INFO_SUCCESS:
+
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                userInfo: {...action.payload}
+            }
+        case ACTION_TYPE.GET_USER_INFO_FAIL:
+        case ACTION_TYPE.CREATE_USER_INFO_FAIL:
+        case ACTION_TYPE.UPDATE_USER_INFO_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+                userInfo: null,
+            }
+        case ACTION_TYPE.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                userInfo: null
+            }
+        default:
+            return state
+
+    }
+}
+
+export { userReducer, userInfoReducer } 

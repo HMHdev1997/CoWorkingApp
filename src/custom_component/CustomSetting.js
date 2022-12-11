@@ -14,9 +14,9 @@ const CustomSetting = ({ icon, text, onPress, isNoti }) => {
                     {text}
                 </Text>
             </View>
-            <Pressable  style={{ flex: 2, alignItems: "flex-end",  marginRight: "5%"}}>
+            <TouchableOpacity  style={{ flex: 2, alignItems: "flex-end",  marginRight: "5%"}} onPress={onPress}>
                 <FontAwesomeIcon size={20} icon={faArrowRight} color={Color.grey} />
-            </Pressable>
+            </TouchableOpacity>
         </TouchableOpacity>
     )
 }

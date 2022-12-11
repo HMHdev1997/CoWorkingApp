@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
+import Color from "../consts/Color"
 const HEIGHT = Dimensions.get('screen').height
 export const toastConfig = {
     /*
@@ -10,11 +11,11 @@ export const toastConfig = {
     success: (props) => (
       <BaseToast
         {...props}
-        style={{ borderLeftColor: 'blue', borderLeftWidth: 10, top: HEIGHT*0.05 }}
+        style={{ borderLeftColor: Color.lightblue, borderLeftWidth: 10, top: HEIGHT*0.05 }}
         contentContainerStyle={{ paddingHorizontal: 10 }}
         text1Style={{
             fontSize: 18,
-            color: '#3333dd'
+            color: Color.lightblue
           }}
           text2Style={{
             fontSize: 14

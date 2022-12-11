@@ -127,7 +127,7 @@ const RegisterScreen = ({ navigation, route }) => {
                     </View>
 
                     <View style={style.txtPassword}>
-                        <Text style={{ fontWeight: "bold" }}>Mật Khẩu: </Text>
+                        <Text style={{ fontWeight: "bold" }}>{"Nhập lại \n mật Khẩu: "}</Text>
                         <TextInput
                             style={{
                                 height: "100%",

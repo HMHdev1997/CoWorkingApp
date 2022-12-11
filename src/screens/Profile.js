@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -16,17 +16,47 @@ import { faAdd, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import CustomInput from "../custom_component/CustomInput";
 import CustomButton from "../custom_component/CustomButton";
 import CustomAvatar from "../custom_component/CustomAvatar";
-
-
-
+import { showToast, isEmpty, TYPE_NOTI } from "../consts/common";
+import { auth } from "../consts/firebase";
+import { useDispatch, useSelector } from 'react-redux';
+import { createUserInit } from "../redux/action/Actions";
 const Profile = () => {
   const navigation = useNavigation()
+  const userInfoReducer = useSelector((state) => state.userInfoReducer)
+
   const [pname, setPname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [bday, setBDay] = useState("");
   const [gender, setGender] = useState("");
-	const [avatarUri, setAvatarUri] = useState(null)
+  const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [avatarUri, setAvatarUri] = useState(null)
+
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (userInfoReducer?.userInfo != null) {
+      setPname(userInfoReducer?.userInfo?.name || "")
+      setPhone(userInfoReducer?.userInfo?.phone_number || "")
+
+      setBDay(userInfoReducer?.userInfo?.birthday || "")
+      setGender(userInfoReducer?.userInfo?.gender || "")
+      setAddress(userInfoReducer?.userInfo?.address || "")
+    }
+  }, [userInfoReducer?.userInfo])
+
+  useEffect(() => {
+    if (loading && userInfoReducer != null && userInfoReducer?.loading == false) {
+      if (userInfoReducer?.error) {
+        showToast(TYPE_NOTI.ERROR, null, "Cập nhật thất bại")
+      } else {
+        showToast(TYPE_NOTI.SUCCESS, null, "Cập nhật thành công")
+      }
+    }
+    setLoading(userInfoReducer?.loading || false)
+  }, [userInfoReducer?.loading])
+  // console.log(userInfoReducer)
 
   const ProfileList = [
     {
@@ -37,9 +67,10 @@ const Profile = () => {
     },
     {
       name: "Email",
-      value: email,
-      setValue: setEmail,
+      value: auth.currentUser?.email  || "",
+      setValue: () => { },
       isNotNull: true,
+      isEditable: false,
     },
     {
       name: "Số điện thoại",
@@ -59,16 +90,69 @@ const Profile = () => {
       setValue: setGender,
       isNotNull: true,
     },
+    {
+      name: "Địa chỉ",
+      value: address,
+      setValue: setAddress,
+      isNotNull: true,
+    },
+    {
+      name: "Ngày tạo",
+      value: auth.currentUser.metadata.creationTime || "",
+      setValue: () => { },
+      isNotNull: true,
+      isEditable: false,
+    },
   ]
 
+  const onUpdate = () => {
+    if (isEmpty(pname)) {
+      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền tên")
+      return
+    }
+
+    if (isEmpty(phone)) {
+      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền Số điện thoại")
+      return
+    }
+
+    if (isEmpty(gender)) {
+      showToast(TYPE_NOTI.ERROR, null, "Vui lòng chọn giới tính")
+      return
+    }
+
+    if (isEmpty(bday)) {
+      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền ngày sinh")
+      return
+    }
+
+    if (isEmpty(address)) {
+      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền địa chỉ")
+      return
+    }
+
+    const userInfo = {
+      name: pname,
+      gender: gender,
+      phone_number: phone,
+      email: auth.currentUser?.email ? auth.currentUser?.email : undefined,
+      birthday: bday,
+      address: address,
+      register_date: auth.currentUser.metadata.creationTime
+    }
+
+    dispatch(createUserInit(userInfo))
+
+  }
+
   const onChangeAvatarPress = () => {
-		navigation.navigate("AddPhotoScreen", { onPhotoCallback })
-	}
+    navigation.navigate("AddPhotoScreen", { onPhotoCallback })
+  }
 
   const onPhotoCallback = useCallback((data) => {
 
-		setAvatarUri(data);
-	}, [])
+    setAvatarUri(data);
+  }, [])
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={style.titleBar}>
@@ -77,20 +161,30 @@ const Profile = () => {
         </TouchableOpacity>
       </View>
       <View style={{ alignItems: "center" }}>
-      <CustomAvatar isEdit={true} size={100} source1={avatarUri ? avatarUri : ""} onPress={onChangeAvatarPress}></CustomAvatar>
+        <CustomAvatar isEdit={true} size={100} source1={avatarUri ? avatarUri : ""} onPress={onChangeAvatarPress}></CustomAvatar>
 
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingHorizontal: "5%" }}>
           {
-            ProfileList.map((e, i) => <CustomInput key={i} isName={true} width='90%' name={e.name} value={e.value} setValue={e.setValue} isNotNullable={e.isNotNull}></CustomInput>)
+            ProfileList.map((e, i) => <CustomInput
+              key={i}
+              isName={true}
+              width='90%'
+              name={e.name}
+              value={e.value}
+              setValue={e.setValue}
+              isNotNullable={e.isNotNull}
+              isEditable={e.isEditable} >
+
+            </CustomInput>)
           }
 
         </View>
       </ScrollView>
       <View style={{ marginBottom: "10%" }}>
-        <CustomButton name={"Lưu thay đổi"}></CustomButton>
+        <CustomButton name={"Lưu thay đổi"} onPress={onUpdate}></CustomButton>
       </View>
     </SafeAreaView>
   );
