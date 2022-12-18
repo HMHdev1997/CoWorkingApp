@@ -18,7 +18,7 @@ import { auth } from '../consts/firebase'
 import { store } from "../redux/store/store.js";
 import { registerInit } from "../redux/action/Actions"
 import { useDispatch, useSelector } from 'react-redux';
-import { isNull } from "../consts/common.js";
+import { isNull, validateEmail, validatePhone } from "../consts/common.js";
 import Color from "../consts/Color"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEye, faEyeDropper, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -29,27 +29,42 @@ const windowsWith = Dimensions.get("window").width;
 let loading = false
 let error = ""
 let unSubcribeStore = () => { }
+
+
 const RegisterScreen = ({ navigation, route }) => {
 
     const [getPasswordVisible, setPasswordVisible] = useState(false);
     const [getRePasswordVisible, setRePasswordVisible] = useState(false);
 
     const [getAccount, setAccount] = useState("");
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
+
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch()
 
     const onRegister = () => {
-
-        if (isEmpty(password) || isEmpty(rePassword) || isEmpty(getAccount)) {
+        
+        if (isEmpty(password) || isEmpty(rePassword) || isEmpty(getAccount) || isEmpty(phone) || isEmpty(email)) {
             showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền hết thông tin")
+            return
+        }
+        
+        if (!validateEmail(email)) {
+            showToast(TYPE_NOTI.ERROR, null, "Email sai định dạng")
+            return
+        }
+        if (!validatePhone(phone)) {
+            showToast(TYPE_NOTI.ERROR, null, "Số điện thoại sai định dạng")
             return
         }
         if (password != rePassword) {
             showToast(TYPE_NOTI.ERROR, null, "Mật khẩu không khớp")
             return
         }
+        
         unSubcribeStore = store.subscribe(() => {
             loading = store.getState().user.loading
             error = store.getState().user.error;
@@ -59,28 +74,25 @@ const RegisterScreen = ({ navigation, route }) => {
             }
             setIsLoading(loading)
             if (!loading) {
+                if (store.getState().user.currentUser) {
+                    if (error) {
+                      showToast(TYPE_NOTI.ERROR, null, error);
+                    } else {
+                      navigation.replace("Profile")
+                      showToast(TYPE_NOTI.SUCCESS, null, 'Đăng kí thành công')
+                    }
+                  }
                 unSubcribeStore();
             }
         })
-        const trimEmail = getAccount.split(" ").join("")
+        const trimEmail = email.split(" ").join("")
         const trimPassword = password.split(" ").join("")
-        dispatch(registerInit(trimEmail, trimPassword))
+        dispatch(registerInit(getAccount,trimEmail, phone, trimPassword))
     }
 
 
     useEffect(() => {
-        const unSubcribe = onAuthStateChanged(auth, user => {
-          if (user) {
-            showToast(TYPE_NOTI.SUCCESS, null, 'Đăng kí thành công')
-            if (isNull(user.displayName)) {
-              navigation.replace("Profile")
-            } else {
-              navigation.replace("Home")
-            }
-          }
-        })
         return () => {
-          unSubcribe();
           unSubcribeStore();
         }
       }, [])
@@ -92,11 +104,27 @@ const RegisterScreen = ({ navigation, route }) => {
                 <View style={style.viewLogin}>
                     {/*Account*/}
                     <View style={style.txtAccount}>
-                        <Text style={{ fontWeight: "bold" }}>Tài Khoản: </Text>
+                        <Text style={{ fontWeight: "bold" }}>Tên: </Text>
                         <TextInput
                             style={{ height: "100%", width: "70%", borderBottomWidth: 1 }}
                             value={getAccount}
                             onChangeText={setAccount}
+                        />
+                    </View>
+                    <View style={style.txtAccount}>
+                        <Text style={{ fontWeight: "bold" }}>Email: </Text>
+                        <TextInput
+                            style={{ height: "100%", width: "70%", borderBottomWidth: 1 }}
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                    </View>
+                    <View style={style.txtAccount}>
+                        <Text style={{ fontWeight: "bold" }}>Đ.thoại: </Text>
+                        <TextInput
+                            style={{ height: "100%", width: "70%", borderBottomWidth: 1 }}
+                            value={phone}
+                            onChangeText={setPhone}
                         />
                     </View>
                     <View style={style.txtPassword}>
@@ -178,7 +206,7 @@ const style = StyleSheet.create({
     viewLogin: {
         height: "15%",
         width: "100%",
-        marginTop: 0.4 * windowsHeight,
+        marginTop: 0.2 * windowsHeight,
         alignItems: "center",
     },
     txtAccount: {

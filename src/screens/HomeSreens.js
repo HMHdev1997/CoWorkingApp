@@ -87,7 +87,6 @@ const HomeSreens = ({ route, navigation }) => {
     );
   };
   const OficeCart = ({ Working }) => {
-    console.log(111, Working)
     return (
       <View style={style.topHotelCard}>
         <View

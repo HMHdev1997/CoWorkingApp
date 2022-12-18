@@ -28,13 +28,48 @@ const windowsWith = Dimensions.get("window").width;
 let loading = false
 let error = ""
 let unSubcribeStore = () => { }
+
+const CategoryList = ({selectedCategoryIndex, setSelectedCategoryIndex}) => {
+  const category = ["Số điện thoại", "Email"];
+  
+  return (
+    <View style={style.categoryListContainer}>
+      {category.map((item, index) => (
+        <TouchableOpacity
+          key={index}
+          activeOpacity={0.8}
+          onPress={() => setSelectedCategoryIndex(index)}
+        >
+          <View>
+            <Text
+              style={{
+                ...style.categoryListText,
+                color:
+                  selectedCategoryIndex == index ? Color.primary : Color.grey,
+              }}
+            >
+              {item}
+            </Text>
+            {selectedCategoryIndex == index && (
+              <View
+              ></View>
+            )}
+          </View>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
+
 const Login = ({ navigation }) => {
   const [getPasswordVisible, setPasswordVisible] = useState(false);
   const [getAccount, setAccount] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch()
+  const currentUser = useSelector((state) => state.user)
 
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
 
   const onLogin = () => {
     if (isEmpty(getAccount) || isEmpty(password)) {
@@ -50,29 +85,28 @@ const Login = ({ navigation }) => {
       }
       setIsLoading(loading)
       if (!loading) {
+        if (store.getState().user.currentUser) {
+          if (error) {
+            showToast(TYPE_NOTI.ERROR, null, error);
+          } else {
+            navigation.replace("Profile")
+            showToast(TYPE_NOTI.SUCCESS, null, 'Đăng nhập thành công')
+          }
+        }
         unSubcribeStore();
       }
     })
 
-
-    dispatch(loginInit(getAccount, password))
+    const isPhone = selectedCategoryIndex == 0
+    dispatch(loginInit(getAccount, password, isPhone))
     // setAccount("")
     setPassword("")
   }
 
   useEffect(() => {
-    const unSubcribe = onAuthStateChanged(auth, user => {
-      if (user) {
-        showToast(TYPE_NOTI.SUCCESS, null, 'Đăng nhập thành công')
-        if (isNull(user.displayName)) {
-          navigation.replace("Profile")
-        } else {
-          navigation.replace("Home")
-        }
-      }
-    })
+    
     return () => {
-      unSubcribe();
+      // unSubcribe();
       unSubcribeStore();
     }
   }, [])
@@ -83,8 +117,11 @@ const Login = ({ navigation }) => {
         {/* Account & Password */}
         <View style={style.viewLogin}>
           {/*Account*/}
+          <View>
+            <CategoryList selectedCategoryIndex={selectedCategoryIndex} setSelectedCategoryIndex={setSelectedCategoryIndex}></CategoryList>
+          </View>
           <View style={style.txtAccount}>
-            <Text style={{ fontWeight: "bold" }}>Tài Khoản: </Text>
+            <Text style={{ fontWeight: "bold" }}>{selectedCategoryIndex==0?"Đ. thoại":"Email"}: </Text>
             <TextInput
               style={{ height: "100%", width: "70%", borderBottomWidth: 1 }}
               value={getAccount}
@@ -128,8 +165,8 @@ const Login = ({ navigation }) => {
               <Text style={{}}>Đăng Nhập</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style.btnLogin} onPress={() => {
-                navigation.replace("RegisterScreen")
-              }}>
+              navigation.replace("RegisterScreen")
+            }}>
               <Text style={{}}>Đăng Ký</Text>
             </TouchableOpacity>
             {/* Forget Password */}
@@ -144,6 +181,19 @@ const Login = ({ navigation }) => {
 };
 
 const style = StyleSheet.create({
+  categoryListContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 20,
+    marginLeft: 0,
+    marginTop: 10,
+  },
+  categoryListText: {
+    paddingHorizontal: 20,
+    fontSize: 17,
+    alignItems: "center",
+    fontWeight: "bold",
+  },
   viewLogin: {
     height: "15%",
     width: "100%",

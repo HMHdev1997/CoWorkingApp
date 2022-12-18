@@ -15,16 +15,9 @@ const Settings = ({ navigation }) => {
     const dispatch = useDispatch()
 
     const onLogout = async () => {
-        signOut(auth)
-            .then(() => {
-                dispatch(logoutSuccess())
-                showToast(TYPE_NOTI.SUCCESS, null, 'Đăng xuất thành công')
-                navigation.navigate("LoginScreen")
-            })
-            .catch(error => {
-                console.log('[ERROR][Logout Fail] ' + error)
-                showToast(TYPE_NOTI.ERROR, null, 'Đăng xuất thất bại')
-            })
+        dispatch(logoutSuccess())
+        showToast(TYPE_NOTI.SUCCESS, null, 'Đăng xuất thành công')
+        navigation.navigate("LoginScreen")
     }
     const SettingsList = [
         {

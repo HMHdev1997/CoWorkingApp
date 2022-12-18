@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createUserInit } from "../redux/action/Actions";
 const Profile = () => {
   const navigation = useNavigation()
-  const userInfoReducer = useSelector((state) => state.userInfoReducer)
+  const {currentUser}= useSelector((state) => state.user)
 
   const [pname, setPname] = useState("");
   const [email, setEmail] = useState("");
@@ -36,26 +36,23 @@ const Profile = () => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (userInfoReducer?.userInfo != null) {
-      setPname(userInfoReducer?.userInfo?.name || "")
-      setPhone(userInfoReducer?.userInfo?.phone_number || "")
-
-      setBDay(userInfoReducer?.userInfo?.birthday || "")
-      setGender(userInfoReducer?.userInfo?.gender || "")
-      setAddress(userInfoReducer?.userInfo?.address || "")
+    if (currentUser != null) {
+      setPname(currentUser?.name || "")
+      setPhone(currentUser?.email || "")
+      setEmail("0" +currentUser?.phoneNumbers.toString() || "") 
     }
-  }, [userInfoReducer?.userInfo])
+  }, [currentUser])
 
-  useEffect(() => {
-    if (loading && userInfoReducer != null && userInfoReducer?.loading == false) {
-      if (userInfoReducer?.error) {
-        showToast(TYPE_NOTI.ERROR, null, "Cập nhật thất bại")
-      } else {
-        showToast(TYPE_NOTI.SUCCESS, null, "Cập nhật thành công")
-      }
-    }
-    setLoading(userInfoReducer?.loading || false)
-  }, [userInfoReducer?.loading])
+  // useEffect(() => {
+  //   if (loading && userInfoReducer != null && userInfoReducer?.loading == false) {
+  //     if (userInfoReducer?.error) {
+  //       showToast(TYPE_NOTI.ERROR, null, "Cập nhật thất bại")
+  //     } else {
+  //       showToast(TYPE_NOTI.SUCCESS, null, "Cập nhật thành công")
+  //     }
+  //   }
+  //   setLoading(userInfoReducer?.loading || false)
+  // }, [userInfoReducer?.loading])
   // console.log(userInfoReducer)
 
   const ProfileList = [
@@ -67,8 +64,8 @@ const Profile = () => {
     },
     {
       name: "Email",
-      value: auth.currentUser?.email  || "",
-      setValue: () => { },
+      value: email,
+      setValue: setEmail,
       isNotNull: true,
       isEditable: false,
     },
@@ -98,7 +95,7 @@ const Profile = () => {
     },
     {
       name: "Ngày tạo",
-      value: auth.currentUser.metadata.creationTime || "",
+      value: auth?.currentUser?.metadata?.creationTime || "",
       setValue: () => { },
       isNotNull: true,
       isEditable: false,
@@ -135,10 +132,10 @@ const Profile = () => {
       name: pname,
       gender: gender,
       phone_number: phone,
-      email: auth.currentUser?.email ? auth.currentUser?.email : undefined,
+      email: auth?.currentUser?.email ? auth?.currentUser?.email : undefined,
       birthday: bday,
       address: address,
-      register_date: auth.currentUser.metadata.creationTime
+      register_date: auth?.currentUser?.metadata?.creationTime || ""
     }
 
     dispatch(createUserInit(userInfo))
@@ -184,7 +181,7 @@ const Profile = () => {
         </View>
       </ScrollView>
       <View style={{ marginBottom: "10%" }}>
-        <CustomButton name={"Lưu thay đổi"} onPress={onUpdate}></CustomButton>
+        <CustomButton name={"Lưu thay đổi"} onPress={()=>{}}></CustomButton>
       </View>
     </SafeAreaView>
   );

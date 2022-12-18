@@ -3,7 +3,8 @@ import { auth, database } from "../../consts/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
 import { handleErrorAuth } from "../../consts/common"
 import { doc, query, limit, DocumentData, DocumentSnapshot, getDoc, getFirestore, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
-
+import { API, sendReq } from "../../consts/request"
+import axios from 'axios';
 
 // Login
 const loginStart = () => ({
@@ -20,20 +21,41 @@ const loginFail = (error) => ({
     payload: error
 })
 
-const loginInit = (email, password) => {
+const loginInit = (email, password, isPhone) => {
     return function (dispatch) {
         dispatch(loginStart())
-        signInWithEmailAndPassword(auth, email, password)
-            .then(({ user }) => {
-                dispatch(getUserInit())
-                dispatch(loginSuccess(user))
-            })
-            .catch((error) => {
-                console.log('[ERROR][loginFail] ' + error)
-                dispatch(loginFail(handleErrorAuth(error.code)))
-                dispatch(loginSuccess({}))
-            })
+        // signInWithEmailAndPassword(auth, email, password)
+        //     .then(({ user }) => {
+        //         dispatch(getUserInit())
+        //         dispatch(loginSuccess(user))
+        //     })
+        //     .catch((error) => {
+        //         console.log('[ERROR][loginFail] ' + error)
+        //         dispatch(loginFail(handleErrorAuth(error.code)))
+        //         dispatch(loginSuccess({}))
+        //     })
 
+        const url = API.Host + API.UserLogin + "?" + new URLSearchParams({
+            email: isPhone ? "" : email,
+            password: password,
+            phoneNumber: isPhone ? email : ""
+        })
+
+        axios({
+            method: 'get',
+            url: url,
+        })
+            .then((res) => {
+                console.log('[ERROR][loginSucc] ' + JSON.stringify(res.data))
+                if (res.status == 200) {
+                    dispatch(loginSuccess(res.data))
+                } else {
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                console.log('[ERROR][loginFail] ' + error.message)
+                dispatch(loginFail(error.message))
+            })
     }
 }
 
@@ -57,23 +79,34 @@ const registerFail = (error) => ({
     payload: error
 })
 
-const registerInit = (email, password) => {
+const registerInit = (name, email, phone, password) => {
     return function (dispatch) {
-        dispatch(registerStart())
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(({ user }) => {
-                dispatch(registerSuccess(user))
-                createUserInit({
-                    email: auth.currentUser?.email ? auth.currentUser?.email : undefined,
-                    register_date: auth.currentUser.metadata.creationTime
-                })
-            })
-            .catch((error) => {
-                console.log('[ERROR][registerFail] ' + error.code)
-                console.log('[ERROR][registerFail] ' + error.message)
 
-                dispatch(registerFail(handleErrorAuth(error.code)))
+        dispatch(registerStart())
+        const url = API.Host + API.User 
+        const bodyFormData = new FormData()
+        bodyFormData.append('Name', name);
+        bodyFormData.append('Email', email);
+        bodyFormData.append('PhoneNumbers', phone);
+        bodyFormData.append('Password', password);
+        axios({
+            method: 'post',
+            url: url,
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data", "accept": "application/json" },
+        })
+            .then((res) => {
+                console.log('[ERROR][registerSucc] ' + JSON.stringify(res.data))
+                if (res.status == 200) {
+                    dispatch(registerSuccess(res.data))
+                } else {
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                console.log('[ERROR][registerFail] ' + error.message)
+                dispatch(loginFail(error.message))
             })
+
     }
 }
 
@@ -183,9 +216,9 @@ const getOfficeListInit = () => {
                             newO[e] = data[e][Object.keys(data[e])[0]]
                         })
                         // console.log("0111", '[OK][createUserFail] ' + JSON.stringify(newO))
-                        return {...newO, Image: require("../../images/hotel/lecafe.png")}
+                        return { ...newO, Image: require("../../images/hotel/lecafe.png") }
                     }
-                    return  {Image: require("../../images/hotel/lecafe.png")};
+                    return { Image: require("../../images/hotel/lecafe.png") };
                 });
                 dispatch(getOfficeListSuccess(List))
 

@@ -13,7 +13,8 @@ const userReducer = (state = initialUserState, action) => {
             return {
                 ...state,
                 error: null,
-                loading: true
+                loading: true,
+                currentUser: null
             }
         case ACTION_TYPE.LOGIN_SUCCESS:
         case ACTION_TYPE.REGISTER_SUCCESS:
@@ -29,7 +30,8 @@ const userReducer = (state = initialUserState, action) => {
             state = {
                 ...state,
                 loading: false,
-                error: action.payload
+                error: action.payload,
+                currentUser: null
             }
             return state
         case ACTION_TYPE.LOGOUT_SUCCESS:

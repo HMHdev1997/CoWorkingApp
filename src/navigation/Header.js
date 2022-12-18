@@ -17,8 +17,10 @@ import { faBarcode, faBookBookmark, faBookJournalWhills, faChartBar, faChartColu
 import CustomButton from "../custom_component/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../consts/firebase";
+import { useSelector } from "react-redux";
 const Hearder = ({ isShowFunction, isShowMassage }) => {
   const navigation = useNavigation()
+  const {currentUser} = useSelector(state => state.user)
   return (
     <View >
       <View style={style.navheader}>
@@ -43,7 +45,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
 
         </View>
         <TouchableOpacity style={{ paddingTop: "5%" }} onPress={() => {
-          if (auth?.currentUser) {
+          if (currentUser) {
             navigation.navigate("Profile")
           } else {
             navigation.navigate("LoginScreen")
