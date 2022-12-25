@@ -39,7 +39,7 @@ const Profile = () => {
     if (currentUser != null) {
       setPname(currentUser?.name || "")
       setPhone(currentUser?.email || "")
-      setEmail("0" +currentUser?.phoneNumbers.toString() || "") 
+      setEmail("0" +currentUser?.phoneNumbers?.toString() || "") 
     }
   }, [currentUser])
 

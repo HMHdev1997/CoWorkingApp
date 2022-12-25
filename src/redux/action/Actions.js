@@ -49,12 +49,14 @@ const loginInit = (email, password, isPhone) => {
                 console.log('[ERROR][loginSucc] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(loginSuccess(res.data))
-                } else {
+                }
+              
+                else {               
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {
                 console.log('[ERROR][loginFail] ' + error.message)
-                dispatch(loginFail(error.message))
+                dispatch(loginFail(error.response.request._response))
             })
     }
 }
@@ -99,12 +101,14 @@ const registerInit = (name, email, phone, password) => {
                 console.log('[ERROR][registerSucc] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(registerSuccess(res.data))
-                } else {
+                } 
+            
+                else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {
                 console.log('[ERROR][registerFail] ' + error.message)
-                dispatch(loginFail(error.message))
+                dispatch(loginFail(error.response.request._response))
             })
 
     }
