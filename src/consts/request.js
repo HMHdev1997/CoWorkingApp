@@ -4,6 +4,7 @@ export const API={
     Customer: "Customer",
     UserLogin: "User/Login",
     Office: "Office/paging",
+    Booking: "Booking",
     AreaId: 1,
 }
 

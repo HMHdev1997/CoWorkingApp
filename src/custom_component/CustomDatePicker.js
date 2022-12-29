@@ -8,7 +8,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 const CustomDatePicker = ({ name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility }) => {
-    const [date, setDate] = useState(value ? value : new Date("2010-01-01"))
+    const [date, setDate] = useState(value ? value : new Date())
 
     const onConfirm1 = (date) => {
         onConfirm(date)

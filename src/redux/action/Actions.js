@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from "./Const";
 import { auth, database } from "../../consts/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
-import { handleErrorAuth } from "../../consts/common"
+import { handleErrorAuth, showToast, TYPE_NOTI } from "../../consts/common"
 import { doc, query, limit, DocumentData, DocumentSnapshot, getDoc, getFirestore, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
 import { API, sendReq } from "../../consts/request"
 import axios from 'axios';
@@ -201,36 +201,8 @@ const getOfficeListFail = (error) => ({
 
 const getOfficeListInit = () => {
     return async function (dispatch) {
-    //     dispatch(getOfficeListStart())
-    //     const OfficeRef = collection(database, "Office");
+        dispatch(getOfficeListStart(data))
 
-    //     const q = query(OfficeRef, limit(10));
-
-    //     getDocs(q)
-    //         .then((querySnapshot) => {
-
-    //             const List = querySnapshot.docs.map((doc) => {
-    //                 const data = doc?._document.data.value.mapValue.fields
-
-    //                 if (data) {
-    //                     const objectK = Object.keys(data)
-    //                     const newO = { ...data }
-
-    //                     objectK.forEach((e) => {
-    //                         newO[e] = data[e][Object.keys(data[e])[0]]
-    //                     })
-    //                     // console.log("0111", '[OK][createUserFail] ' + JSON.stringify(newO))
-    //                     return { ...newO, Image: require("../../images/hotel/lecafe.png") }
-    //                 }
-    //                 return { Image: require("../../images/hotel/lecafe.png") };
-    //             });
-    //             dispatch(getOfficeListSuccess(List))
-
-    //         })
-    //         .catch((e) => {
-    //             console.log('[ERROR][createUserFail] ' + e.message)
-    //             dispatch(getOfficeListFail(e.message))
-    //         })
         const url = API.Host + API.Office + "?" + new URLSearchParams({
             AreaId: API.AreaId,
             PageIndex: 1,
@@ -267,4 +239,56 @@ const getOfficeListInit = () => {
     }
 }
 
-export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit }
+
+// Get user info
+const bookingStart = () => ({
+    type: ACTION_TYPE.BOOKING_START
+})
+
+const bookingSuccess = (list) => ({
+    type: ACTION_TYPE.BOOKING_SUCCESS,
+    payload: list
+})
+
+const bookingFail = (error) => ({
+    type: ACTION_TYPE.BOOKING_FAIL,
+    payload: error
+})
+
+const bookingInit = (officeId, customId, startTime) => {
+
+    return async function (dispatch) {
+        dispatch(bookingStart())
+
+        const url = API.Host + API.Booking 
+        const bodyFormData = new FormData()
+        bodyFormData.append('CustomerId', customId);
+        bodyFormData.append('OfficeId', officeId);
+        bodyFormData.append('StartTime', startTime);
+        bodyFormData.append('EndTime', startTime);
+        bodyFormData.append('Total', 1)
+        console.log(111111111, url, customId, officeId)
+        axios({
+            method: 'post',
+            url: url,
+            data: bodyFormData,
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    dispatch(bookingSuccess())
+                    showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
+                } else {               
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                showToast(TYPE_NOTI.ERROR, null, "Booking không thành công")
+
+                console.log('[ERROR][loginFail] ' + error.message)
+                dispatch(bookingFail(error.message))
+            })
+
+    }
+}
+
+
+export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit, bookingInit }

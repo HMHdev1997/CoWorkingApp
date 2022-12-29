@@ -12,12 +12,13 @@ import {
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import CustomButton from "../custom_component/CustomButton";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomLine from "../custom_component/CustomLine";
 import CustomDatePicker from "../custom_component/CustomDatePicker";
 import { isIOS } from "../custom_component/CustomAvatar";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
 import { showToast, TYPE_NOTI } from "../consts/common";
+import { bookingInit } from "../redux/action/Actions";
 const heightScreen = Dimensions.get("screen").height;
 
 const maxLineC = 10
@@ -76,17 +77,27 @@ const OrderScreen = ({ navigation, route }) => {
     const item = route.params;
     const [isShowMore, setShowMore] = useState(true)
     const [maxLine, setMaxLine] = useState(3)
-    const [birthday, setBirthday] = useState(new Date("2010-01-01"))
+    const [date, setDate] = useState(new Date("2010-01-01"))
+    const dispatch = useDispatch()
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const {currentUser} = useSelector(state => state.user)
     const handleConfirm = (date) => {
-        setBirthday(date)
+        setDate(date)
         hideDatePicker();
     };
 
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
+    const onBooking = () => {
+        dispatch(
+            bookingInit(
+                item.ID,
+                currentUser.ID,  
+                date.getUTCFullYear() +"/"+ (date.getUTCMonth()+1) +"/"+ date.getUTCDate()
+                ))
+    }
+    
     useEffect(()=>{
         if (currentUser) {
             // navigation.navigate("Profile")
@@ -136,7 +147,7 @@ const OrderScreen = ({ navigation, route }) => {
                             onConfirm={handleConfirm}
                             onCancel={hideDatePicker}
                             setVisibility={setDatePickerVisibility}
-                            value={birthday}
+                            value={date}
                         />
                         <View
                             style={{
@@ -156,7 +167,7 @@ const OrderScreen = ({ navigation, route }) => {
                 </View>
 
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <CustomButton name={"Xác nhận"} />
+                    <CustomButton name={"Xác nhận"} onPress={onBooking}/>
                 </View>
             </View>
         </View>
