@@ -14,6 +14,7 @@ import Tabs from "../navigation/Tabs";
 import 'react-native-gesture-handler';
 import AddPhotoScreen from "./AddPhotoScreen";
 import RegisterScreen from "./RegisterScreen";
+import OrderScreen from "./Order";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,7 +32,7 @@ const RootComponent = ({ navigation }) => {
         <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
         <Stack.Screen name="LoginScreen" component={Login} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-
+        <Stack.Screen name="OrderScreen" component={OrderScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

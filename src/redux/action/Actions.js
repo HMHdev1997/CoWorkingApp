@@ -108,7 +108,7 @@ const registerInit = (name, email, phone, password) => {
                 }
             }).catch(error => {
                 console.log('[ERROR][registerFail] ' + error.message)
-                dispatch(loginFail(error.response.request._response))
+                dispatch(registerFail(error.response.request._response))
             })
 
     }
@@ -201,36 +201,69 @@ const getOfficeListFail = (error) => ({
 
 const getOfficeListInit = () => {
     return async function (dispatch) {
-        dispatch(getOfficeListStart())
-        const OfficeRef = collection(database, "Office");
+    //     dispatch(getOfficeListStart())
+    //     const OfficeRef = collection(database, "Office");
 
-        const q = query(OfficeRef, limit(10));
+    //     const q = query(OfficeRef, limit(10));
 
-        getDocs(q)
-            .then((querySnapshot) => {
+    //     getDocs(q)
+    //         .then((querySnapshot) => {
 
-                const List = querySnapshot.docs.map((doc) => {
-                    const data = doc?._document.data.value.mapValue.fields
+    //             const List = querySnapshot.docs.map((doc) => {
+    //                 const data = doc?._document.data.value.mapValue.fields
 
-                    if (data) {
-                        const objectK = Object.keys(data)
-                        const newO = { ...data }
+    //                 if (data) {
+    //                     const objectK = Object.keys(data)
+    //                     const newO = { ...data }
 
-                        objectK.forEach((e) => {
-                            newO[e] = data[e][Object.keys(data[e])[0]]
+    //                     objectK.forEach((e) => {
+    //                         newO[e] = data[e][Object.keys(data[e])[0]]
+    //                     })
+    //                     // console.log("0111", '[OK][createUserFail] ' + JSON.stringify(newO))
+    //                     return { ...newO, Image: require("../../images/hotel/lecafe.png") }
+    //                 }
+    //                 return { Image: require("../../images/hotel/lecafe.png") };
+    //             });
+    //             dispatch(getOfficeListSuccess(List))
+
+    //         })
+    //         .catch((e) => {
+    //             console.log('[ERROR][createUserFail] ' + e.message)
+    //             dispatch(getOfficeListFail(e.message))
+    //         })
+        const url = API.Host + API.Office + "?" + new URLSearchParams({
+            AreaId: API.AreaId,
+            PageIndex: 1,
+            PageSize: 10,
+            TotalRecords: 10,
+            PageCount: 10,
+        })
+
+        axios({
+            method: 'get',
+            url: url,
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    var data = []
+                    if (res.data.Item) {
+
+                        data = res.data.Item.map((e) => {
+                            return {...e, Image: require("../../images/hotel/lecafe.png"), Price: 89}
                         })
-                        // console.log("0111", '[OK][createUserFail] ' + JSON.stringify(newO))
-                        return { ...newO, Image: require("../../images/hotel/lecafe.png") }
                     }
-                    return { Image: require("../../images/hotel/lecafe.png") };
-                });
-                dispatch(getOfficeListSuccess(List))
+                    // console.log('[ERROR][loginSucc] ' + JSON.stringify(data))
+                    dispatch(getOfficeListSuccess(data))
+                }
+              
+                else {               
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                console.log('[ERROR][loginFail] ' + error.message)
+                dispatch(getOfficeListFail( error.message))
+            })
 
-            })
-            .catch((e) => {
-                console.log('[ERROR][createUserFail] ' + e.message)
-                dispatch(getOfficeListFail(e.message))
-            })
     }
 }
 

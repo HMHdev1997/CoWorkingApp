@@ -6,7 +6,8 @@ const CustomLine = ({color, weight, style}) => {
     <View
     style={[{
         borderBottomColor: color || 'black',
-        borderBottomWidth: weight || 1,
+        borderBottomWidth: weight || 0.5,
+        alignSelf:"center"
       }, style]}
   />
   )

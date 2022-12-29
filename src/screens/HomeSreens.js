@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
   Dimensions,
   Image,
   Animated,
+  RefreshControl,
 } from "react-native";
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -21,20 +22,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { getOfficeListInit } from "../redux/action/Actions";
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
-
+const defaultList = [{Image: require("../images/hotel/lecafe.png"), Price: "80"}]
 const HomeSreens = ({ route, navigation }) => {
+  const [dataList, setData] = useState(defaultList)
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(getOfficeListInit())
-  }, [])
+  const [refreshing, setRefreshing] = useState(false)
+  const [scrollEnabled, setScrollEnabled] = useState(true)
+
+
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const { account } = route?.params || {};
   const scrollX = React.useRef(new Animated.Value(0)).current;
   const {officeList} = useSelector((state) => state.officeList)
   useEffect(() => {
-    // console.log(officeList)
+    setRefreshing(false)
+
+    if (officeList) {
+      setData(officeList)
+    } else {
+      dispatch(getOfficeListInit())
+      setData(defaultList)
+    }
   }, [officeList])
 
+
+  const onRefresh = () => {
+    setRefreshing(true)
+    dispatch(getOfficeListInit())
+  }
   const Cart = ({ Working, index }) => {
     return (
       <TouchableOpacity activeOpacity={1} onPress={() => navigation.navigate('DetailsScreen', Working)}>
@@ -45,7 +60,7 @@ const HomeSreens = ({ route, navigation }) => {
               style={{ color: Color.white, fontSize: 20, fontWeight: "bold" }}
             >
               {" "}
-              ${Working.Price}
+              ${Working?.Price?Working.Price:80}
             </Text>
           </View>
 
@@ -56,7 +71,7 @@ const HomeSreens = ({ route, navigation }) => {
             >
               <View>
                 <Text style={{ fontWeight: "bold", fontSize: 17 }}>
-                  {Working.Name}
+                  {Working.NameOffice}
                 </Text>
                 <Text style={{ fontWeight: "bold", fontSize: 13 }}>
                   {Working.Address}
@@ -110,7 +125,7 @@ const HomeSreens = ({ route, navigation }) => {
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-            {Working.Name}
+            {Working.NameOffice}
           </Text>
           <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
             {Working.Address}
@@ -143,7 +158,7 @@ const HomeSreens = ({ route, navigation }) => {
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
           <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-            {Working.Name}
+            {Working.NameOffice}
           </Text>
           <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
             {Working.Address}
@@ -189,7 +204,11 @@ const HomeSreens = ({ route, navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
       <Hearder isShowFunction={true} isShowMassage={true} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+      scrollEnabled={scrollEnabled}
+      refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
+       showsVerticalScrollIndicator={false}
+      >
         {/* <CategoryList /> */}
         {/* Hệ thống co Working Space */}
         <View>
@@ -210,7 +229,7 @@ const HomeSreens = ({ route, navigation }) => {
           </View>
           <FlatList
             horizontal
-            data={officeList}
+            data={dataList}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               paddingLeft: 20,
@@ -236,7 +255,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={officeList}
+            data={dataList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -266,7 +285,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={officeList}
+            data={dataList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -295,7 +314,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={officeList}
+            data={dataList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{

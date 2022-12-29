@@ -12,6 +12,7 @@ import {
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import CustomButton from "../custom_component/CustomButton";
+import { isIOS } from "../custom_component/CustomAvatar";
 const heightScreen = Dimensions.get("screen").height;
 
 const maxLineC = 10
@@ -67,7 +68,7 @@ const DetailsScreen = ({ navigation, route }) => {
             <Icon name="place" color={Color.white} size={28} />
           </View>
           <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.Name}</Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.NameOffice}</Text>
             <Text
               style={{
                 fontSize: 12,
@@ -131,11 +132,16 @@ const DetailsScreen = ({ navigation, route }) => {
             </View>
           </View>
         </View>
+        <View
+          style={{
+            marginBottom: 200
+          }}
+        ></View>
       </ScrollView>
       <View style={style.cardDetails}>
         <View style={{ flex: 1, flexDirection: "column", alignItems: "center" }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 17, marginTop: 5 }}> Check in: {item.Price}P/lượt</Text>
-          <View style={{ flexDirection: "row", marginTop: 20 }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Check in:{`\n\t\t`} {item.Price}P/lượt</Text>
+          <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Icon name="star" size={20} color={Color.grey} />
             <Icon name="star" size={20} color={Color.grey} />
             <Icon name="star" size={20} color={Color.grey} />
@@ -145,7 +151,7 @@ const DetailsScreen = ({ navigation, route }) => {
         </View>
 
         <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-          <CustomButton name={"Đặt lịch"} />
+          <CustomButton name={"Đặt lịch"} onPress={() => { navigation.navigate("OrderScreen", item) }} />
         </View>
       </View>
     </View>
@@ -199,7 +205,7 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
   },
   cardDetails: {
-    height: 200,
+    height: isIOS?200:100,
     borderRadius: 25,
     backgroundColor: Color.white,
     borderWidth: 0.5,

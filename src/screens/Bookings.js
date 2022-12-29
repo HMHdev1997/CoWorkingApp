@@ -19,9 +19,9 @@ const HEIGHT = Dimensions.get("screen").height;
 import Working from "../consts/Working";
 import { useSelector } from "react-redux";
 const CategoryList = () => {
-  const category = ["tất cả","HOT", "đã lưu"];
+  const category = ["Tất cả", "HOT", "Đã lưu"];
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
-  
+
   return (
     <View style={styles.categoryListContainer}>
       {category.map((item, index) => (
@@ -60,7 +60,7 @@ const CategoryList = () => {
 const Bookings = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [searchedList, setSList] = useState([]);
-  const {officeList} = useSelector((state) => state.officeList)
+  const { officeList } = useSelector((state) => state.officeList)
   useEffect(() => {
     setSList(officeList)
   }, [officeList])
@@ -119,7 +119,9 @@ const Bookings = ({ navigation }) => {
       <ScrollView>
         {officeList.map((e, i) => (
           <BookingLabel
+            navigation={navigation}
             key={i}
+            item={e}
             title={e.Name}
             source={e.Image}
             description={e.Detail}
