@@ -7,7 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 
-const CustomDatePicker = ({ name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility }) => {
+const CustomDatePicker = ({isbday, name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility }) => {
     const [date, setDate] = useState(value ? value : new Date())
 
     const onConfirm1 = (date) => {
@@ -32,8 +32,8 @@ const CustomDatePicker = ({ name, value, placeholder, secureTextEntry, setValue,
                     confirmTextIOS={'Chọn'}
                     cancelTextIOS={'Hủy'}
                     date={date}
-                    maximumDate={(new Date()).setDate((new Date()).getDate() + 60)}
-                    minimumDate={new Date()}
+                    maximumDate={isbday?(new Date()):(new Date()).setDate((new Date()).getDate() + 60)}
+                    minimumDate={isbday?(new Date()).setDate((new Date()).getDate()- 60000):(new Date())}
                     style={{}}
                 />
             </View>

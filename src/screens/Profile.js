@@ -20,40 +20,46 @@ import { showToast, isEmpty, TYPE_NOTI } from "../consts/common";
 import { auth } from "../consts/firebase";
 import { useDispatch, useSelector } from 'react-redux';
 import { createUserInit } from "../redux/action/Actions";
+import CustomDatePicker from "../custom_component/CustomDatePicker";
 const Profile = () => {
   const navigation = useNavigation()
-  const {currentUser}= useSelector((state) => state.user)
+  const { userInfo } = useSelector((state) => state.userInfo)
+  const { currentUser, phoneN } = useSelector((state) => state.user)
 
   const [pname, setPname] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [bday, setBDay] = useState("");
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
+  const [id, setID] = useState("");
+
   const [loading, setLoading] = useState(false);
 
   const [avatarUri, setAvatarUri] = useState(null)
-
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [date, setDate] = useState(userInfo?.DateOfBirth ? (new Date(userInfo?.DateOfBirth)) : new Date("2010-01-01"))
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+  const handleConfirm = (date) => {
+    setDate(date)
+    hideDatePicker();
+  };
   const dispatch = useDispatch()
   useEffect(() => {
-    if (currentUser != null) {
-      setPname(currentUser?.name || "")
-      setPhone(currentUser?.email || "")
-      setEmail("0" +currentUser?.phoneNumbers?.toString() || "") 
-    }
-  }, [currentUser])
+    // console.log(2222, userInfo, phoneN)
+    // setDate(new Date(userInfo?.DateOfBirth))
 
-  // useEffect(() => {
-  //   if (loading && userInfoReducer != null && userInfoReducer?.loading == false) {
-  //     if (userInfoReducer?.error) {
-  //       showToast(TYPE_NOTI.ERROR, null, "Cập nhật thất bại")
-  //     } else {
-  //       showToast(TYPE_NOTI.SUCCESS, null, "Cập nhật thành công")
-  //     }
-  //   }
-  //   setLoading(userInfoReducer?.loading || false)
-  // }, [userInfoReducer?.loading])
-  // console.log(userInfoReducer)
+    if (userInfo != null) {
+      setPname(userInfo?.FullName || "")
+      setPhone("0" + currentUser?.PhoneNumbers || "")
+      setGender(userInfo?.Gender || "")
+      setAddress(userInfo?.Address || "")
+      setID(userInfo?.IdentifierCode?.toString() || "")
+      setEmail(currentUser?.Email || "")
+      setDate(new Date(userInfo?.DateOfBirth))
+    }
+  }, [userInfo, phoneN])
 
   const ProfileList = [
     {
@@ -76,12 +82,6 @@ const Profile = () => {
       isNotNull: true,
     },
     {
-      name: "Ngày sinh",
-      value: bday,
-      setValue: setBDay,
-      isNotNull: true,
-    },
-    {
       name: "Giới tính",
       value: gender,
       setValue: setGender,
@@ -94,11 +94,10 @@ const Profile = () => {
       isNotNull: true,
     },
     {
-      name: "Ngày tạo",
-      value: auth?.currentUser?.metadata?.creationTime || "",
-      setValue: () => { },
+      name: "CMT/CCCD",
+      value: id,
+      setValue: setID,
       isNotNull: true,
-      isEditable: false,
     },
   ]
 
@@ -118,24 +117,21 @@ const Profile = () => {
       return
     }
 
-    if (isEmpty(bday)) {
-      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền ngày sinh")
-      return
-    }
-
     if (isEmpty(address)) {
       showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền địa chỉ")
       return
     }
 
     const userInfo = {
-      name: pname,
-      gender: gender,
-      phone_number: phone,
-      email: auth?.currentUser?.email ? auth?.currentUser?.email : undefined,
-      birthday: bday,
-      address: address,
-      register_date: auth?.currentUser?.metadata?.creationTime || ""
+      ID: currentUser?.ID,
+      FullName: pname,
+      Gender: gender,
+      PhoneNumbers: phone,
+      Email: email,
+      DateOfBirth: date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
+      Address: address,
+      IdentifierCode: id,
+      Point: userInfo?.Point
     }
 
     dispatch(createUserInit(userInfo))
@@ -168,7 +164,7 @@ const Profile = () => {
             ProfileList.map((e, i) => <CustomInput
               key={i}
               isName={true}
-              width='90%'
+              width='100%'
               name={e.name}
               value={e.value}
               setValue={e.setValue}
@@ -177,11 +173,20 @@ const Profile = () => {
 
             </CustomInput>)
           }
+          <CustomDatePicker
+            isbday={true}
+            width={"100%"} name='Ngày sinh'
+            isVisible={isDatePickerVisible}
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+            setVisibility={setDatePickerVisibility}
+            value={date}
+          />
 
         </View>
       </ScrollView>
       <View style={{ marginBottom: "10%" }}>
-        <CustomButton name={"Lưu thay đổi"} onPress={()=>{}}></CustomButton>
+        <CustomButton name={"Lưu thay đổi"} onPress={onUpdate}></CustomButton>
       </View>
     </SafeAreaView>
   );
