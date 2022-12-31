@@ -24,6 +24,7 @@ const loginFail = (error) => ({
 const loginInit = (email, password, isPhone) => {
     return function (dispatch) {
         dispatch(loginStart())
+
         // signInWithEmailAndPassword(auth, email, password)
         //     .then(({ user }) => {
         //         dispatch(getUserInit())
@@ -49,14 +50,15 @@ const loginInit = (email, password, isPhone) => {
                 console.log('[ERROR][loginSucc] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(loginSuccess(res.data))
+                    dispatch(getUserInit(res.data.ID))
                 }
-              
-                else {               
+
+                else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {
                 console.log('[ERROR][loginFail] ' + error.message)
-                dispatch(loginFail(error.response.request._response))
+                dispatch(loginFail(error.response.request._response|| error.message))
             })
     }
 }
@@ -85,7 +87,7 @@ const registerInit = (name, email, phone, password) => {
     return function (dispatch) {
 
         dispatch(registerStart())
-        const url = API.Host + API.User 
+        const url = API.Host + API.User
         const bodyFormData = new FormData()
         bodyFormData.append('Name', name);
         bodyFormData.append('Email', email);
@@ -101,8 +103,8 @@ const registerInit = (name, email, phone, password) => {
                 console.log('[ERROR][registerSucc] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(registerSuccess(res.data))
-                } 
-            
+                }
+
                 else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
@@ -132,18 +134,38 @@ const createUserFail = (error) => ({
 const createUserInit = (userInfo) => {
     return async function (dispatch) {
         dispatch(createUserStart())
-        const auth = getAuth()
-        updateProfile(auth.currentUser, { displayName: userInfo.name, phoneNumber: userInfo.phone })
-        const docRef = doc(getFirestore(), "Customers", auth.currentUser?.uid);
-        // Set the 'capital' field of the city
-        setDoc(docRef, { ...userInfo }, { merge: true })
-            .then(() => {
-                dispatch(createUserSuccess({ ...userInfo, id: auth.currentUser?.uid }))
-            })
-            .catch((error) => {
-                console.log('[ERROR][createUserFail] ' + error.message)
+        const url = API.Host + API.Customer
+        const bodyFormData = new FormData()
+        bodyFormData.append('Address', userInfo.Address);
+        bodyFormData.append('DateOfBirth', userInfo.DateOfBirth);
+        bodyFormData.append('Email', userInfo.Email);
+        bodyFormData.append('FullName', userInfo.FullName);
+        bodyFormData.append('Gender', userInfo.Gender)
+        bodyFormData.append('IdentifierCode', userInfo.IdentifierCode)
+        bodyFormData.append('PhoneNumbers', userInfo.PhoneNumbers)
+        bodyFormData.append('Point', userInfo.Point)
+        bodyFormData.append('Id', userInfo.ID)
+
+        console.log(111111111, url,  userInfo.Address,  userInfo.Email)
+        axios({
+            method: 'put',
+            url: url,
+            data: bodyFormData,
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    dispatch(createUserSuccess(res.data))
+                    showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
+                } else {
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
+
+                console.log('[ERROR][loginFail] ' + error.message)
                 dispatch(createUserFail(error.message))
             })
+
     }
 }
 
@@ -162,11 +184,30 @@ const getUserFail = (error) => ({
     payload: error
 })
 
-const getUserInit = () => {
+const getUserInit = (uid) => {
     return async function (dispatch) {
         dispatch(getUserStart())
-        // const expoToken = await registerForPushNotificationsAsync()
-        const docRef = doc(getFirestore(), "Customers", auth.currentUser?.uid);
+        const url = API.Host + API.User + "?" + new URLSearchParams({
+            id: uid,
+        })
+
+        axios({
+            method: 'get',
+            url: url,
+        })
+            .then((res) => {
+                console.log('[ERROR][getUserSuccess] ' + JSON.stringify(res.data))
+                if (res.status == 200) {
+                    dispatch(getUserSuccess(res.data))
+                }
+
+                else {
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                console.log('[ERROR][loginFail] ' + error.message)
+                dispatch(getUserFail(error.response.request._response|| error.message))
+            })
 
         try {
             const docSnap = await getDoc(docRef)
@@ -201,7 +242,7 @@ const getOfficeListFail = (error) => ({
 
 const getOfficeListInit = () => {
     return async function (dispatch) {
-        // dispatch(getOfficeListStart(data))
+        dispatch(getOfficeListStart(data))
 
         const url = API.Host + API.Office + "?" + new URLSearchParams({
             AreaId: API.AreaId,
@@ -221,19 +262,19 @@ const getOfficeListInit = () => {
                     if (res.data.Item) {
 
                         data = res.data.Item.map((e) => {
-                            return {...e, Image: require("../../images/hotel/lecafe.png"), Price: 89}
+                            return { ...e, Image: require("../../images/hotel/lecafe.png"), Price: 89 }
                         })
                     }
                     console.log('[ERROR][loginSucc] ' + JSON.stringify(data))
                     dispatch(getOfficeListSuccess(data))
                 }
-              
-                else {               
+
+                else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {
                 console.log('[ERROR][loginFail] ' + error.message)
-                dispatch(getOfficeListFail( error.message))
+                dispatch(getOfficeListFail(error.message))
             })
 
     }
@@ -260,7 +301,7 @@ const bookingInit = (officeId, customId, startTime) => {
     return async function (dispatch) {
         dispatch(bookingStart())
 
-        const url = API.Host + API.Booking 
+        const url = API.Host + API.Booking
         const bodyFormData = new FormData()
         bodyFormData.append('CustomerId', customId);
         bodyFormData.append('OfficeId', officeId);
@@ -277,7 +318,7 @@ const bookingInit = (officeId, customId, startTime) => {
                 if (res.status == 200) {
                     dispatch(bookingSuccess())
                     showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
-                } else {               
+                } else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {

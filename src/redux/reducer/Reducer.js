@@ -3,7 +3,8 @@ import { ACTION_TYPE } from "../action/Const"
 const initialUserState = {
     loading: false,
     currentUser: null,
-    error: null
+    error: null,
+    phoneN: "",
 }
 
 const userReducer = (state = initialUserState, action) => {
@@ -22,7 +23,8 @@ const userReducer = (state = initialUserState, action) => {
                 ...state,
                 loading: false,
                 error: null,
-                currentUser: action.payload
+                currentUser: action.payload,
+                phoneN: action.payload.PhoneNumbers
             }
             return newState
         case ACTION_TYPE.LOGIN_FAIL:
@@ -39,7 +41,8 @@ const userReducer = (state = initialUserState, action) => {
                 ...state,
                 loading: false,
                 error: null,
-                currentUser: null
+                currentUser: null,
+                phoneN: "",
             }
             return state
         default:
@@ -51,7 +54,7 @@ const userReducer = (state = initialUserState, action) => {
 const initialUserInfoState = {
     loading: false,
     userInfo: null,
-    error: null
+    error: null,
 }
 
 const userInfoReducer = (state = initialUserInfoState, action) => {
@@ -68,12 +71,11 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
         case ACTION_TYPE.GET_USER_INFO_SUCCESS:
         case ACTION_TYPE.CREATE_USER_INFO_SUCCESS:
         case ACTION_TYPE.UPDATE_USER_INFO_SUCCESS:
-
             return {
                 ...state,
                 loading: false,
                 error: null,
-                userInfo: {...action.payload}
+                userInfo: {...action.payload},
             }
         case ACTION_TYPE.GET_USER_INFO_FAIL:
         case ACTION_TYPE.CREATE_USER_INFO_FAIL:
@@ -89,7 +91,7 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
                 ...state,
                 loading: false,
                 error: null,
-                userInfo: null
+                userInfo: null,
             }
         default:
             return state
