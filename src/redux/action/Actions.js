@@ -201,7 +201,7 @@ const getOfficeListFail = (error) => ({
 
 const getOfficeListInit = () => {
     return async function (dispatch) {
-        dispatch(getOfficeListStart(data))
+        // dispatch(getOfficeListStart(data))
 
         const url = API.Host + API.Office + "?" + new URLSearchParams({
             AreaId: API.AreaId,
@@ -224,7 +224,7 @@ const getOfficeListInit = () => {
                             return {...e, Image: require("../../images/hotel/lecafe.png"), Price: 89}
                         })
                     }
-                    // console.log('[ERROR][loginSucc] ' + JSON.stringify(data))
+                    console.log('[ERROR][loginSucc] ' + JSON.stringify(data))
                     dispatch(getOfficeListSuccess(data))
                 }
               

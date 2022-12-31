@@ -93,13 +93,13 @@ const Profile = () => {
       setValue: setAddress,
       isNotNull: true,
     },
-    {
-      name: "Ngày tạo",
-      value: auth?.currentUser?.metadata?.creationTime || "",
-      setValue: () => { },
-      isNotNull: true,
-      isEditable: false,
-    },
+    // {
+    //   name: "Ngày tạo",
+    //   value: auth?.currentUser?.metadata?.creationTime || "",
+    //   setValue: () => { },
+    //   isNotNull: true,
+    //   isEditable: false,
+    // },
   ]
 
   const onUpdate = () => {
