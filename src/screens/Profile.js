@@ -94,10 +94,11 @@ const Profile = () => {
       isNotNull: true,
     },
     {
-      name: "CMT/CCCD",
-      value: id,
-      setValue: setID,
+      name: "Ngày tạo",
+      value: auth?.currentUser?.metadata?.creationTime || "",
+      setValue: () => { },
       isNotNull: true,
+      isEditable: false,
     },
   ]
 
