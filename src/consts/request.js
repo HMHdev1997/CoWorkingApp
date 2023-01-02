@@ -1,9 +1,14 @@
 export const API={
-    Host: "http://192.168.1.9:5000/api/",
+    Host: "http://192.168.1.6:5000/api/",
     User: "User",
     Customer: "Customer",
     UserLogin: "User/Login",
     Office: "Office/paging",
+    OfficeID: "Office",
+
+    CategoryOffice: "CategoryOffice",
+    CategoryOfficeAll: "CategoryOffice/all",
+
     Booking: "Booking",
     AreaId: 1,
 }

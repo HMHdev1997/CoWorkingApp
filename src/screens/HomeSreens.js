@@ -19,12 +19,71 @@ import Hearder from "../navigation/Header";
 import CustomLabel from "../custom_component/CustomLabel";
 import Working from "../consts/Working";
 import { useDispatch, useSelector } from "react-redux";
-import { getOfficeListInit } from "../redux/action/Actions";
+import { getCategoryInit, getOfficeListInit } from "../redux/action/Actions";
+import axios from "axios";
+import { API } from "../consts/request";
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
-const defaultList = [{Image: require("../images/hotel/lecafe.png"), Price: "80"}]
+const defaultList = []
+const checkContainId = (array, id) => {
+  return array.find((x) => x.ID == id) !== undefined;
+}
+
+const getOfficebyId = async (id) => {
+  try {
+    const res = await axios({
+      method: 'get',
+      url: API.Host + API.OfficeID + `/ID?id=${id}`,
+    })
+    if (res.status == 200) {
+      if (res.data) {
+        return res.data
+      }
+    }
+  } catch (error) {
+    console.log('[ERROR][getOfficebyId] ' + error.message)
+    return undefined
+  }
+}
+const getListbyId = async (id) => {
+  const url = API.Host + API.CategoryOffice + `?id=${1}`
+  var data = []
+  try {
+    const res = await axios({
+      method: 'get',
+      url: url,
+    })
+    if (res.status == 200) {
+      if (res.data) {
+        if (res.data.OfficeInCategory) {
+          await Promise.all(res.data.OfficeInCategory.map(async e => {
+            const element = await getOfficebyId(e.OfficeId)
+            if (element) {
+              data.push(element)
+            }
+          }))
+          return data
+        }
+      }
+      return data
+    }
+
+    else {
+      throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+    }
+  } catch (error) {
+    console.log('[ERROR][getCategoryInit] ' + error.message)
+    return data
+  }
+}
 const HomeSreens = ({ route, navigation }) => {
   const [dataList, setData] = useState(defaultList)
+  const [CoWorkingSpaceList, setCoWorkingSpaceList] = useState(defaultList)
+
+  const [fullOffice, setFullOffice] = useState(defaultList)
+  const [eventList, setEventList] = useState(defaultList)
+  const [slotList, setSlotList] = useState(defaultList)
+
   const dispatch = useDispatch()
   const [refreshing, setRefreshing] = useState(false)
   const [scrollEnabled, setScrollEnabled] = useState(true)
@@ -33,7 +92,9 @@ const HomeSreens = ({ route, navigation }) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
   const { account } = route?.params || {};
   const scrollX = React.useRef(new Animated.Value(0)).current;
-  const {officeList} = useSelector((state) => state.officeList)
+  const { officeList } = useSelector((state) => state.officeList)
+  const { categoryList } = useSelector((state) => state.categoryList)
+
   useEffect(() => {
     setRefreshing(false)
 
@@ -46,8 +107,37 @@ const HomeSreens = ({ route, navigation }) => {
   }, [officeList])
 
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setRefreshing(false)
+
+      if (categoryList) {
+        if (checkContainId(categoryList, 1)) {
+          setCoWorkingSpaceList(await getListbyId(1))
+        }
+        if (checkContainId(categoryList, 2)) {
+          setFullOffice(await getListbyId(2))
+        }
+
+        if (checkContainId(categoryList, 3)) {
+          setEventList(await getListbyId(3))
+        }
+        if (checkContainId(categoryList, 4)) {
+          setSlotList(await getListbyId(4))
+        }
+
+      } else {
+      }
+    }
+    fetchData()
+    // make sure to catch any error
+    .catch(console.error);
+  }, [categoryList])
+
   const onRefresh = () => {
     setRefreshing(true)
+    dispatch(getCategoryInit())
+
     dispatch(getOfficeListInit())
   }
   const Cart = ({ Working, index }) => {
@@ -60,7 +150,7 @@ const HomeSreens = ({ route, navigation }) => {
               style={{ color: Color.white, fontSize: 20, fontWeight: "bold" }}
             >
               {" "}
-              ${Working?.Price?Working.Price:80}
+              ${Working?.Price ? Working.Price : 80}
             </Text>
           </View>
 
@@ -205,9 +295,9 @@ const HomeSreens = ({ route, navigation }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: Color.white }}>
       <Hearder isShowFunction={true} isShowMassage={true} />
       <ScrollView
-      scrollEnabled={scrollEnabled}
-      refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
-       showsVerticalScrollIndicator={false}
+        scrollEnabled={scrollEnabled}
+        refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
+        showsVerticalScrollIndicator={false}
       >
         {/* <CategoryList /> */}
         {/* Hệ thống co Working Space */}
@@ -229,7 +319,7 @@ const HomeSreens = ({ route, navigation }) => {
           </View>
           <FlatList
             horizontal
-            data={dataList}
+            data={CoWorkingSpaceList}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               paddingLeft: 20,
@@ -255,7 +345,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={dataList}
+            data={fullOffice}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -285,7 +375,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={dataList}
+            data={eventList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -314,7 +404,7 @@ const HomeSreens = ({ route, navigation }) => {
             <Text style={{ color: Color.blue }}> Xem Thêm </Text>
           </View>
           <FlatList
-            data={dataList}
+            data={slotList}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{

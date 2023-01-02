@@ -162,7 +162,7 @@ const createUserInit = (userInfo) => {
             }).catch(error => {
                 showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
 
-                console.log('[ERROR][loginFail] ' + error.message)
+                console.log('[ERROR][createUserInit] ' + error.message)
                 dispatch(createUserFail(error.message))
             })
 
@@ -205,7 +205,7 @@ const getUserInit = (uid) => {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {
-                console.log('[ERROR][loginFail] ' + error.message)
+                console.log('[ERROR][getUserInit] ' + error.message)
                 dispatch(getUserFail(error.response.request._response|| error.message))
             })
 
@@ -273,12 +273,62 @@ const getOfficeListInit = () => {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             }).catch(error => {
-                console.log('[ERROR][loginFail] ' + error.message)
+                console.log('[ERROR][getOfficeListInit] ' + error.message)
                 dispatch(getOfficeListFail(error.message))
             })
 
     }
 }
+
+// Get user info
+const getCategoryStart = () => ({
+    type: ACTION_TYPE.GET_CATEGORY_START
+})
+
+const getCategorySuccess = (list) => ({
+    type: ACTION_TYPE.GET_CATEGORY_SUCCESS,
+    payload: list
+})
+
+const getCategoryFail = (error) => ({
+    type: ACTION_TYPE.GET_CATEGORY_FAIL,
+    payload: error
+})
+
+const getCategoryInit = () => {
+    return async function (dispatch) {
+        dispatch(getCategoryStart())
+
+        const url = API.Host + API.CategoryOfficeAll
+
+        axios({
+            method: 'get',
+            url: url,
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    var data = []
+                    if (res.data) {
+
+                        data = res.data.map((e) => {
+                            return { ID: e.ID, Name: e.Name, Decription: e.Decription }
+                        })
+                    }
+                    // console.log('[ERROR][Category] ' + JSON.stringify(res.data))
+                    dispatch(getCategorySuccess(data))
+                }
+
+                else {
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                console.log('[ERROR][getCategoryInit] ' + error.message)
+                dispatch(getCategoryFail(error.message))
+            })
+
+    }
+}
+
 
 
 // Get user info
@@ -324,7 +374,7 @@ const bookingInit = (officeId, customId, startTime) => {
             }).catch(error => {
                 showToast(TYPE_NOTI.ERROR, null, "Booking không thành công")
 
-                console.log('[ERROR][loginFail] ' + error.message)
+                console.log('[ERROR][bookingInit] ' + error.message)
                 dispatch(bookingFail(error.message))
             })
 
@@ -332,4 +382,4 @@ const bookingInit = (officeId, customId, startTime) => {
 }
 
 
-export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit, bookingInit }
+export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit, bookingInit, getCategoryInit }

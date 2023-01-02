@@ -139,4 +139,46 @@ const officeListReducer = (state = initialOfficeListState, action) => {
 
     }
 }
-export { userReducer, userInfoReducer, officeListReducer } 
+
+const initialCategoryListState={
+    loading: false,
+    categoryList: [],
+    error: null
+}
+
+const categoryListReducer = (state = initialOfficeListState, action) => {
+    switch (action.type) {
+        case ACTION_TYPE.GET_CATEGORY_START:
+            const newState = {
+                ...state,
+                error: null,
+                loading: true
+            }
+            return newState
+        case ACTION_TYPE.GET_CATEGORY_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                categoryList: [...action.payload]
+            }
+        case ACTION_TYPE.GET_CATEGORY_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+                categoryList: [],
+            }
+        case ACTION_TYPE.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                categoryList: []
+            }
+        default:
+            return state
+
+    }
+}
+export { userReducer, userInfoReducer, officeListReducer, categoryListReducer } 
