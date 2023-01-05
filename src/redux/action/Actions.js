@@ -146,7 +146,7 @@ const createUserInit = (userInfo) => {
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
 
-        console.log(111111111, url,  userInfo.Address,  userInfo.Email)
+        console.log(111111111, url, userInfo.ID,  userInfo.Email)
         axios({
             method: 'put',
             url: url,
@@ -353,7 +353,7 @@ const bookingInit = (officeId, customId, startTime) => {
 
         const url = API.Host + API.Booking
         const bodyFormData = new FormData()
-        bodyFormData.append('CustomerId', customId);
+        bodyFormData.append('UserId', customId);
         bodyFormData.append('OfficeId', officeId);
         bodyFormData.append('StartTime', startTime);
         bodyFormData.append('EndTime', startTime);

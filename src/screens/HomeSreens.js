@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategoryInit, getOfficeListInit } from "../redux/action/Actions";
 import axios from "axios";
 import { API } from "../consts/request";
+import { async } from "@firebase/util";
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
 const defaultList = []
@@ -37,6 +38,16 @@ const getOfficebyId = async (id) => {
     })
     if (res.status == 200) {
       if (res.data) {
+        if (res.data.OfficeImages) {
+          var imageList = []
+          await Promise.all(res.data.OfficeImages.map(async e=> {
+            const imageData = await getImageById(e.ID)
+            if (imageData) {
+              imageList.push(imageData)
+            }
+          }))
+          res.data.ImageList = imageList
+        }
         return res.data
       }
     }
@@ -46,7 +57,7 @@ const getOfficebyId = async (id) => {
   }
 }
 const getListbyId = async (id) => {
-  const url = API.Host + API.CategoryOffice + `?id=${1}`
+  const url = API.Host + API.CategoryOffice + `?id=${id}`
   var data = []
   try {
     const res = await axios({
@@ -76,6 +87,27 @@ const getListbyId = async (id) => {
     return data
   }
 }
+
+const getImageById = async (id) => {
+  const url = API.Host + API.OfficeImage + `?id=${id}`
+  try {
+    const res = await axios({
+      method: 'get',
+      url: url,
+    })
+    if (res.status == 200) {
+      if (res.data) {
+        if (res.data) {
+          return res.data.FileContents
+        }
+      }
+    }
+  } catch (error) {
+    console.log('[ERROR][getImageById] ' + error.message)
+    return undefined
+  }
+}
+
 const HomeSreens = ({ route, navigation }) => {
   const [dataList, setData] = useState(defaultList)
   const [CoWorkingSpaceList, setCoWorkingSpaceList] = useState(defaultList)
@@ -109,9 +141,10 @@ const HomeSreens = ({ route, navigation }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setRefreshing(false)
 
       if (categoryList) {
+        setRefreshing(false)
+
         if (checkContainId(categoryList, 1)) {
           setCoWorkingSpaceList(await getListbyId(1))
         }
@@ -130,15 +163,15 @@ const HomeSreens = ({ route, navigation }) => {
       }
     }
     fetchData()
-    // make sure to catch any error
-    .catch(console.error);
+      // make sure to catch any error
+      .catch(console.error);
   }, [categoryList])
 
   const onRefresh = () => {
     setRefreshing(true)
     dispatch(getCategoryInit())
 
-    dispatch(getOfficeListInit())
+    // dispatch(getOfficeListInit())
   }
   const Cart = ({ Working, index }) => {
     return (
@@ -154,7 +187,7 @@ const HomeSreens = ({ route, navigation }) => {
             </Text>
           </View>
 
-          <Image source={Working.Image} style={style.cardImage} />
+          <Image source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} style={style.cardImage} />
           <View style={style.cardDetails}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -210,7 +243,7 @@ const HomeSreens = ({ route, navigation }) => {
             5.0
           </Text>
         </View>
-        <Image style={style.topHotelCardImage} source={Working.Image} />
+        <Image style={style.topHotelCardImage} source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} />
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
@@ -243,7 +276,7 @@ const HomeSreens = ({ route, navigation }) => {
             5.0
           </Text>
         </View>
-        <Image style={style.topHotelCardImage} source={Working.Image} />
+        <Image style={style.topHotelCardImage} source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} />
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
@@ -276,7 +309,7 @@ const HomeSreens = ({ route, navigation }) => {
             5.0
           </Text>
         </View>
-        <Image style={style.topHotelCardImage} source={Working.Image} />
+        <Image style={style.topHotelCardImage} source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} />
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >

@@ -52,7 +52,7 @@ const DetailsScreen = ({ navigation, route }) => {
           translucent
           backgroundColor="rgba(0,0,0,0)"
         />
-        <ImageBackground style={style.headerImage} source={item.Image}>
+        <ImageBackground style={style.headerImage} source={{uri:"data:image/jpeg;base64,"+item.ImageList[0]}}>
           <View style={style.header}>
             <Icon
               name="arrow-back-ios"

@@ -9,6 +9,7 @@ export const API={
     CategoryOffice: "CategoryOffice",
     CategoryOfficeAll: "CategoryOffice/all",
 
+    OfficeImage: "OfficeImage/id",
     Booking: "Booking",
     AreaId: 1,
 }

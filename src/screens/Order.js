@@ -63,11 +63,11 @@ const Customer = () => {
             </View>
             <View style={{ flexDirection: "row", marginTop: 5 }}>
                 <Text style={{ fontSize: 14, fontWeight: "400", alignItems: "flex-start", flex: 1 }}>Số điện thoại</Text>
-                <Text style={{ fontSize: 14, fontWeight: "400", alignItems: "flex-end", flex: 1 }}>{currentUser?.phoneNumbers?.toString() ? "0" + currentUser?.phoneNumbers?.toString() : ""}</Text>
+                <Text style={{ fontSize: 14, fontWeight: "400", alignItems: "flex-end", flex: 1 }}>{currentUser?.PhoneNumbers ? "0" + currentUser?.PhoneNumbers : ""}</Text>
             </View>
             <View style={{ flexDirection: "row", marginTop: 5 }}>
                 <Text style={{ fontSize: 14, fontWeight: "400", alignItems: "flex-start", flex: 1 }}>Email</Text>
-                <Text style={{ fontSize: 14, fontWeight: "400", alignItems: "flex-end", flex: 1 }}>{currentUser?.email}</Text>
+                <Text style={{ fontSize: 14, fontWeight: "400", alignItems: "flex-end", flex: 1 }}>{currentUser?.Email}</Text>
             </View>
         </View>
     )
@@ -129,7 +129,7 @@ const OrderScreen = ({ navigation, route }) => {
                     <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
                         <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 10 }}>Dịch vụ</Text>
                        
-                        <ImageBackground style={style.headerImage} source={item.Image} />
+                        <ImageBackground style={style.headerImage} source={{uri:"data:image/jpeg;base64,"+item.ImageList[0]}} />
                         <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>{item.NameOffice}</Text>
                         <Text
                             style={{
