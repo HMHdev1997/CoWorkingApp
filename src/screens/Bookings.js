@@ -10,6 +10,7 @@ import {
   Keyboard,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import Color from "../consts/Color";
 import BookingLabel from "../custom_component/BookingLabel";
@@ -17,7 +18,8 @@ import CustomInput from "../custom_component/CustomInput";
 const WIDTH = Dimensions.get("screen").width;
 const HEIGHT = Dimensions.get("screen").height;
 import Working from "../consts/Working";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getOfficeListInit } from "../redux/action/Actions";
 const CategoryList = () => {
   const category = ["Tất cả", "HOT", "Đã lưu"];
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
@@ -61,21 +63,32 @@ const Bookings = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [searchedList, setSList] = useState([]);
   const { officeList } = useSelector((state) => state.officeList)
+  const dispatch = useDispatch()
+  const [refreshing, setRefreshing] = useState(false)
+  const [scrollEnabled, setScrollEnabled] = useState(true)
+  const onRefresh = () => {
+    setRefreshing(true)
+    dispatch(getOfficeListInit())
+  }
   useEffect(() => {
+    setRefreshing(false)
+    // if (officeList.length == 0) {
+    //   dispatch(getOfficeListInit())
+    // }
     setSList(officeList)
   }, [officeList])
   const onSearch = () => {
     Keyboard.dismiss();
     if (search == "") {
-      setSList(eventList);
+      setSList(officeList);
     } else {
       setSList(
-        eventList.filter(
+        searchedList.filter(
           (e) =>
-            e.title.toLowerCase().includes(search.toLowerCase()) ||
-            e.description.toLowerCase().includes(search.toLowerCase()) ||
-            e.checkinTime.toLowerCase().includes(search.toLowerCase()) ||
-            e.price.toLowerCase().includes(search.toLowerCase())
+            e.NameOffice.toLowerCase().includes(search.toLowerCase()) ||
+            e.Detail.toLowerCase().includes(search.toLowerCase()) ||
+            e.Address.toLowerCase().includes(search.toLowerCase()) ||
+            e.GenenalDecription.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
@@ -100,7 +113,7 @@ const Bookings = ({ navigation }) => {
             setValue={setSearch}
           ></CustomInput>
         </View>
-        <Pressable
+        <TouchableOpacity
           style={{
             flex: 1,
             marginVertical: Dimensions.get("screen").height * 0.02,
@@ -112,19 +125,22 @@ const Bookings = ({ navigation }) => {
             icon={faSearch}
             color={Color.lightblue}
           ></FontAwesomeIcon>
-        </Pressable>
+        </TouchableOpacity>
       </View>
       <CategoryList />
 
-      <ScrollView>
-        {officeList.map((e, i) => (
+      <ScrollView
+        refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
+      >
+        {searchedList.map((e, i) => (
           <BookingLabel
             navigation={navigation}
             key={i}
             item={e}
-            title={e.Name}
-            source={e.Image}
+            title={e.NameOffice}
+            source={{ uri: "data:image/jpeg;base64," + e.ImageList[0] }}
             description={e.Detail}
+            address={e.Address}
             checkinTime={"08:00-20:00"}
             price={e.Discount}
             onPress={() => navigation.navigate("DetailsScreen", e)}

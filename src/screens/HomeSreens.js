@@ -113,10 +113,10 @@ const HomeSreens = ({ route, navigation }) => {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <View>
-                <Text style={{ fontWeight: "bold", fontSize: 17 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 17 }} numberOfLines={1}>
                   {Working.NameOffice}
                 </Text>
-                <Text style={{ fontWeight: "bold", fontSize: 13 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 13 }} numberOfLines={1}>
                   {Working.Address}
                 </Text>
               </View>
@@ -167,10 +167,10 @@ const HomeSreens = ({ route, navigation }) => {
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
-          <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
             {Working.Address}
           </Text>
         </View>
@@ -200,10 +200,10 @@ const HomeSreens = ({ route, navigation }) => {
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
-          <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
             {Working.Address}
           </Text>
         </View>
@@ -233,10 +233,10 @@ const HomeSreens = ({ route, navigation }) => {
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
-          <Text style={{ fontSize: 10, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
             {Working.Name}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }}>
+          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
             {Working.Address}
           </Text>
         </View>

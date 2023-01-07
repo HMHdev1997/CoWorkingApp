@@ -12,7 +12,7 @@ const HEIGHT = Dimensions.get('screen').height
 
 
 
-const BookingLabel = ({ title, description, source, onPress, checkinTime, price, navigation, item }) => {
+const BookingLabel = ({ title, description, address, source, onPress, checkinTime, price, navigation, item }) => {
     return (
         <ShadowView style={styles.label} onPress={onPress}>
             <View style={styles.imageView}>
@@ -39,8 +39,9 @@ const BookingLabel = ({ title, description, source, onPress, checkinTime, price,
 
             <View style={styles.textView}>
                 <View style={{ flex: 3 }}>
-                    <Text style={styles.title}>{title}</Text>
-                    <Text style={styles.text}>{description}</Text>
+                    <Text style={styles.title} numberOfLines={1}>{title}</Text>
+                    <Text style={styles.text} numberOfLines={1}>{address}</Text>
+                    <Text style={styles.text} numberOfLines={1}>{description}</Text>
                 </View>
                 <View style={{ flex: 2 }}>
                     <CustomButton name={"Đặt lịch ngay"}  onPress={()=>{navigation.navigate("OrderScreen", item)}}></CustomButton>

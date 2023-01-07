@@ -3,8 +3,9 @@ import { auth, database } from "../../consts/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
 import { handleErrorAuth, showToast, TYPE_NOTI } from "../../consts/common"
 import { doc, query, limit, DocumentData, DocumentSnapshot, getDoc, getFirestore, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
-import { API, sendReq } from "../../consts/request"
+import { API, getOfficebyId, sendReq } from "../../consts/request"
 import axios from 'axios';
+import { async } from "@firebase/util";
 
 // Login
 const loginStart = () => ({
@@ -51,6 +52,7 @@ const loginInit = (email, password, isPhone) => {
                 if (res.status == 200) {
                     dispatch(loginSuccess(res.data))
                     dispatch(getUserInit(res.data.ID))
+                    dispatch(getOfficeListInit())
                 }
 
                 else {
@@ -103,6 +105,7 @@ const registerInit = (name, email, phone, password) => {
                 console.log('[ERROR][registerSucc] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(registerSuccess(res.data))
+                    dispatch(getOfficeListInit())
                 }
 
                 else {
@@ -247,6 +250,7 @@ const getOfficeListFail = (error) => ({
 const getOfficeListInit = () => {
     return async function (dispatch) {
         dispatch(getOfficeListStart())
+        // console.log(1111, '[ERROR][loginSucc] ')
 
         const url = API.Host + API.Office + "?" + new URLSearchParams({
             AreaId: API.AreaId,
@@ -256,18 +260,18 @@ const getOfficeListInit = () => {
             PageCount: 10,
         })
 
-        axios({
+        await axios({
             method: 'get',
             url: url,
         })
-            .then((res) => {
+            .then(async (res) => {
                 if (res.status == 200) {
                     var data = []
                     if (res.data.Item) {
 
-                        data = res.data.Item.map((e) => {
-                            return { ...e, Image: require("../../images/hotel/lecafe.png"), Price: 89 }
-                        })
+                        data = await Promise.all(res.data.Item.map(async (e) => {
+                            return await getOfficebyId(e.ID)
+                        }))
                     }
                     // console.log('[ERROR][loginSucc] ' + JSON.stringify(data))
                     dispatch(getOfficeListSuccess(data))

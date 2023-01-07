@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLocation, faLocationArrow, faMapLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import CustomInput from "../custom_component/CustomInput";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const Header = ({ navigation }) => {
   return (
@@ -40,6 +41,8 @@ const Header = ({ navigation }) => {
 const Maps = () => {
   const navigation = useNavigation()
   const route = useRoute()
+  const { officeList } = useSelector((state) => state.officeList)
+
   const item = route.params;
   const [mapCor, setMapCor] = useState({
     latitude: 21.0273,
@@ -69,16 +72,16 @@ const Maps = () => {
       setMapRegion({
         title: item.title,
         description: item.description,
-        latitude: item.Latitude,
-        longitude: item.Longitude,
+        latitude: item.Latitude/100000,
+        longitude: item.Longitude/100000,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
       setMapRegionOffice({
         title: item.title,
         description: item.description,
-        latitude: item.Latitude,
-        longitude: item.Longitude,
+        latitude: item.Latitude/100000,
+        longitude: item.Longitude/100000,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421,
       });
