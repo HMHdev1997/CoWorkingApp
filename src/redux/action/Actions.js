@@ -58,7 +58,7 @@ const loginInit = (email, password, isPhone) => {
                 }
             }).catch(error => {
                 console.log('[ERROR][loginFail] ' + error.message)
-                dispatch(loginFail(error.response.request._response|| error.message))
+                dispatch(loginFail(error.response.request._response || error.message))
             })
     }
 }
@@ -146,20 +146,24 @@ const createUserInit = (userInfo) => {
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
 
-        console.log(111111111, url, userInfo.ID,  userInfo.Email)
-        axios({
-            method: 'put',
-            url: url,
-            data: bodyFormData,
-        })
+        // console.log(111111111, url, userInfo.ID, userInfo.Email)
+        fetch(url,
+            {
+                body: bodyFormData,
+                method: "put"
+            })
             .then((res) => {
                 if (res.status == 200) {
-                    dispatch(createUserSuccess(res.data))
-                    showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
+                    return res.json()
                 } else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
-            }).catch(error => {
+            })
+            .then(data =>  {
+                dispatch(createUserSuccess(data))
+                showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
+            }) 
+            .catch(error => {
                 showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
 
                 console.log('[ERROR][createUserInit] ' + error.message)
@@ -206,7 +210,7 @@ const getUserInit = (uid) => {
                 }
             }).catch(error => {
                 console.log('[ERROR][getUserInit] ' + error.message)
-                dispatch(getUserFail(error.response.request._response|| error.message))
+                dispatch(getUserFail(error.response.request._response || error.message))
             })
 
         try {
@@ -359,17 +363,16 @@ const bookingInit = (officeId, customId, startTime) => {
         bodyFormData.append('EndTime', startTime);
         bodyFormData.append('Total', 1)
         // console.log(111111111, url, customId, officeId)
-        axios({
-            method: 'post',
-            url: url,
-            data: bodyFormData,
-        })
+        fetch(url,
+            {
+                body: bodyFormData,
+                method: "post"
+            })
             .then((res) => {
                 if (res.status == 200) {
                     dispatch(bookingSuccess())
                     showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
                     dispatch(getBookingHistoryInit(customId))
-
                 } else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
