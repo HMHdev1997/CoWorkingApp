@@ -67,15 +67,15 @@ const HomeSreens = ({ route, navigation }) => {
         if (checkContainId(categoryList, 1)) {
           setCoWorkingSpaceList(await getListbyId(1))
         }
-        if (checkContainId(categoryList, 2)) {
-          setFullOffice(await getListbyId(2))
+        if (checkContainId(categoryList, 4)) {
+          setFullOffice(await getListbyId(4))
         }
 
-        if (checkContainId(categoryList, 3)) {
-          setEventList(await getListbyId(3))
+        if (checkContainId(categoryList, 2)) {
+          setEventList(await getListbyId(2))
         }
-        if (checkContainId(categoryList, 4)) {
-          setSlotList(await getListbyId(4))
+        if (checkContainId(categoryList, 3)) {
+          setSlotList(await getListbyId(3))
         }
 
       } else {

@@ -41,9 +41,6 @@ const Maps = () => {
   const navigation = useNavigation()
   const route = useRoute()
   const item = route.params;
-  if (item) {
-    
-  }
   const [mapCor, setMapCor] = useState({
     latitude: 21.0273,
     longitude: 105.84604,
@@ -51,40 +48,41 @@ const Maps = () => {
     longitudeDelta: 0.0421,
   });
   const [mapRegion, setMapRegion] = useState({
-    title: item.title,
-    description: item.description,
-    latitude: item.Latitude,
-    longitude: item.Longitude,
+    title: "title",
+    description: "description",
+    latitude: 21.0273,
+    longitude:  105.84604,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
   const [mapRegionOffice, setMapRegionOffice] = useState({
-    title: item.title,
-    description: item.description,
-    latitude: item.Latitude,
-    longitude: item.Longitude,
+    title:  "title",
+    description: "description",
+    latitude: 21.0273,
+    longitude: 105.84604,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
 
   useEffect(() => {
-
-    setMapRegion({
-      title: item.title,
-      description: item.description,
-      latitude: item.Latitude,
-      longitude: item.Longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
-    setMapRegionOffice({
-      title: item.title,
-      description: item.description,
-      latitude: item.Latitude,
-      longitude: item.Longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
+    if (item?.title) {
+      setMapRegion({
+        title: item.title,
+        description: item.description,
+        latitude: item.Latitude,
+        longitude: item.Longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+      setMapRegionOffice({
+        title: item.title,
+        description: item.description,
+        latitude: item.Latitude,
+        longitude: item.Longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
   }, [item])
   const userLocation = async () => {
 
