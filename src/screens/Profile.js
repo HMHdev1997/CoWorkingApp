@@ -129,7 +129,7 @@ const Profile = () => {
       Gender: gender,
       PhoneNumbers: phone,
       Email: email,
-      DateOfBirth: date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate(),
+      DateOfBirth: date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
       Address: address,
       IdentifierCode: id,
       Point: userInfo?.Point
