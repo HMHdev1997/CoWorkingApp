@@ -331,7 +331,7 @@ const getCategoryInit = () => {
 
 
 
-// Get user info
+// Push Booking info
 const bookingStart = () => ({
     type: ACTION_TYPE.BOOKING_START
 })
@@ -368,6 +368,8 @@ const bookingInit = (officeId, customId, startTime) => {
                 if (res.status == 200) {
                     dispatch(bookingSuccess())
                     showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
+                    dispatch(getBookingHistoryInit(customId))
+
                 } else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
@@ -382,4 +384,52 @@ const bookingInit = (officeId, customId, startTime) => {
 }
 
 
-export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit, bookingInit, getCategoryInit }
+// Push Booking info
+const bookingHistoryStart = () => ({
+    type: ACTION_TYPE.BOOKING_HISTORY_START
+})
+
+const bookingHistorySuccess = (list) => ({
+    type: ACTION_TYPE.BOOKING_HISTORY_SUCCESS,
+    payload: list
+})
+
+const bookingHistoryFail = (error) => ({
+    type: ACTION_TYPE.BOOKING_HISTORY_FAIL,
+    payload: error
+})
+
+const getBookingHistoryInit = (userId) => {
+
+    return async function (dispatch) {
+        dispatch(bookingHistoryStart())
+
+        const url = API.Host + API.BookingHistory + `?id=${userId}`
+
+        console.log(111111111, url, userId)
+        axios({
+            method: 'get',
+            url: url,
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    if (res.data) {
+                        console.log('[SUCC][getBookingHistoryInit] ' + JSON.stringify(res.data))
+
+                        dispatch(bookingHistorySuccess(res.data))
+                        showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
+                    }
+                } else {
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                }
+            }).catch(error => {
+                showToast(TYPE_NOTI.ERROR, null, "Booking không thành công")
+
+                console.log('[ERROR][bookingInit] ' + error.message)
+                dispatch(bookingHistoryFail(error.message))
+            })
+
+    }
+}
+
+export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit, bookingInit, getCategoryInit, getBookingHistoryInit }

@@ -84,24 +84,24 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
         </View>
         {isShowFunction &&
           <View flexDirection="row" style={{ marginTop: 10 }}>
-            <Pressable style={{ flex: 1, alignItems: "center" }}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }}>
               <FontAwesomeIcon style={{ ...style.icon }} size={30} icon={faBarcode} color={Color.lightblue} />
               <Text>Nhập mã</Text>
-            </Pressable>
-            <Pressable style={{ flex: 1, alignItems: "center" }}>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("BookingHistoryScreen")}}>
               <FontAwesomeIcon style={style.icon} size={30} icon={faChartColumn} color={Color.lightblue} />
               <Text>Lịch sử</Text>
 
-            </Pressable>
-            <Pressable style={{ flex: 1, alignItems: "center" }}>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }}>
               <FontAwesomeIcon style={style.icon} size={30} icon={faUserCheck} color={Color.lightblue} />
               <Text>Check-in nhanh</Text>
 
-            </Pressable>
-            <Pressable style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("Bookings")}}>
+            </TouchableOpacity>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("Bookings")}}>
               <FontAwesomeIcon style={style.icon} size={30} icon={faBookBookmark} color={Color.lightblue} />
               <Text>Booking</Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         }
 

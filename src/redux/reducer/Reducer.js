@@ -181,4 +181,47 @@ const categoryListReducer = (state = initialOfficeListState, action) => {
 
     }
 }
-export { userReducer, userInfoReducer, officeListReducer, categoryListReducer } 
+
+
+const initialBookingHistoryState = {
+    loading: false,
+    bookingHistory: [],
+    error: null
+}
+const bookingHistoryReducer = (state = initialBookingHistoryState, action) => {
+    switch (action.type) {
+        case ACTION_TYPE.BOOKING_HISTORY_START:
+            const newState = {
+                ...state,
+                error: null,
+                loading: true
+            }
+            return newState
+        case ACTION_TYPE.BOOKING_HISTORY_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                bookingHistory: [...action.payload]
+            }
+        case ACTION_TYPE.BOOKING_HISTORY_FAIL:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload,
+                officeList: [],
+            }
+        case ACTION_TYPE.LOGOUT_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                error: null,
+                officeList: []
+            }
+        default:
+            return state
+
+    }
+}
+
+export { userReducer, userInfoReducer, officeListReducer, categoryListReducer, bookingHistoryReducer } 

@@ -20,93 +20,12 @@ import CustomLabel from "../custom_component/CustomLabel";
 import Working from "../consts/Working";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryInit, getOfficeListInit } from "../redux/action/Actions";
-import axios from "axios";
-import { API } from "../consts/request";
-import { async } from "@firebase/util";
+import { API, checkContainId, getListbyId,  } from "../consts/request";
+
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
 const defaultList = []
-const checkContainId = (array, id) => {
-  return array.find((x) => x.ID == id) !== undefined;
-}
 
-const getOfficebyId = async (id) => {
-  try {
-    const res = await axios({
-      method: 'get',
-      url: API.Host + API.OfficeID + `/ID?id=${id}`,
-    })
-    if (res.status == 200) {
-      if (res.data) {
-        if (res.data.OfficeImages) {
-          var imageList = []
-          await Promise.all(res.data.OfficeImages.map(async e=> {
-            const imageData = await getImageById(e.ID)
-            if (imageData) {
-              imageList.push(imageData)
-            }
-          }))
-          res.data.ImageList = imageList
-        }
-        return res.data
-      }
-    }
-  } catch (error) {
-    console.log('[ERROR][getOfficebyId] ' + error.message)
-    return undefined
-  }
-}
-const getListbyId = async (id) => {
-  const url = API.Host + API.CategoryOffice + `?id=${id}`
-  var data = []
-  try {
-    const res = await axios({
-      method: 'get',
-      url: url,
-    })
-    if (res.status == 200) {
-      if (res.data) {
-        if (res.data.OfficeInCategory) {
-          await Promise.all(res.data.OfficeInCategory.map(async e => {
-            const element = await getOfficebyId(e.OfficeId)
-            if (element) {
-              data.push(element)
-            }
-          }))
-          return data
-        }
-      }
-      return data
-    }
-
-    else {
-      throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
-    }
-  } catch (error) {
-    console.log('[ERROR][getCategoryInit] ' + error.message)
-    return data
-  }
-}
-
-const getImageById = async (id) => {
-  const url = API.Host + API.OfficeImage + `?id=${id}`
-  try {
-    const res = await axios({
-      method: 'get',
-      url: url,
-    })
-    if (res.status == 200) {
-      if (res.data) {
-        if (res.data) {
-          return res.data.FileContents
-        }
-      }
-    }
-  } catch (error) {
-    console.log('[ERROR][getImageById] ' + error.message)
-    return undefined
-  }
-}
 
 const HomeSreens = ({ route, navigation }) => {
   const [dataList, setData] = useState(defaultList)
@@ -226,7 +145,7 @@ const HomeSreens = ({ route, navigation }) => {
   };
   const OficeCart = ({ Working }) => {
     return (
-      <View style={style.topHotelCard}>
+      <TouchableOpacity style={style.topHotelCard} onPress={() => navigation.navigate('DetailsScreen', Working)}>
         <View
           style={{
             position: "absolute",
@@ -254,12 +173,12 @@ const HomeSreens = ({ route, navigation }) => {
             {Working.Address}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   const OfficeEvenCart = ({ Working }) => {
     return (
-      <View style={style.topHotelCard}>
+      <TouchableOpacity style={style.topHotelCard} onPress={() => navigation.navigate('DetailsScreen', Working)}>
         <View
           style={{
             position: "absolute",
@@ -287,12 +206,12 @@ const HomeSreens = ({ route, navigation }) => {
             {Working.Address}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
   const SlotCart = ({ Working }) => {
     return (
-      <View style={style.topHotelCard}>
+      <TouchableOpacity style={style.topHotelCard} onPress={() => navigation.navigate('DetailsScreen', Working)}>
         <View
           style={{
             position: "absolute",
@@ -320,7 +239,7 @@ const HomeSreens = ({ route, navigation }) => {
             {Working.Address}
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

@@ -64,9 +64,9 @@ const DetailsScreen = ({ navigation, route }) => {
           </View>
         </ImageBackground>
         <View>
-          <View style={style.iconContainer}>
+          <TouchableOpacity style={style.iconContainer} onPress={()=>{navigation.navigate("Maps", {Latitude: item.Latitude,Longitude: item.Longitude, title: item.NameOffice, description: item.GenenalDecription})}}>
             <Icon name="place" color={Color.white} size={28} />
-          </View>
+          </TouchableOpacity>
           <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.NameOffice}</Text>
             <Text

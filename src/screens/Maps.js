@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Dimensions, TextInput, Text, Pressable, Keyboard } from "react-native";
+import { View, StyleSheet, Dimensions, TextInput, Text, Pressable, Keyboard, TouchableOpacity } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { Button } from "react-native";
@@ -8,15 +8,89 @@ import Color from "../consts/Color";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faLocation, faLocationArrow, faMapLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import CustomInput from "../custom_component/CustomInput";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
+const Header = ({ navigation }) => {
+  return (
+    <View style={{
+      height: 100,
+      backgroundColor: Color.white,
+      borderColor: Color.grey,
+      position: "absolute",
+      top: 20,
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "center"
+    }}>
+
+      <View style={{ left: 20, top: 20, position: "absolute", }}>
+        <Icon
+          name="arrow-back-ios"
+          size={28}
+          color={Color.lightblue}
+          onPress={() => { navigation.goBack() }}
+        />
+      </View>
+
+    </View>
+  )
+}
+
+
 const Maps = () => {
-  const [mapRegion, setMapRegion] = useState({
+  const navigation = useNavigation()
+  const route = useRoute()
+  const item = route.params;
+  if (item) {
+    
+  }
+  const [mapCor, setMapCor] = useState({
     latitude: 21.0273,
     longitude: 105.84604,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
+  const [mapRegion, setMapRegion] = useState({
+    title: item.title,
+    description: item.description,
+    latitude: item.Latitude,
+    longitude: item.Longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  const [mapRegionOffice, setMapRegionOffice] = useState({
+    title: item.title,
+    description: item.description,
+    latitude: item.Latitude,
+    longitude: item.Longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+
+  useEffect(() => {
+
+    setMapRegion({
+      title: item.title,
+      description: item.description,
+      latitude: item.Latitude,
+      longitude: item.Longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+    setMapRegionOffice({
+      title: item.title,
+      description: item.description,
+      latitude: item.Latitude,
+      longitude: item.Longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+  }, [item])
   const userLocation = async () => {
+
     let { status } = await Location.requestForegroundPermissionsAsync();
+    console.log(1111, status)
+
     if (status !== "granted") {
       setErrorMsg("Permisson to access location was denied");
     }
@@ -24,6 +98,21 @@ const Maps = () => {
       enableHighAccuracy: true,
     });
     setMapRegion({
+      latitude: 21.0273,
+      longitude: 105.84604,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    });
+    setMapRegion(() => {
+      return {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }
+
+    });
+    setMapCor({
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
       latitudeDelta: 0.0922,
@@ -36,11 +125,22 @@ const Maps = () => {
 
   return (
     <View style={styles.container}>
+      <Header navigation={navigation} />
+
       <MapView style={styles.map} region={mapRegion} onPress={Keyboard.dismiss}>
-        <Marker coordinate={mapRegion} title="Marker" pinColor={Color.lightblue} />
+        <Marker coordinate={mapCor} title="Marker" pinColor={Color.lightblue} />
+        <Marker coordinate={mapRegionOffice} title={mapRegionOffice.title} description={mapRegionOffice.description} pinColor={Color.red} />
+
       </MapView>
       {/* <Button title="Get Location" onPress={userLocation}> </Button> */}
-
+      <TouchableOpacity style={{ left: 20, top: 20, position: "absolute", }} onPress={() => { navigation.goBack() }}>
+        <Icon
+          name="arrow-back-ios"
+          size={28}
+          color={Color.lightblue}
+        // onPress={() => { navigation.goBack() }}
+        />
+      </TouchableOpacity>
       <View style={{ position: "absolute", top: 10, width: "100%", flexDirection: "row", marginTop: "10%" }}>
         <View style={{ flex: 5 }}>
           <CustomInput width='90%' style={styles.txtSearch} name={"Tìm Kiếm"} isNotNullable={false}></CustomInput>
