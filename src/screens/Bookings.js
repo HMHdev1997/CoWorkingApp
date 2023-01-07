@@ -126,7 +126,7 @@ const Bookings = ({ navigation }) => {
             source={e.Image}
             description={e.Detail}
             checkinTime={"08:00-20:00"}
-            price={e.Price}
+            price={e.Discount}
             onPress={() => navigation.navigate("DetailsScreen", e)}
           ></BookingLabel>
         ))}

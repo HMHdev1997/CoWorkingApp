@@ -140,7 +140,7 @@ const DetailsScreen = ({ navigation, route }) => {
       </ScrollView>
       <View style={style.cardDetails}>
         <View style={{ flex: 1, flexDirection: "column", alignItems: "center" }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Check in:{`\n\t\t`} {item.Price}P/lượt</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Check in:{`\n\t\t`} {item.Discount}P/lượt</Text>
           <View style={{ flexDirection: "row", marginTop: 5 }}>
             <Icon name="star" size={20} color={Color.grey} />
             <Icon name="star" size={20} color={Color.grey} />

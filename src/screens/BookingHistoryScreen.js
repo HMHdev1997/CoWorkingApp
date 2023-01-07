@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useDispatch, useSelector } from 'react-redux';
 import { getBookingHistoryInit } from '../redux/action/Actions';
-import { getOfficebyId } from '../consts/request';
+import { getOfficebyIdFromCache, formatDate } from '../consts/request';
 
 const heightScreen = Dimensions.get("screen").height;
 
@@ -42,8 +42,8 @@ const SlotCart = ({ Booking }) => {
     const [imgData, setImgData] = useState("")
     useEffect(() => {
         const fetchData = async () => {
-            if (Booking?.ID) {
-                setOffice(await getOfficebyId(Booking?.ID))
+            if (Booking?.OfficeId) {
+                setOffice(await getOfficebyIdFromCache(Booking?.OfficeId))
             }
         }
         fetchData()
@@ -52,7 +52,7 @@ const SlotCart = ({ Booking }) => {
     useEffect(() => {
         if (office) {
             if (office.ImageList) {
-                console.log(Object.keys(office))
+                // console.log(Object.keys(office))
                 setImgData(office.ImageList[0] || "")
             }
         }
@@ -81,13 +81,13 @@ const SlotCart = ({ Booking }) => {
                     {office?.Address?office?.Address:""}
                 </Text>
                 <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-                    Ngày đặt: {Booking.CreatedDate}
+                    Ngày đặt: {formatDate(Booking.CreatedDate)}
                 </Text>
                 <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }}>
-                    Bắt đầu: {Booking.StartTime}
+                    Bắt đầu: {formatDate(Booking.StartTime)}
                 </Text>
                 <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }}>
-                    Kết thúc: {Booking.EndTime}
+                    Kết thúc: {formatDate(Booking.EndTime)}
                 </Text>
             </View>
         </TouchableOpacity>
@@ -129,6 +129,9 @@ const BookingHistoryScreen = () => {
                     }}
                     renderItem={({ item }) => <SlotCart Booking={item} />}
                 />
+                <View style={{height: 200}}>
+
+                </View>
             </ScrollView>
         </View>
     )

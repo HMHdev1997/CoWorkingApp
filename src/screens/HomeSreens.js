@@ -20,7 +20,7 @@ import CustomLabel from "../custom_component/CustomLabel";
 import Working from "../consts/Working";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryInit, getOfficeListInit } from "../redux/action/Actions";
-import { API, checkContainId, getListbyId,  } from "../consts/request";
+import { API, checkContainId, clearCache, getListbyId,  } from "../consts/request";
 
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
@@ -88,6 +88,7 @@ const HomeSreens = ({ route, navigation }) => {
 
   const onRefresh = () => {
     setRefreshing(true)
+    clearCache()
     dispatch(getCategoryInit())
 
     // dispatch(getOfficeListInit())
@@ -102,7 +103,7 @@ const HomeSreens = ({ route, navigation }) => {
               style={{ color: Color.white, fontSize: 20, fontWeight: "bold" }}
             >
               {" "}
-              ${Working?.Price ? Working.Price : 80}
+              ${Working?.Discount ? Working.Discount : 80}
             </Text>
           </View>
 

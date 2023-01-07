@@ -20,8 +20,33 @@ export const API = {
 export const checkContainId = (array, id) => {
     return array.find((x) => x.ID == id) !== undefined;
 }
+const officeCached = new Map();
+export const clearCache = () => {
+    officeCached.clear();
+}
+export const getOfficebyIdFromCache = async (id) => {
+    const cached = officeCached.get(id)
+    if (cached) {
+        // console.log("get from cached getOfficebyId")
+
+        return cached
+    }
+    const req = await getOfficebyId(id)
+    if (req) {
+        saveOfficebyIdToCache(id, req)
+        return req
+    }
+    return undefined
+}
+
+export const saveOfficebyIdToCache = (id, item) => {
+    // console.log("saved cache")
+    officeCached.set(id, item)
+}
 
 export const getOfficebyId = async (id) => {
+    // console.log("request getOfficebyId")
+
     try {
         const res = await axios({
             method: 'get',
@@ -59,7 +84,7 @@ export const getListbyId = async (id) => {
             if (res.data) {
                 if (res.data.OfficeInCategory) {
                     await Promise.all(res.data.OfficeInCategory.map(async e => {
-                        const element = await getOfficebyId(e.OfficeId)
+                        const element = await getOfficebyIdFromCache(e.OfficeId)
                         if (element) {
                             data.push(element)
                         }
@@ -97,4 +122,9 @@ export const getImageById = async (id) => {
         console.log('[ERROR][getImageById] ' + error.message)
         return undefined
     }
+}
+
+export const formatDate = (str) => {
+    var datetime = new Date(str);
+    return datetime.getFullYear() + "-" + (datetime.getMonth()+1) + "-" +datetime.getDate()
 }

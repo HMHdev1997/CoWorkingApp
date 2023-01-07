@@ -358,7 +358,7 @@ const bookingInit = (officeId, customId, startTime) => {
         bodyFormData.append('StartTime', startTime);
         bodyFormData.append('EndTime', startTime);
         bodyFormData.append('Total', 1)
-        console.log(111111111, url, customId, officeId)
+        // console.log(111111111, url, customId, officeId)
         axios({
             method: 'post',
             url: url,
@@ -414,10 +414,10 @@ const getBookingHistoryInit = (userId) => {
             .then((res) => {
                 if (res.status == 200) {
                     if (res.data) {
-                        console.log('[SUCC][getBookingHistoryInit] ' + JSON.stringify(res.data))
+                        // console.log('[SUCC][getBookingHistoryInit] ' + JSON.stringify(res.data))
 
                         dispatch(bookingHistorySuccess(res.data))
-                        showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
+                        // showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
                     }
                 } else {
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
