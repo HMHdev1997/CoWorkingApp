@@ -1,3 +1,4 @@
+import { mergeByProperty } from "../../consts/common"
 import { ACTION_TYPE } from "../action/Const"
 
 const initialUserState = {
@@ -75,7 +76,7 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
                 ...state,
                 loading: false,
                 error: null,
-                userInfo: {...action.payload},
+                userInfo: { ...action.payload },
             }
         case ACTION_TYPE.GET_USER_INFO_FAIL:
         case ACTION_TYPE.CREATE_USER_INFO_FAIL:
@@ -102,7 +103,10 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
 const initialOfficeListState = {
     loading: false,
     officeList: [],
-    error: null
+    error: null,
+    pageIndex: 0,
+    pageCount: 0,
+    totalRecords: 0
 }
 const officeListReducer = (state = initialOfficeListState, action) => {
     switch (action.type) {
@@ -110,15 +114,21 @@ const officeListReducer = (state = initialOfficeListState, action) => {
             const newState = {
                 ...state,
                 error: null,
-                loading: true
+                loading: true,
+                officeList: [],
+                pageIndex: 0
             }
             return newState
         case ACTION_TYPE.GET_OFFICE_LIST_SUCCESS:
+            mergeByProperty(state.officeList, action.payload, "ID")
             return {
                 ...state,
                 loading: false,
                 error: null,
-                officeList: [...action.payload]
+                officeList: [...state.officeList],
+                pageIndex: action.pageIndex,
+                totalRecords: action.totalRecords,
+                pageCount: action.pageCount,
             }
         case ACTION_TYPE.GET_OFFICE_LIST_FAIL:
             return {
@@ -140,7 +150,7 @@ const officeListReducer = (state = initialOfficeListState, action) => {
     }
 }
 
-const initialCategoryListState={
+const initialCategoryListState = {
     loading: false,
     categoryList: [],
     error: null

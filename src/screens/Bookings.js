@@ -19,7 +19,8 @@ const WIDTH = Dimensions.get("screen").width;
 const HEIGHT = Dimensions.get("screen").height;
 import Working from "../consts/Working";
 import { useDispatch, useSelector } from "react-redux";
-import { getOfficeListInit } from "../redux/action/Actions";
+import { getOfficeListInit, getOfficeListStart } from "../redux/action/Actions";
+import { FlatList } from "react-native-gesture-handler";
 const CategoryList = () => {
   const category = ["Tất cả", "HOT", "Đã lưu"];
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
@@ -62,19 +63,40 @@ const CategoryList = () => {
 const Bookings = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [searchedList, setSList] = useState([]);
-  const { officeList } = useSelector((state) => state.officeList)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const { officeList, pageIndex, pageCount, totalRecords } = useSelector((state) => state.officeList)
   const dispatch = useDispatch()
   const [refreshing, setRefreshing] = useState(false)
   const [scrollEnabled, setScrollEnabled] = useState(true)
   const onRefresh = () => {
     setRefreshing(true)
-    dispatch(getOfficeListInit())
+    dispatch(getOfficeListInit(1))
+  }
+  const onEndReached = ({distanceFromEnd}) => {
+    console.log(1111, distanceFromEnd )
+    if (distanceFromEnd < 50) return;
+    console.log(1112)
+
+    if (officeList.length < 1) {
+      return
+    }
+    console.log("end", pageIndex, pageCount, totalRecords)
+
+    if (pageIndex + 1 > pageCount) {
+      return
+    }
+    setLoadingMore(true)
+    setTimeout(() => {
+      dispatch(getOfficeListInit(pageIndex ? pageIndex + 1 : 1))
+    }, 1000);
   }
   useEffect(() => {
+    console.log("length: ", officeList.length)
     setRefreshing(false)
     // if (officeList.length == 0) {
     //   dispatch(getOfficeListInit())
     // }
+    setLoadingMore(false)
     setSList(officeList)
   }, [officeList])
   const onSearch = () => {
@@ -127,27 +149,43 @@ const Bookings = ({ navigation }) => {
           ></FontAwesomeIcon>
         </TouchableOpacity>
       </View>
+      {
+        loadingMore && <Text style={{ fontSize: 18, fontWeight: "600" }}>Loading more...</Text>
+      }
       <CategoryList />
-
-      <ScrollView
-        refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
-      >
-        {searchedList.map((e, i) => (
-          <BookingLabel
+        <FlatList
+          refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
+          data={searchedList}
+          showsHorizontalScrollIndicator={true}
+          contentContainerStyle={{
+            flexDirection: "column",
+            paddingBottom: 200,
+          }}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.5}
+          renderItem={({ item }) => <BookingLabel
             navigation={navigation}
-            key={i}
-            item={e}
-            title={e.NameOffice}
-            source={{ uri: "data:image/jpeg;base64," + e.ImageList[0] }}
-            description={e.Detail}
-            address={e.Address}
+            item={item}
+            title={item?.NameOffice || ""}
+            source={{ uri: "data:image/jpeg;base64," + item?.ImageList[0] || "" }}
+            description={item?.Detail || ""}
+            address={item?.Address || ""}
             checkinTime={"08:00-20:00"}
-            price={e.Discount}
-            onPress={() => navigation.navigate("DetailsScreen", e)}
-          ></BookingLabel>
-        ))}
-        <View style={{ height: HEIGHT * 0.2 }}></View>
-      </ScrollView>
+            price={item?.Discount || ""}
+            onPress={() => navigation.navigate("DetailsScreen", item)}
+          />} />
+
+
+      {loadingMore && <View style={{
+        backgroundColor: 'red',
+        height: 100,
+        width: '100%',
+        marginTop: 'auto',
+      }}>
+        <Text style={{ fontSize: 18, fontWeight: "600" }}>Loading more...</Text>
+
+      </View>}
+
     </View>
   );
 };

@@ -70,3 +70,12 @@ export const validatePhone = (email) => {
       /(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/
     );
 };
+
+export const mergeByProperty = (target, source, prop) => {
+  source.forEach(sourceElement => {
+    let targetElement = target.find(targetElement => {
+      return sourceElement[prop] === targetElement[prop];
+    })
+    targetElement ? Object.assign(targetElement, sourceElement) : target.push(sourceElement);
+  })
+}

@@ -52,7 +52,7 @@ const loginInit = (email, password, isPhone) => {
                 if (res.status == 200) {
                     dispatch(loginSuccess(res.data))
                     dispatch(getUserInit(res.data.ID))
-                    dispatch(getOfficeListInit())
+                    dispatch(getOfficeListInit(1))
                 }
 
                 else {
@@ -105,7 +105,7 @@ const registerInit = (name, email, phone, password) => {
                 console.log('[ERROR][registerSucc] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(registerSuccess(res.data))
-                    dispatch(getOfficeListInit())
+                    dispatch(getOfficeListInit(1))
                 }
 
                 else {
@@ -149,7 +149,7 @@ const createUserInit = (userInfo) => {
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
 
-        // console.log(111111111, url, userInfo.ID, userInfo.Email)
+        // console.log(111111111, url, userInfo)
         fetch(url,
             {
                 body: bodyFormData,
@@ -159,13 +159,15 @@ const createUserInit = (userInfo) => {
                 if (res.status == 200) {
                     return res.json()
                 } else {
+                    // console.log(res.status)
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             })
-            .then(data =>  {
+            .then((data) => {
                 dispatch(createUserSuccess(data))
+                // console.log(data)
                 showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
-            }) 
+            })
             .catch(error => {
                 showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
 
@@ -203,7 +205,7 @@ const getUserInit = (uid) => {
             url: url,
         })
             .then((res) => {
-                console.log('[ERROR][getUserSuccess] ' + JSON.stringify(res.data))
+                // console.log('[ERROR][getUserSuccess] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(getUserSuccess(res.data))
                 }
@@ -237,9 +239,12 @@ const getOfficeListStart = () => ({
     type: ACTION_TYPE.GET_OFFICE_LIST_START
 })
 
-const getOfficeListSuccess = (list) => ({
+const getOfficeListSuccess = (list, info) => ({
     type: ACTION_TYPE.GET_OFFICE_LIST_SUCCESS,
-    payload: list
+    payload: list,
+    pageIndex: info.pageIndex,
+    totalRecords: info.totalRecords,
+    pageCount: info.pageCount,
 })
 
 const getOfficeListFail = (error) => ({
@@ -247,15 +252,17 @@ const getOfficeListFail = (error) => ({
     payload: error
 })
 
-const getOfficeListInit = () => {
+const getOfficeListInit = (id) => {
     return async function (dispatch) {
-        dispatch(getOfficeListStart())
+        if (id == -1 || id == 1) {
+            dispatch(getOfficeListStart())
+        }
         // console.log(1111, '[ERROR][loginSucc] ')
 
         const url = API.Host + API.Office + "?" + new URLSearchParams({
             AreaId: API.AreaId,
-            PageIndex: 1,
-            PageSize: 10,
+            PageIndex: id,
+            PageSize: 5,
             TotalRecords: 10,
             PageCount: 10,
         })
@@ -273,8 +280,13 @@ const getOfficeListInit = () => {
                             return await getOfficebyId(e.ID)
                         }))
                     }
-                    // console.log('[ERROR][loginSucc] ' + JSON.stringify(data))
-                    dispatch(getOfficeListSuccess(data))
+                    // console.log('[ERROR][loginSucc] ', id, res.data.PageCount, res.data.TotalRecords, data)
+
+                    dispatch(getOfficeListSuccess(data, {
+                        pageIndex: id,
+                        pageCount: res.data.PageCount || 0,
+                        totalRecords: res.data.TotalRecords || 0
+                    }))
                 }
 
                 else {
