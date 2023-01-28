@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput, StyleSheet } from 'react-native'
+import { View, Text, Pressable, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { Dispatch, SetStateAction, useState } from 'react'
 import CustomInput from './CustomInput'
 import Color from '../consts/Color'
@@ -15,18 +15,18 @@ const CustomDatePicker = ({isbday, name, value, placeholder, secureTextEntry, se
         setDate(date)
     }
     return (
-        <Pressable style={{ marginVertical: 15 }} onPress={() => { setVisibility(true) }}>
+        <TouchableOpacity style={{ marginVertical: 15 }} onPress={() => { setVisibility(true) }}>
             <View ><Text style={styles.name}>{name}{isNotNullable ? " (*)" : ""}:</Text></View>
             <View pointerEvents="none">
                 <TextInput
                     {...{ name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility }}
                     style={[styles.input, { width: width ? width : "100%", height: height ? height : 40 }, style]}
-                    value={date.toISOString().substring(0, 10)}
+                    value={isbday?date.toISOString().substring(0, 10):date.toISOString()}
                 />
                 <CustomLine color={Color.lightblue} style={{ width: width || '100%', marginTop: -10 }}></CustomLine>
                 <DateTimePickerModal
                     isVisible={isVisible}
-                    mode="date"
+                    mode={isbday?"date":"datetime"}
                     onConfirm={onConfirm1}
                     onCancel={onCancel}
                     confirmTextIOS={'Chọn'}
@@ -38,7 +38,7 @@ const CustomDatePicker = ({isbday, name, value, placeholder, secureTextEntry, se
                 />
             </View>
 
-        </Pressable>
+        </TouchableOpacity>
     )
 }
 

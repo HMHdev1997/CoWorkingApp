@@ -92,14 +92,7 @@ const Profile = () => {
       value: address,
       setValue: setAddress,
       isNotNull: true,
-    },
-    {
-      name: "Ngày tạo",
-      value: auth?.currentUser?.metadata?.creationTime || "",
-      setValue: () => { },
-      isNotNull: true,
-      isEditable: false,
-    },
+    }
   ]
 
   const onUpdate = () => {
@@ -148,7 +141,7 @@ const Profile = () => {
     setAvatarUri(data);
   }, [])
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFFFFF", minHeight: "100%" }}>
       <View style={style.titleBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back-ios" size={24} />

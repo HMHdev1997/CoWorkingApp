@@ -116,7 +116,7 @@ const Bookings = ({ navigation }) => {
     }
   };
   return (
-    <View>
+    <View style= {{backgroundColor: Color.white}}>
       <View
         style={{
           top: 10,

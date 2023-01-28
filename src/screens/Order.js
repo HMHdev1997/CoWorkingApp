@@ -77,10 +77,10 @@ const OrderScreen = ({ navigation, route }) => {
     const item = route.params;
     const [isShowMore, setShowMore] = useState(true)
     const [maxLine, setMaxLine] = useState(3)
-    const [date, setDate] = useState(new Date("2010-01-01"))
-    const dispatch = useDispatch()
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const {currentUser} = useSelector(state => state.user)
+    const dispatch = useDispatch()
+    const [date, setDate] = useState(new Date())
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const handleConfirm = (date) => {
         setDate(date)
         hideDatePicker();
@@ -89,12 +89,23 @@ const OrderScreen = ({ navigation, route }) => {
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
+    const [endDate, setEndDate] = useState(new Date())
+    const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+    const handleEndDateConfirm = (date) => {
+        setEndDate(date)
+        hideEndDatePicker();
+    };
+
+    const hideEndDatePicker = () => {
+        setEndDatePickerVisibility(false);
+    };
     const onBooking = () => {
         dispatch(
             bookingInit(
                 item.ID,
                 currentUser.ID,  
-                date.getUTCFullYear() +"/"+ (date.getUTCMonth()+1) +"/"+ date.getUTCDate()
+                date.toUTCString(),
+                endDate.toUTCString()
                 ))
     }
     
@@ -148,6 +159,14 @@ const OrderScreen = ({ navigation, route }) => {
                             onCancel={hideDatePicker}
                             setVisibility={setDatePickerVisibility}
                             value={date}
+                        />
+                        <CustomDatePicker
+                            width={"100%"} name='Ngày kết thúc'
+                            isVisible={isEndDatePickerVisible}
+                            onConfirm={handleEndDateConfirm}
+                            onCancel={hideEndDatePicker}
+                            setVisibility={setEndDatePickerVisibility}
+                            value={endDate}
                         />
                         <View
                             style={{

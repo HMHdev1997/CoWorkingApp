@@ -69,7 +69,7 @@ const Settings = ({ navigation }) => {
     ]
 
     return (
-        <View>
+        <View style= {{backgroundColor: "#FFFFFF", minHeight: "100%"}}>
             <Hearder />
             <SafeAreaView style={{ marginTop: "10%" }}>
                 <ScrollView style={{maxHeight: "99%" }}>

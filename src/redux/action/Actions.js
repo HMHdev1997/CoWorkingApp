@@ -366,7 +366,7 @@ const bookingFail = (error) => ({
     payload: error
 })
 
-const bookingInit = (officeId, customId, startTime) => {
+const bookingInit = (officeId, customId, startTime, endTime) => {
 
     return async function (dispatch) {
         dispatch(bookingStart())
@@ -376,7 +376,7 @@ const bookingInit = (officeId, customId, startTime) => {
         bodyFormData.append('UserId', customId);
         bodyFormData.append('OfficeId', officeId);
         bodyFormData.append('StartTime', startTime);
-        bodyFormData.append('EndTime', startTime);
+        bodyFormData.append('EndTime', endTime);
         bodyFormData.append('Total', 1)
         // console.log(111111111, url, customId, officeId)
         fetch(url,
