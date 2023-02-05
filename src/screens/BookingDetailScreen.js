@@ -8,7 +8,6 @@ import {
     View,
     TouchableOpacity,
     Dimensions,
-    Alert
 } from "react-native";
 import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -22,6 +21,8 @@ import { showToast, TYPE_NOTI } from "../consts/common";
 import { bookingInit } from "../redux/action/Actions";
 import CustomCobobox from "../custom_component/CustomCobobox";
 import CustomNote from "../custom_component/CustomNote";
+import { API } from "../consts/request";
+import { async } from "@firebase/util";
 const heightScreen = Dimensions.get("screen").height;
 
 const maxLineC = 10
@@ -49,7 +50,7 @@ const Header = ({ navigation }) => {
                 />
             </View>
             <View style={{}}>
-                <Text style={{ fontSize: 20, fontWeight: "600", color: Color.lightblue }}>Đặt phòng</Text>
+                <Text style={{ fontSize: 20, fontWeight: "600", color: Color.lightblue }}>Chi tiết đặt phòng</Text>
             </View>
         </View>
     )
@@ -75,20 +76,80 @@ const Customer = () => {
         </View>
     )
 }
-const nSeatArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-const OrderScreen = ({ navigation, route }) => {
-    const item = route.params;
+
+const nSeatArr = [1, 2, 3]
+const defaultData = {
+    "BookingId": -1,
+    "Name": null,
+    "Number": 0,
+    "Price": 0,
+    "Note": "",
+    "StartTime": "2023-02-05T05:09:03",
+    "EndTime": "2023-02-05T05:09:03",
+    "PaymentStatus": 0,
+    "CreaetDate": null,
+    "CreateBy": null
+}
+const getBookingDetail = async (id) => {
+
+    try {
+        const url = API.Host + API.BookingDetail + `?id=${id}`
+        const res = await fetch(url, { method: "get" })
+        if (res.status == 200) {
+            const data = await res.json()
+            return data
+        } else {
+            throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+        }
+
+
+
+    } catch (err) {
+        showToast(TYPE_NOTI.ERROR, null, "Get Detail Booking không thành công")
+
+        console.log('[ERROR][BookingDetail] ' + err.message)
+        return defaultData
+    }
+
+}
+
+const BookingDetailScreen = ({ navigation, route }) => {
+    const data = route.params;
+    const item = data.office
+    const booking = data.booking
+    const [bookingDetail, setBookingDetail] = useState(defaultData)
+
+    // console.log(bookingDetail)
     const [isShowMore, setShowMore] = useState(true)
     const [maxLine, setMaxLine] = useState(3)
     const { currentUser } = useSelector(state => state.user)
     const dispatch = useDispatch()
-    const [date, setDate] = useState(new Date())
-    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [nSeat, setNSeat] = useState(5)
-    const [note, setNote] = useState("")
+    const [date, setDate] = useState(new Date(bookingDetail.StartTime))
+    const [nSeat, setNSeat] = useState()
+    const [note, setNote] = useState(bookingDetail.Note)
+
+
+    useEffect(
+        () => {
+            const fetchData = async () => {
+                const bookingDetail = await getBookingDetail(booking.ID)
+                console.log(bookingDetail)
+                setBookingDetail(bookingDetail)
+                setNote(bookingDetail.Note)
+                setDate(new Date(bookingDetail.StartTime))
+                setEndDate(new Date(bookingDetail.EndTime))
+                setNSeat(bookingDetail.Number)
+
+            }
+            fetchData()
+        }
+        , [route.params])
     const onSelectNSeat = (index, option) => {
         setNSeat(nSeatArr[index])
     }
+    // const [date, setDate] = useState(new Date())
+
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const handleConfirm = (date) => {
         setDate(date)
         hideDatePicker();
@@ -97,7 +158,9 @@ const OrderScreen = ({ navigation, route }) => {
     const hideDatePicker = () => {
         setDatePickerVisibility(false);
     };
-    const [endDate, setEndDate] = useState(new Date())
+    // const [endDate, setEndDate] = useState(new Date())
+
+    const [endDate, setEndDate] = useState(new Date(bookingDetail.EndTime))
     const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
     const handleEndDateConfirm = (date) => {
         setEndDate(date)
@@ -107,18 +170,7 @@ const OrderScreen = ({ navigation, route }) => {
     const hideEndDatePicker = () => {
         setEndDatePickerVisibility(false);
     };
-    const onBooking = () => {
-        dispatch(
-            bookingInit(
-                item.ID,
-                currentUser.ID,
-                date.toUTCString(),
-                endDate.toUTCString(),
-                item.Discount + nSeat,
-                nSeat,
-                note
-            ))
-    }
+
 
     useEffect(() => {
         if (currentUser) {
@@ -129,29 +181,7 @@ const OrderScreen = ({ navigation, route }) => {
         }
     }, [])
 
-    const [showBox, setShowBox] = useState(true);
 
-    const showConfirmDialog = () => {
-        return Alert.alert(
-            "Bạn muốn đặt phòng?",
-            `Bạn muốn đặt phòng ${item.NameOffice} với ${nSeat} chỗ ngồi\nGiá tổng cộng: ${item.Discount + nSeat} P`,
-            [
-                // The "Yes" button
-                {
-                    text: "Đặt phòng",
-                    onPress: () => {
-                        onBooking()
-                        setShowBox(false);
-                    },
-                },
-                // The "No" button
-                // Does nothing but dismiss the dialog when tapped
-                {
-                    text: "Hủy",
-                },
-            ]
-        );
-    }
     return (
         <View style={{ minHeight: heightScreen, backgroundColor: Color.white }}>
             <Header navigation={navigation} />
@@ -185,7 +215,7 @@ const OrderScreen = ({ navigation, route }) => {
                         >
                             {item.Address}
                         </Text>
-                        <CustomCobobox isNotNullable={true} width={"100%"} name='Số ghế đặt' option={nSeatArr} onSelect={onSelectNSeat} defaultValue={"5"} />
+                        <CustomCobobox disabled={true} width={"100%"} name='Số ghế đặt' option={nSeatArr} onSelect={onSelectNSeat} defaultValue={nSeat} />
 
                         <CustomDatePicker
                             width={"100%"} name='Ngày đặt'
@@ -194,6 +224,7 @@ const OrderScreen = ({ navigation, route }) => {
                             onCancel={hideDatePicker}
                             setVisibility={setDatePickerVisibility}
                             value={date}
+                            disable={true}
                         />
                         <CustomDatePicker
                             width={"100%"} name='Ngày kết thúc'
@@ -202,8 +233,10 @@ const OrderScreen = ({ navigation, route }) => {
                             onCancel={hideEndDatePicker}
                             setVisibility={setEndDatePickerVisibility}
                             value={endDate}
+                            disable={true}
                         />
                         <CustomNote value={note} setValue={setNote} />
+
                         <View
                             style={{
                                 marginBottom: 500
@@ -215,17 +248,11 @@ const OrderScreen = ({ navigation, route }) => {
 
                     </View>
                 </View>
-                {/* {showBox && <View style={style.box}></View>} */}
 
             </ScrollView>
             <View style={style.cardDetails}>
-                <View style={{ flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Tổng cộng:{`\n\t\t`} {item.Discount + nSeat} P</Text>
-                </View>
+                <Text style={{ fontSize: 26, fontWeight: "700", marginBottom: 10, marginRight: 20, color: Color.lightblue, textAlign: 'right' }}>Giá thành: {bookingDetail.Price}P</Text>
 
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <CustomButton name={"Xác nhận"} onPress={showConfirmDialog} />
-                </View>
             </View>
         </View>
     );
@@ -286,17 +313,9 @@ const style = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
-        flexDirection: "row"
-    },
-    box: {
-        width: 300,
-        height: 300,
-        backgroundColor: "red",
-        marginBottom: 30,
-    },
-    text: {
-        fontSize: 30,
+        flexDirection: "row-reverse",
+        alignItems: "center",
     },
 });
 
-export default OrderScreen;
+export default BookingDetailScreen;

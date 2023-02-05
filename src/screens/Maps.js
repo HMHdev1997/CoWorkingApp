@@ -90,7 +90,6 @@ const Maps = () => {
   const userLocation = async () => {
 
     let { status } = await Location.requestForegroundPermissionsAsync();
-    console.log(1111, status)
 
     if (status !== "granted") {
       setErrorMsg("Permisson to access location was denied");

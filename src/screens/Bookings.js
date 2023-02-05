@@ -72,15 +72,12 @@ const Bookings = ({ navigation }) => {
     setRefreshing(true)
     dispatch(getOfficeListInit(1))
   }
-  const onEndReached = ({distanceFromEnd}) => {
-    console.log(1111, distanceFromEnd )
+  const onEndReached = ({ distanceFromEnd }) => {
     if (distanceFromEnd < 50) return;
-    console.log(1112)
 
     if (officeList.length < 1) {
       return
     }
-    console.log("end", pageIndex, pageCount, totalRecords)
 
     if (pageIndex + 1 > pageCount) {
       return
@@ -91,7 +88,6 @@ const Bookings = ({ navigation }) => {
     }, 1000);
   }
   useEffect(() => {
-    console.log("length: ", officeList.length)
     setRefreshing(false)
     // if (officeList.length == 0) {
     //   dispatch(getOfficeListInit())
@@ -116,7 +112,7 @@ const Bookings = ({ navigation }) => {
     }
   };
   return (
-    <View style= {{backgroundColor: Color.white}}>
+    <View style={{ backgroundColor: Color.white }}>
       <View
         style={{
           top: 10,
@@ -153,36 +149,39 @@ const Bookings = ({ navigation }) => {
         loadingMore && <Text style={{ fontSize: 18, fontWeight: "600" }}>Loading more...</Text>
       }
       <CategoryList />
-        <FlatList
-          refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
-          data={searchedList}
-          showsHorizontalScrollIndicator={true}
-          contentContainerStyle={{
-            flexDirection: "column",
-            paddingBottom: 200,
-          }}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={0.5}
-          renderItem={({ item }) => <BookingLabel
-            navigation={navigation}
-            item={item}
-            title={item?.NameOffice || ""}
-            source={{ uri: "data:image/jpeg;base64," + item?.ImageList[0] || "" }}
-            description={item?.Detail || ""}
-            address={item?.Address || ""}
-            checkinTime={"08:00-20:00"}
-            price={item?.Discount || ""}
-            onPress={() => navigation.navigate("DetailsScreen", item)}
-          />} />
+      <FlatList
+        refreshControl={<RefreshControl enabled={scrollEnabled} refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>}
+        data={searchedList}
+        showsHorizontalScrollIndicator={true}
+        contentContainerStyle={{
+          flexDirection: "column",
+          paddingBottom: 200,
+        }}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.5}
+        renderItem={({ item }) => <BookingLabel
+          navigation={navigation}
+          item={item}
+          title={item?.NameOffice || ""}
+          source={{ uri: "data:image/jpeg;base64," + item?.ImageList[0] || "" }}
+          description={item?.Detail || ""}
+          address={item?.Address || ""}
+          checkinTime={"08:00-20:00"}
+          price={item?.Discount || ""}
+          onPress={() => navigation.navigate("DetailsScreen", item)}
+        />} />
 
 
       {loadingMore && <View style={{
-        backgroundColor: 'red',
+        backgroundColor: 'white',
         height: 100,
         width: '100%',
         marginTop: 'auto',
+        alignItems: "center",
+        justifyContent: "center",
+        opacity: 50,
       }}>
-        <Text style={{ fontSize: 18, fontWeight: "600" }}>Loading more...</Text>
+        <Text style={{ fontSize: 26, fontWeight: "600", color: Color.lightblue }}>Loading more...</Text>
 
       </View>}
 

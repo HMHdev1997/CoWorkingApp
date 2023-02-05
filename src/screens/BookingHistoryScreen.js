@@ -37,7 +37,7 @@ const Header = ({ navigation }) => {
     )
 }
 
-const SlotCart = ({ Booking }) => {
+const SlotCart = ({ Booking, navigation }) => {
     const [office, setOffice] = useState({})
     const [imgData, setImgData] = useState("")
     useEffect(() => {
@@ -58,7 +58,7 @@ const SlotCart = ({ Booking }) => {
         }
     }, [office])
     return (
-        <TouchableOpacity style={style.topHotelCard}>
+        <TouchableOpacity style={style.topHotelCard} onPress={() => { navigation.navigate("BookingDetailScreen", { office: office, booking: Booking }) }}>
             <View
                 style={{
                     position: "absolute",
@@ -75,10 +75,10 @@ const SlotCart = ({ Booking }) => {
                 style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
             >
                 <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-                    {office?.NameOffice?office?.NameOffice:""}
+                    {office?.NameOffice ? office?.NameOffice : ""}
                 </Text>
                 <Text style={{ fontSize: 10, fontWeight: "bold" }}>
-                    {office?.Address?office?.Address:""}
+                    {office?.Address ? office?.Address : ""}
                 </Text>
                 <Text style={{ fontSize: 10, fontWeight: "bold" }}>
                     Ngày đặt: {formatDate(Booking.CreatedDate)}
@@ -127,9 +127,9 @@ const BookingHistoryScreen = () => {
                         paddingBottom: 30,
                         flexDirection: "column",
                     }}
-                    renderItem={({ item }) => <SlotCart Booking={item} />}
+                    renderItem={({ item }) => <SlotCart Booking={item} navigation={navigation} />}
                 />
-                <View style={{height: 200}}>
+                <View style={{ height: 200 }}>
 
                 </View>
             </ScrollView>

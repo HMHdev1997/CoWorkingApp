@@ -7,7 +7,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 
-const CustomDatePicker = ({isbday, name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility }) => {
+const CustomDatePicker = ({ isbday, name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility, disable }) => {
     const [date, setDate] = useState(value ? value : new Date())
 
     const onConfirm1 = (date) => {
@@ -15,25 +15,31 @@ const CustomDatePicker = ({isbday, name, value, placeholder, secureTextEntry, se
         setDate(date)
     }
     return (
-        <TouchableOpacity style={{ marginVertical: 15 }} onPress={() => { setVisibility(true) }}>
+        <TouchableOpacity style={{ marginVertical: 15 }} onPress={() => {
+            if (!disable) {
+                console.log(disable)
+                setVisibility(true)
+
+            }
+        }}>
             <View ><Text style={styles.name}>{name}{isNotNullable ? " (*)" : ""}:</Text></View>
             <View pointerEvents="none">
                 <TextInput
                     {...{ name, value, placeholder, secureTextEntry, setValue, width, height, isNotNullable, isNumber, isEditable, numberOfLines, multiline, style, onFocus, isVisible, onConfirm, onCancel, setVisibility }}
                     style={[styles.input, { width: width ? width : "100%", height: height ? height : 40 }, style]}
-                    value={isbday?date.toISOString().substring(0, 10):date.toISOString()}
+                    value={isbday ? date.toISOString().substring(0, 10) : date.toISOString()}
                 />
                 <CustomLine color={Color.lightblue} style={{ width: width || '100%', marginTop: -10 }}></CustomLine>
                 <DateTimePickerModal
                     isVisible={isVisible}
-                    mode={isbday?"date":"datetime"}
+                    mode={isbday ? "date" : "datetime"}
                     onConfirm={onConfirm1}
                     onCancel={onCancel}
                     confirmTextIOS={'Chọn'}
                     cancelTextIOS={'Hủy'}
                     date={date}
-                    maximumDate={isbday?(new Date()):(new Date()).setDate((new Date()).getDate() + 60)}
-                    minimumDate={isbday?(new Date()).setDate((new Date()).getDate()- 60000):(new Date())}
+                    maximumDate={isbday ? (new Date()) : (new Date()).setDate((new Date()).getDate() + 60)}
+                    minimumDate={isbday ? (new Date()).setDate((new Date()).getDate() - 60000) : (new Date())}
                     style={{}}
                 />
             </View>

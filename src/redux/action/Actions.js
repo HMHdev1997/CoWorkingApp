@@ -26,17 +26,6 @@ const loginInit = (email, password, isPhone) => {
     return function (dispatch) {
         dispatch(loginStart())
 
-        // signInWithEmailAndPassword(auth, email, password)
-        //     .then(({ user }) => {
-        //         dispatch(getUserInit())
-        //         dispatch(loginSuccess(user))
-        //     })
-        //     .catch((error) => {
-        //         console.log('[ERROR][loginFail] ' + error)
-        //         dispatch(loginFail(handleErrorAuth(error.code)))
-        //         dispatch(loginSuccess({}))
-        //     })
-
         const url = API.Host + API.UserLogin + "?" + new URLSearchParams({
             email: isPhone ? "" : email,
             password: password,
@@ -149,7 +138,6 @@ const createUserInit = (userInfo) => {
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
 
-        // console.log(111111111, url, userInfo)
         fetch(url,
             {
                 body: bodyFormData,
@@ -159,13 +147,11 @@ const createUserInit = (userInfo) => {
                 if (res.status == 200) {
                     return res.json()
                 } else {
-                    // console.log(res.status)
                     throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
                 }
             })
             .then((data) => {
                 dispatch(createUserSuccess(data))
-                // console.log(data)
                 showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
             })
             .catch(error => {
@@ -205,7 +191,6 @@ const getUserInit = (uid) => {
             url: url,
         })
             .then((res) => {
-                // console.log('[ERROR][getUserSuccess] ' + JSON.stringify(res.data))
                 if (res.status == 200) {
                     dispatch(getUserSuccess(res.data))
                 }
@@ -257,7 +242,6 @@ const getOfficeListInit = (id) => {
         if (id == -1 || id == 1) {
             dispatch(getOfficeListStart())
         }
-        // console.log(1111, '[ERROR][loginSucc] ')
 
         const url = API.Host + API.Office + "?" + new URLSearchParams({
             AreaId: API.AreaId,
@@ -280,7 +264,6 @@ const getOfficeListInit = (id) => {
                             return await getOfficebyId(e.ID)
                         }))
                     }
-                    // console.log('[ERROR][loginSucc] ', id, res.data.PageCount, res.data.TotalRecords, data)
 
                     dispatch(getOfficeListSuccess(data, {
                         pageIndex: id,
@@ -334,7 +317,6 @@ const getCategoryInit = () => {
                             return { ID: e.ID, Name: e.Name, Decription: e.Decription }
                         })
                     }
-                    // console.log('[ERROR][Category] ' + JSON.stringify(res.data))
                     dispatch(getCategorySuccess(data))
                 }
 
@@ -366,38 +348,62 @@ const bookingFail = (error) => ({
     payload: error
 })
 
-const bookingInit = (officeId, customId, startTime, endTime) => {
+const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, note) => {
 
     return async function (dispatch) {
         dispatch(bookingStart())
 
         const url = API.Host + API.Booking
+        const BookingDetailUrl = API.Host + API.BookingDetail
         const bodyFormData = new FormData()
         bodyFormData.append('UserId', customId);
         bodyFormData.append('OfficeId', officeId);
         bodyFormData.append('StartTime', startTime);
         bodyFormData.append('EndTime', endTime);
         bodyFormData.append('Total', 1)
-        // console.log(111111111, url, customId, officeId)
-        fetch(url,
-            {
-                body: bodyFormData,
-                method: "post"
-            })
-            .then((res) => {
-                if (res.status == 200) {
+
+        try {
+            const res = await fetch(url,
+                {
+                    body: bodyFormData,
+                    method: "post"
+                })
+            if (res.status == 200) {
+                const data = await res.json()
+                const bookingId = data.ID
+                const BookingDetailData = new FormData()
+                BookingDetailData.append("BookingId", bookingId)
+                BookingDetailData.append("Number", nSeat)
+                BookingDetailData.append("Price", price)
+                BookingDetailData.append("StartTime", startTime)
+                BookingDetailData.append("EndTime", endTime)
+                BookingDetailData.append("Note", note)
+                // BookingDetailData.append("BookingId", bookingId)
+                console.log(bookingId)
+
+                const resBookingDetail = await fetch(BookingDetailUrl,
+                    {
+                        body: BookingDetailData,
+                        method: "post"
+                    })
+
+                if (resBookingDetail.status == 200) {
                     dispatch(bookingSuccess())
                     showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
                     dispatch(getBookingHistoryInit(customId))
-                } else {
-                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                    const detailBody = await resBookingDetail.json()
                 }
-            }).catch(error => {
-                showToast(TYPE_NOTI.ERROR, null, "Booking không thành công")
+            } else {
+                throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+            }
+        } catch (error) {
+            showToast(TYPE_NOTI.ERROR, null, "Booking không thành công")
 
-                console.log('[ERROR][bookingInit] ' + error.message)
-                dispatch(bookingFail(error.message))
-            })
+            console.log('[ERROR][bookingInit] ' + error.message)
+            dispatch(bookingFail(error.message))
+        }
+
+
 
     }
 }
@@ -425,7 +431,6 @@ const getBookingHistoryInit = (userId) => {
 
         const url = API.Host + API.BookingHistory + `?id=${userId}`
 
-        console.log(111111111, url, userId)
         axios({
             method: 'get',
             url: url,

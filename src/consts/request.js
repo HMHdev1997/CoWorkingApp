@@ -13,6 +13,7 @@ export const API = {
 
     OfficeImage: "OfficeImage/id",
     Booking: "Booking",
+    BookingDetail: "BookingDetail",
     BookingHistory: "Booking/User",
     AreaId: 1,
 }
@@ -126,5 +127,5 @@ export const getImageById = async (id) => {
 
 export const formatDate = (str) => {
     var datetime = new Date(str);
-    return datetime.getFullYear() + "-" + (datetime.getMonth()+1) + "-" +datetime.getDate()
+    return datetime.getFullYear() + "-" + (datetime.getMonth() + 1) + "-" + datetime.getDate()
 }
