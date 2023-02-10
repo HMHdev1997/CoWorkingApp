@@ -130,11 +130,11 @@ const createUserInit = (userInfo) => {
         const bodyFormData = new FormData()
         bodyFormData.append('Address', userInfo.Address);
         bodyFormData.append('DateOfBirth', userInfo.DateOfBirth);
-        bodyFormData.append('Email', userInfo.Email);
+        // bodyFormData.append('Email', userInfo.Email);
         bodyFormData.append('FullName', userInfo.FullName);
         bodyFormData.append('Gender', userInfo.Gender)
         bodyFormData.append('IdentifierCode', userInfo.IdentifierCode)
-        bodyFormData.append('PhoneNumbers', userInfo.PhoneNumbers)
+        // bodyFormData.append('PhoneNumbers', userInfo.PhoneNumbers)
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
 
@@ -147,7 +147,7 @@ const createUserInit = (userInfo) => {
                 if (res.status == 200) {
                     return res.json()
                 } else {
-                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status +url);
                 }
             })
             .then((data) => {
@@ -348,11 +348,11 @@ const bookingFail = (error) => ({
     payload: error
 })
 
-const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, note) => {
+const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatPosition, note) => {
 
     return async function (dispatch) {
         dispatch(bookingStart())
-
+        const seatString = seatPosition?seatPosition.toString():""
         const url = API.Host + API.Booking
         const BookingDetailUrl = API.Host + API.BookingDetail
         const bodyFormData = new FormData()
@@ -361,7 +361,7 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, note)
         bodyFormData.append('StartTime', startTime);
         bodyFormData.append('EndTime', endTime);
         bodyFormData.append('Total', 1)
-
+        
         try {
             const res = await fetch(url,
                 {
@@ -377,6 +377,7 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, note)
                 BookingDetailData.append("Price", price)
                 BookingDetailData.append("StartTime", startTime)
                 BookingDetailData.append("EndTime", endTime)
+                BookingDetailData.append("SeatPosition", seatString)
                 BookingDetailData.append("Note", note)
                 // BookingDetailData.append("BookingId", bookingId)
                 console.log(bookingId)

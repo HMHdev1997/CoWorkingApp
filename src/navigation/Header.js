@@ -113,6 +113,35 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
   );
 };
 
+export const HeaderBar = ({ navigation, title }) => {
+  return (
+      <View style={{
+          height: 100,
+          backgroundColor: Color.white,
+          borderColor: Color.grey,
+          position: "absolute",
+          top: 20,
+          width: "100%",
+          flexDirection: "row",
+          justifyContent: "center"
+      }}>
+
+          <View style={{ left: 20, top: 20, position: "absolute", }}>
+              <Icon
+                  name="arrow-back-ios"
+                  size={28}
+                  color={Color.lightblue}
+                  onPress={() => { navigation.goBack() }}
+              />
+          </View>
+          <View style={{}}>
+              <Text style={{ fontSize: 20, fontWeight: "600", color: Color.lightblue }}>{title}</Text>
+          </View>
+      </View>
+  )
+}
+
+
 const style = StyleSheet.create({
   navheader: {
     marginTop: 20,

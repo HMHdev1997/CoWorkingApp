@@ -127,7 +127,7 @@ const BookingDetailScreen = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date(bookingDetail.StartTime))
     const [nSeat, setNSeat] = useState()
     const [note, setNote] = useState(bookingDetail.Note)
-
+    const [seatPosition, setSeatPosition] = useState("")
 
     useEffect(
         () => {
@@ -139,7 +139,7 @@ const BookingDetailScreen = ({ navigation, route }) => {
                 setDate(new Date(bookingDetail.StartTime))
                 setEndDate(new Date(bookingDetail.EndTime))
                 setNSeat(bookingDetail.Number)
-
+                setSeatPosition(bookingDetail.SeatPosition)
             }
             fetchData()
         }
@@ -180,7 +180,13 @@ const BookingDetailScreen = ({ navigation, route }) => {
             navigation.replace("LoginScreen")
         }
     }, [])
-
+    const onSelectionSeat = () => {
+        navigation.navigate("SeatBookingScreen", {
+            callback: ()=>{
+            },
+            seatPosition: seatPosition
+        })
+    }
 
     return (
         <View style={{ minHeight: heightScreen, backgroundColor: Color.white }}>
@@ -215,7 +221,14 @@ const BookingDetailScreen = ({ navigation, route }) => {
                         >
                             {item.Address}
                         </Text>
-                        <CustomCobobox disabled={true} width={"100%"} name='Số ghế đặt' option={nSeatArr} onSelect={onSelectNSeat} defaultValue={nSeat} />
+                        <View style={{ flexDirection: "row" }}>
+                            <View style={{flex: 1, justifyContent: "center"}}>
+                                <Text style={{ color: Color.lightblue }}>Số ghế đặt: {nSeat}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: "flex-end" }} >
+                                <CustomButton name={"Xem ghe"} onPress={onSelectionSeat}></CustomButton>
+                            </View>
+                        </View>
 
                         <CustomDatePicker
                             width={"100%"} name='Ngày đặt'

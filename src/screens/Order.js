@@ -84,7 +84,8 @@ const OrderScreen = ({ navigation, route }) => {
     const dispatch = useDispatch()
     const [date, setDate] = useState(new Date())
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [nSeat, setNSeat] = useState(5)
+    const [nSeat, setNSeat] = useState(0)
+    const [seatPosition, setSeatPosition] = useState([])
     const [note, setNote] = useState("")
     const onSelectNSeat = (index, option) => {
         setNSeat(nSeatArr[index])
@@ -116,6 +117,7 @@ const OrderScreen = ({ navigation, route }) => {
                 endDate.toUTCString(),
                 item.Discount + nSeat,
                 nSeat,
+                seatPosition,
                 note
             ))
     }
@@ -152,6 +154,14 @@ const OrderScreen = ({ navigation, route }) => {
             ]
         );
     }
+    const onSelectionSeat = () => {
+        navigation.navigate("SeatBookingScreen", {
+            callback: (arr)=>{
+                setNSeat(arr?.length?arr.length:0)
+                setSeatPosition(arr?arr:[])
+            }
+        })
+    }
     return (
         <View style={{ minHeight: heightScreen, backgroundColor: Color.white }}>
             <Header navigation={navigation} />
@@ -185,7 +195,14 @@ const OrderScreen = ({ navigation, route }) => {
                         >
                             {item.Address}
                         </Text>
-                        <CustomCobobox isNotNullable={true} width={"100%"} name='Số ghế đặt' option={nSeatArr} onSelect={onSelectNSeat} defaultValue={"5"} />
+                        <View style={{ flexDirection: "row" }}>
+                            <View style={{flex: 1, justifyContent: "center"}}>
+                                <Text style={{ color: Color.lightblue }}>Số ghế đặt: {nSeat}</Text>
+                            </View>
+                            <View style={{ flex: 1, alignItems: "flex-end" }} >
+                                <CustomButton name={"Chon ghe"} onPress={onSelectionSeat}></CustomButton>
+                            </View>
+                        </View>
 
                         <CustomDatePicker
                             width={"100%"} name='Ngày đặt'
