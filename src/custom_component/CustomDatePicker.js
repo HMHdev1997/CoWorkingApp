@@ -17,9 +17,7 @@ const CustomDatePicker = ({ isbday, name, value, placeholder, secureTextEntry, s
     return (
         <TouchableOpacity style={{ marginVertical: 15 }} onPress={() => {
             if (!disable) {
-                console.log(disable)
                 setVisibility(true)
-
             }
         }}>
             <View ><Text style={styles.name}>{name}{isNotNullable ? " (*)" : ""}:</Text></View>

@@ -133,7 +133,6 @@ const BookingDetailScreen = ({ navigation, route }) => {
         () => {
             const fetchData = async () => {
                 const bookingDetail = await getBookingDetail(booking.ID)
-                console.log(bookingDetail)
                 setBookingDetail(bookingDetail)
                 setNote(bookingDetail.Note)
                 setDate(new Date(bookingDetail.StartTime))

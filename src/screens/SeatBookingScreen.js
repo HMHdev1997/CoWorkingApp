@@ -13,7 +13,6 @@ const SeatElement = ({ posistion, width, onPress, checkArr, disable }) => {
     const [status, setStatus] = useState(false)
 
     useEffect(() => {
-        console.log(checkArr)
         setStatus(checkArr)
     }, [checkArr])
     const onPressElement = () => {
@@ -96,7 +95,6 @@ const SeatBookingScreen = ({ navigation, route }) => {
 
     const onCallback = () => {
         const array = Array.from(statusMap, ([posistion, status]) => ({ posistion, status })).filter((e) => e.status == true).map(e => e.posistion);
-        console.log(array)
         route.params.callback(array)
         navigation.goBack()
     }

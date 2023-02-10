@@ -52,7 +52,6 @@ const SlotCart = ({ Booking, navigation }) => {
     useEffect(() => {
         if (office) {
             if (office.ImageList) {
-                // console.log(Object.keys(office))
                 setImgData(office.ImageList[0] || "")
             }
         }

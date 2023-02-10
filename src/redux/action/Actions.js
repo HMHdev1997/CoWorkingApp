@@ -380,7 +380,6 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
                 BookingDetailData.append("SeatPosition", seatString)
                 BookingDetailData.append("Note", note)
                 // BookingDetailData.append("BookingId", bookingId)
-                console.log(bookingId)
 
                 const resBookingDetail = await fetch(BookingDetailUrl,
                     {
