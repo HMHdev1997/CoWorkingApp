@@ -19,6 +19,7 @@ import BookingHistoryScreen from "./BookingHistoryScreen"
 import BookingDetailScreen from "./BookingDetailScreen";
 import SeatBookingScreen from "./SeatBookingScreen";
 import TestComponentScreen from "./TestComponentScreen";
+import BillScreen from "./BillScreen";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +40,7 @@ const RootComponent = ({ navigation }) => {
         <Stack.Screen name="BookingHistoryScreen" component={BookingHistoryScreen} />
         <Stack.Screen name="BookingDetailScreen" component={BookingDetailScreen} />
         <Stack.Screen name="SeatBookingScreen" component={SeatBookingScreen} />
+        <Stack.Screen name="BillScreen" component={BillScreen} />
         <Stack.Screen name="TestComponentScreen" component={TestComponentScreen} />
 
       </Stack.Navigator>

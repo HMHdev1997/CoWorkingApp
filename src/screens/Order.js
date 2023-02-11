@@ -110,17 +110,31 @@ const OrderScreen = ({ navigation, route }) => {
         setEndDatePickerVisibility(false);
     };
     const onBooking = () => {
-        dispatch(
-            bookingInit(
-                item.ID,
-                currentUser.ID,
-                date.toUTCString(),
-                endDate.toUTCString(),
-                item.Discount + nSeat,
-                nSeat,
-                seatPosition,
-                note
-            ))
+        navigation.navigate("BillScreen", {
+            data: {
+                OfficeId: item.ID,
+                UserId: currentUser.ID,
+                NameOffice: item.NameOffice,
+                Address: item.Address,
+                startTime: date.toUTCString(),
+                endTime: endDate.toUTCString(),
+                price: item.Discount + nSeat,
+                nSeat: nSeat,
+                seatPosition: seatPosition,
+                note: note,
+            }
+        })
+        // dispatch(
+        //     bookingInit(
+        //         item.ID,
+        //         currentUser.ID,
+        //         date.toUTCString(),
+        //         endDate.toUTCString(),
+        //         item.Discount + nSeat,
+        //         nSeat,
+        //         seatPosition,
+        //         note
+        //     ))
     }
 
     useEffect(() => {
@@ -177,31 +191,33 @@ const OrderScreen = ({ navigation, route }) => {
 
 
                 <View style={{}}>
-                    <Customer />
-                    <CustomLine style={{ width: "90%", marginTop: 10 }} />
+                    {/* <Customer /> */}
+                    {/* <CustomLine style={{ width: "90%", marginTop: 10 }} /> */}
 
 
                     <View style={{ marginTop: 20, paddingHorizontal: 0.05*windowsWith }}>
-                        <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 10 }}>Dịch vụ</Text>
+                        {/* <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 10 }}>Dịch vụ</Text> */}
 
-                        <ImageSwipe imageArr={item.ImageList}></ImageSwipe>
-                        <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>{item.NameOffice}</Text>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.NameOffice}</Text>
                         <Text
                             style={{
                                 fontSize: 12,
                                 fontWeight: "400",
                                 color: Color.grey,
-                                marginTop: 20,
+                                marginVertical: 10,
                             }}
                         >
                             {item.Address}
                         </Text>
-                        <View style={{ flexDirection: "row" }}>
+                        <ImageSwipe imageArr={item.ImageList}></ImageSwipe>
+
+                        
+                        <View style={{ flexDirection: "row", marginTop: 20  }}>
                             <View style={{flex: 1, justifyContent: "center"}}>
                                 <Text style={{ color: Color.lightblue }}>Số ghế đặt: {nSeat}</Text>
                             </View>
                             <View style={{ flex: 1, alignItems: "flex-end" }} >
-                                <CustomButton name={"Chon ghe"} onPress={onSelectionSeat}></CustomButton>
+                                <CustomButton name={"Chọn ghế"} onPress={onSelectionSeat}></CustomButton>
                             </View>
                         </View>
 
@@ -242,7 +258,7 @@ const OrderScreen = ({ navigation, route }) => {
                 </View>
 
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <CustomButton name={"Xác nhận"} onPress={showConfirmDialog} />
+                    <CustomButton name={"Thanh toán"} onPress={onBooking} />
                 </View>
             </View>
         </View>

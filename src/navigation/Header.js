@@ -84,7 +84,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
         </View>
         {isShowFunction &&
           <View flexDirection="row" style={{ marginTop: 10 }}>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("TestComponentScreen")}}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("BillScreen")}}>
               <FontAwesomeIcon style={{ ...style.icon }} size={30} icon={faBarcode} color={Color.lightblue} />
               <Text>Nhập mã</Text>
             </TouchableOpacity>
