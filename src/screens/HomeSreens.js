@@ -20,7 +20,7 @@ import CustomLabel from "../custom_component/CustomLabel";
 import Working from "../consts/Working";
 import { useDispatch, useSelector } from "react-redux";
 import { getCategoryInit, getOfficeListInit } from "../redux/action/Actions";
-import { API, checkContainId, clearCache, getListbyId,  } from "../consts/request";
+import { API, checkContainId, clearCache, getListbyId, } from "../consts/request";
 
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 1.8;
@@ -107,7 +107,7 @@ const HomeSreens = ({ route, navigation }) => {
             </Text>
           </View>
 
-          <Image source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} style={style.cardImage} />
+          <Image source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} style={style.cardImage} />
           <View style={style.cardDetails}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -163,15 +163,18 @@ const HomeSreens = ({ route, navigation }) => {
             5.0
           </Text>
         </View>
-        <Image style={style.topHotelCardImage} source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} />
+        <Image style={style.topHotelCardImage} source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} />
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
-          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
+          <Text style={{ fontSize: 12, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
+          <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
             {Working.Address}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
+            {Working.GenenalDecription}
           </Text>
         </View>
       </TouchableOpacity>
@@ -196,15 +199,18 @@ const HomeSreens = ({ route, navigation }) => {
             5.0
           </Text>
         </View>
-        <Image style={style.topHotelCardImage} source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} />
+        <Image style={style.topHotelCardImage} source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} />
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
-          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
+          <Text style={{ fontSize: 12, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
+          <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
             {Working.Address}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
+            {Working.GenenalDecription}
           </Text>
         </View>
       </TouchableOpacity>
@@ -229,15 +235,18 @@ const HomeSreens = ({ route, navigation }) => {
             5.0
           </Text>
         </View>
-        <Image style={style.topHotelCardImage} source={{uri:"data:image/jpeg;base64,"+Working.ImageList[0]}} />
+        <Image style={style.topHotelCardImage} source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} />
         <View
           style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
         >
-          <Text style={{ fontSize: 10, fontWeight: "bold" }} numberOfLines={1}>
-            {Working.Name}
+          <Text style={{ fontSize: 12, fontWeight: "bold" }} numberOfLines={1}>
+            {Working.NameOffice}
           </Text>
-          <Text style={{ fontSize: 7, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
+          <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
             {Working.Address}
+          </Text>
+          <Text style={{ fontSize: 10, fontWeight: "bold", color: Color.grey }} numberOfLines={1}>
+            {Working.GenenalDecription}
           </Text>
         </View>
       </TouchableOpacity>

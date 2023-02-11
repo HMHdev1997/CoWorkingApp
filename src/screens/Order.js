@@ -18,10 +18,11 @@ import CustomLine from "../custom_component/CustomLine";
 import CustomDatePicker from "../custom_component/CustomDatePicker";
 import { isIOS } from "../custom_component/CustomAvatar";
 import { Toast } from "react-native-toast-message/lib/src/Toast";
-import { showToast, TYPE_NOTI } from "../consts/common";
+import { showToast, TYPE_NOTI, windowsWith } from "../consts/common";
 import { bookingInit } from "../redux/action/Actions";
 import CustomCobobox from "../custom_component/CustomCobobox";
 import CustomNote from "../custom_component/CustomNote";
+import ImageSwipe from "../custom_component/ImageSwipe";
 const heightScreen = Dimensions.get("screen").height;
 
 const maxLineC = 10
@@ -180,10 +181,10 @@ const OrderScreen = ({ navigation, route }) => {
                     <CustomLine style={{ width: "90%", marginTop: 10 }} />
 
 
-                    <View style={{ marginTop: 20, paddingHorizontal: 20 }}>
+                    <View style={{ marginTop: 20, paddingHorizontal: 0.05*windowsWith }}>
                         <Text style={{ fontSize: 16, fontWeight: "600", marginBottom: 10 }}>Dịch vụ</Text>
 
-                        <ImageBackground style={style.headerImage} source={{ uri: "data:image/jpeg;base64," + item.ImageList[0] }} />
+                        <ImageSwipe imageArr={item.ImageList}></ImageSwipe>
                         <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 20 }}>{item.NameOffice}</Text>
                         <Text
                             style={{

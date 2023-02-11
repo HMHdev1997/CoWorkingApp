@@ -103,7 +103,7 @@ const BookingHistoryScreen = () => {
         if (bookingHistory) {
             setList(bookingHistory)
         }
-        dispatch(getBookingHistoryInit(currentUser.ID))
+        dispatch(getBookingHistoryInit(currentUser?.ID))
     }, [])
     return (
         <View style={{ minHeight: heightScreen, backgroundColor: Color.white }}>

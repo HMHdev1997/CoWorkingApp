@@ -219,14 +219,14 @@ const bookingHistoryReducer = (state = initialBookingHistoryState, action) => {
                 ...state,
                 loading: false,
                 error: action.payload,
-                officeList: [],
+                bookingHistory: [],
             }
         case ACTION_TYPE.LOGOUT_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 error: null,
-                officeList: []
+                bookingHistory: []
             }
         default:
             return state

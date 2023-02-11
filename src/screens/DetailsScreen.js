@@ -13,6 +13,7 @@ import Color from "../consts/Color";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import CustomButton from "../custom_component/CustomButton";
 import { isIOS } from "../custom_component/CustomAvatar";
+import { ImageSwipeBackGround } from "../custom_component/ImageSwipe";
 const heightScreen = Dimensions.get("screen").height;
 
 const maxLineC = 10
@@ -52,17 +53,8 @@ const DetailsScreen = ({ navigation, route }) => {
           translucent
           backgroundColor="rgba(0,0,0,0)"
         />
-        <ImageBackground style={style.headerImage} source={{uri:"data:image/jpeg;base64,"+item.ImageList[0]}}>
-          <View style={style.header}>
-            <Icon
-              name="arrow-back-ios"
-              size={28}
-              color={Color.lightblue}
-              onPress={navigation.goBack}
-            />
-            <Icon name="bookmark-border" size={28} color={Color.lightblue} />
-          </View>
-        </ImageBackground>
+        <ImageSwipeBackGround imageArr={item.ImageList} navigation={navigation}></ImageSwipeBackGround>
+        
         <View>
           <TouchableOpacity style={style.iconContainer} onPress={()=>{navigation.navigate("Maps", {Latitude: item.Latitude,Longitude: item.Longitude, title: item.NameOffice, description: item.GenenalDecription})}}>
             <Icon name="place" color={Color.white} size={28} />
