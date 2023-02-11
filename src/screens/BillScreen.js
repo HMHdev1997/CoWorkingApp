@@ -1,9 +1,8 @@
-import { View, Text, Alert } from 'react-native'
+import { View, Text, Alert, ScrollView } from 'react-native'
 import React from 'react'
 import Color from "../consts/Color";
 import { windowsHeight } from '../consts/common';
 import { HeaderBar } from '../navigation/Header';
-import { ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomLine from '../custom_component/CustomLine';
 import { useState } from 'react';

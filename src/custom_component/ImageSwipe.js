@@ -33,7 +33,7 @@ const ImageSwipe = ({ imageArr }) => {
                 horizontal
             >
                 {ImageList.map((e, i) =>
-                    <View style={{
+                    <View key={i} style={{
                         width: windowsWith,
                         height: windowsHeight * 0.22,
                         borderRadius: 40,
@@ -57,7 +57,7 @@ const ImageSwipe = ({ imageArr }) => {
             <View style={{ position: "absolute", bottom: 0, flexDirection: "row", alignSelf: "center", paddingRight: windowsHeight * 0.05 }}>
                 {
                     ImageList.map((e, index) =>
-                        <Text key={e} style={{ fontSize: 15, color: imaActive == index ? Color.lightblue : Color.grey }}>
+                        <Text key={index} style={{ fontSize: 15, color: imaActive == index ? Color.lightblue : Color.grey }}>
                             o
                         </Text>
                     )
@@ -97,7 +97,9 @@ export const ImageSwipeBackGround = ({ imageArr, navigation }) => {
                 horizontal
             >
                 {ImageList.map((e, i) =>
-                    <ImageBackground style={{
+                    <ImageBackground 
+                    key={i}
+                    style={{
                         height: 400,
                         width: windowsWith,
                         borderBottomRightRadius: 40,
