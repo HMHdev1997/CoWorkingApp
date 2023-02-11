@@ -57,7 +57,6 @@ const BillScreen = ({ navigation, route }) => {
         }
     }, [route])
     const onSelectionSeat = () => {
-        console.log()
         navigation.navigate("SeatBookingScreen", {
             callback: () => {
             },

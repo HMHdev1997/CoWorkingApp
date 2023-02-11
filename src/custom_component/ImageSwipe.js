@@ -75,7 +75,6 @@ export const ImageSwipeBackGround = ({ imageArr, navigation }) => {
     }, [imageArr])
     const onChange = (nativeEvent) => {
         if (nativeEvent) {
-            console.log(nativeEvent)
             const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width)
             if (slide != imaActive) {
                 setImaActive(slide)
