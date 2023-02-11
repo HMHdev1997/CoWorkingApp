@@ -11,6 +11,7 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  FlatList,
 } from "react-native";
 import Color from "../consts/Color";
 import BookingLabel from "../custom_component/BookingLabel";
@@ -20,7 +21,6 @@ const HEIGHT = Dimensions.get("screen").height;
 import Working from "../consts/Working";
 import { useDispatch, useSelector } from "react-redux";
 import { getOfficeListInit, getOfficeListStart } from "../redux/action/Actions";
-import { FlatList } from "react-native-gesture-handler";
 const CategoryList = () => {
   const category = ["Tất cả", "HOT", "Đã lưu"];
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
