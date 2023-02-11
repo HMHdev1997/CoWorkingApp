@@ -165,7 +165,7 @@ const HomeSreens = ({ route, navigation }) => {
         </View>
         <Image style={style.topHotelCardImage} source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} />
         <View
-          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
+          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20, width: "50%" }}
         >
           <Text style={{ fontSize: 12, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
@@ -201,7 +201,7 @@ const HomeSreens = ({ route, navigation }) => {
         </View>
         <Image style={style.topHotelCardImage} source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} />
         <View
-          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
+          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20, width: "50%" }}
         >
           <Text style={{ fontSize: 12, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
@@ -237,7 +237,7 @@ const HomeSreens = ({ route, navigation }) => {
         </View>
         <Image style={style.topHotelCardImage} source={{ uri: "data:image/jpeg;base64," + Working.ImageList[0] }} />
         <View
-          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20 }}
+          style={{ paddingVertical: 5, paddingHorizontal: 10, paddingTop: 20, width: "50%" }}
         >
           <Text style={{ fontSize: 12, fontWeight: "bold" }} numberOfLines={1}>
             {Working.NameOffice}
