@@ -138,28 +138,51 @@ const createUserInit = (userInfo) => {
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
 
-        fetch(url,
-            {
-                body: bodyFormData,
-                method: "put"
-            })
-            .then((res) => {
-                if (res.status == 200) {
-                    return res.json()
-                } else {
-                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status +url);
-                }
-            })
-            .then((data) => {
+        // console.log(222, url, userInfo.ID)
+        try {
+            const res = await fetch(url,
+                {
+                    body: bodyFormData,
+                    method: "put"
+                })
+            if (res.status == 200) {
+                const data = await res.json()
                 dispatch(createUserSuccess(data))
                 showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
-            })
-            .catch(error => {
-                showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
-
-                console.log('[ERROR][createUserInit] ' + error.message)
-                dispatch(createUserFail(error.message))
-            })
+            } else if (res.status == 400) {
+                // Create 
+                // console.log(223, res.status, await res.text())
+                const createbodyFormData = new FormData()
+                createbodyFormData.append('Address', userInfo.Address);
+                createbodyFormData.append('DateOfBirth', userInfo.DateOfBirth);
+                createbodyFormData.append('FullName', userInfo.FullName);
+                createbodyFormData.append('Gender', userInfo.Gender)
+                createbodyFormData.append('IdentifierCode', userInfo.IdentifierCode)
+                // createbodyFormData.append('Point', userInfo.Point)
+                createbodyFormData.append('UserId', userInfo.ID)
+                const resCreate = await fetch(url,
+                    {
+                        body: createbodyFormData,
+                        method: "post"
+                    })
+                if (resCreate.status == 200) {
+                    // console.log(224)
+                    const resCreateData = await res.json()
+                    dispatch(createUserSuccess(resCreateData))
+                    showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
+                } else {
+                    // console.log(225, resCreate.status)
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status +url);
+                }
+            } else {
+                // console.log(226)
+                throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status +url);
+            }
+        } catch (error ){
+            showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
+            console.log('[ERROR][createUserInit] ' + error.message)
+            dispatch(createUserFail(error.message))
+        }
 
     }
 }
@@ -185,7 +208,7 @@ const getUserInit = (uid) => {
         const url = API.Host + API.User + "?" + new URLSearchParams({
             id: uid,
         })
-
+        // console.log(222, url)
         axios({
             method: 'get',
             url: url,
@@ -203,19 +226,19 @@ const getUserInit = (uid) => {
                 dispatch(getUserFail(error.response.request._response || error.message))
             })
 
-        try {
-            const docSnap = await getDoc(docRef)
-            if (docSnap.exists()) {
-                dispatch(getUserSuccess({ ...docSnap.data(), id: auth.currentUser?.uid }))
-            } else {
-                // doc.data() will be undefined in this case
-                dispatch(getUserSuccess({ age: 0 }))
-                console.log("No such document!");
-                // dispatch(getUserFail({error: "No document"}))
-            }
-        } catch (error) {
-            dispatch(getUserFail(error.message))
-        }
+        // try {
+        //     const docSnap = await getDoc(docRef)
+        //     if (docSnap.exists()) {
+        //         dispatch(getUserSuccess({ ...docSnap.data(), id: auth.currentUser?.uid }))
+        //     } else {
+        //         // doc.data() will be undefined in this case
+        //         dispatch(getUserSuccess({ age: 0 }))
+        //         console.log("No such document!");
+        //         // dispatch(getUserFail({error: "No document"}))
+        //     }
+        // } catch (error) {
+        //     dispatch(getUserFail(error.message))
+        // }
     }
 }
 

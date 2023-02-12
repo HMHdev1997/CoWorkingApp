@@ -47,19 +47,20 @@ const Profile = () => {
   };
   const dispatch = useDispatch()
   useEffect(() => {
-    // console.log(2222, userInfo, phoneN)
+    // console.log(2222, userInfo, phoneN, currentUser)
     // setDate(new Date(userInfo?.DateOfBirth))
-
+    if (currentUser) {
+      setPhone("0" + currentUser?.PhoneNumbers || "")
+      setEmail(currentUser?.Email || "")
+    }
     if (userInfo != null) {
       setPname(userInfo?.FullName || "")
-      setPhone("0" + currentUser?.PhoneNumbers || "")
       setGender(userInfo?.Gender || "")
       setAddress(userInfo?.Address || "")
       setID(userInfo?.IdentifierCode?.toString() || "")
-      setEmail(currentUser?.Email || "")
       setDate(new Date(userInfo?.DateOfBirth))
     }
-  }, [userInfo, phoneN])
+  }, [userInfo, phoneN, currentUser])
 
   const ProfileList = [
     {
@@ -80,6 +81,7 @@ const Profile = () => {
       value: phone,
       setValue: setPhone,
       isNotNull: true,
+      isEditable: false,
     },
     {
       name: "Giới tính",
@@ -101,10 +103,10 @@ const Profile = () => {
       return
     }
 
-    if (isEmpty(phone)) {
-      showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền Số điện thoại")
-      return
-    }
+    // if (isEmpty(phone)) {
+    //   showToast(TYPE_NOTI.ERROR, null, "Vui lòng điền Số điện thoại")
+    //   return
+    // }
 
     if (isEmpty(gender)) {
       showToast(TYPE_NOTI.ERROR, null, "Vui lòng chọn giới tính")
@@ -125,7 +127,8 @@ const Profile = () => {
       DateOfBirth: date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
       Address: address,
       IdentifierCode: id,
-      Point: userInfo?.Point
+      Point: userInfo?.Point,
+      IdentifierCode: 2,
     }
 
     dispatch(createUserInit(userInfo))
