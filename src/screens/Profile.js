@@ -64,8 +64,8 @@ const Profile = () => {
       setDate(new Date(userInfo?.DateOfBirth))
     }
     if (userImageData) {
-      if (userImageData.startsWith("file://"))
-        console.log(222, userImageData)
+      // if (userImageData.startsWith("file://"))
+        // console.log(222, userImageData)
       setAvatarUri(userImageData || "")
     }
   }, [userInfo, phoneN, currentUser, userImageData])
@@ -149,7 +149,7 @@ const Profile = () => {
   }
 
   const onPhotoCallback = useCallback((data) => {
-    console.log(444, data)
+    // console.log(444, data)
     setAvatarUri(data);
   }, [])
   return (

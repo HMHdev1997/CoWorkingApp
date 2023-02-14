@@ -228,7 +228,7 @@ const getUserInit = (uid) => {
                 method: 'get',
                 url: url,
             })
-            console.log(2349, url)
+            // console.log(2349, url)
 
             if (res.status == 200) {
                 const ImagePart = ""
