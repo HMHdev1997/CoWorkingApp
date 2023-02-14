@@ -56,6 +56,7 @@ const initialUserInfoState = {
     loading: false,
     userInfo: null,
     error: null,
+    userImageData: null,
 }
 
 const userInfoReducer = (state = initialUserInfoState, action) => {
@@ -72,20 +73,28 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
         case ACTION_TYPE.GET_USER_INFO_SUCCESS:
         case ACTION_TYPE.CREATE_USER_INFO_SUCCESS:
         case ACTION_TYPE.UPDATE_USER_INFO_SUCCESS:
-            return {
+            const newState2 = {
                 ...state,
                 loading: false,
                 error: null,
                 userInfo: { ...action.payload },
             }
+            return newState2
+        case ACTION_TYPE.UPDATE_USER_IMAGE_SUCCESS:   
+            return {
+                ...state,
+                userImageData: action.payload,
+            }
         case ACTION_TYPE.GET_USER_INFO_FAIL:
         case ACTION_TYPE.CREATE_USER_INFO_FAIL:
         case ACTION_TYPE.UPDATE_USER_INFO_FAIL:
+        case ACTION_TYPE.UPDATE_USER_IMAGE_FAIL:   
             return {
                 ...state,
                 loading: false,
                 error: action.payload,
                 userInfo: null,
+                userImageData: null,
             }
         case ACTION_TYPE.LOGOUT_SUCCESS:
             return {
@@ -93,6 +102,7 @@ const userInfoReducer = (state = initialUserInfoState, action) => {
                 loading: false,
                 error: null,
                 userInfo: null,
+                userImageData: null,
             }
         default:
             return state

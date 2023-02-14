@@ -36,7 +36,7 @@ const CustomAvatar = ({ size = 50, source1, isEdit, onPress, isShadow = true, })
 		{
 			!!source1 ? <Image
 				style={[styleAvatarBound]}
-				source={typeof (source1) == typeof (require('../../assets/icon.png')) ? source1 : { uri: getFilePathEachPlatform(source1) }}>
+				source={typeof (source1) == typeof (require('../../assets/icon.png')) ? source1 : typeof(source1) == "string" && !source1.startsWith("file://")? {uri: "data:image/jpeg;base64," + source1}: { uri: getFilePathEachPlatform(source1) }}>
 			</Image>
 				:
 				<Image

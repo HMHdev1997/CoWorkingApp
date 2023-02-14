@@ -1,7 +1,7 @@
 import { ACTION_TYPE } from "./Const";
 import { auth, database } from "../../consts/firebase";
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, getAuth, UserCredential, User } from "firebase/auth";
-import { handleErrorAuth, showToast, TYPE_NOTI } from "../../consts/common"
+import { dataURItoBlob, handleErrorAuth, showToast, TYPE_NOTI } from "../../consts/common"
 import { doc, query, limit, DocumentData, DocumentSnapshot, getDoc, getFirestore, updateDoc, setDoc, getDocs, collection } from "firebase/firestore";
 import { API, getOfficebyId, sendReq } from "../../consts/request"
 import axios from 'axios';
@@ -107,6 +107,11 @@ const registerInit = (name, email, phone, password) => {
 
     }
 }
+//Update avatar info
+const updateUserImageData = (data) => ({
+    type: ACTION_TYPE.UPDATE_USER_IMAGE_SUCCESS,
+    payload: data,
+})
 
 //Create user info
 const createUserStart = () => ({
@@ -137,6 +142,10 @@ const createUserInit = (userInfo) => {
         // bodyFormData.append('PhoneNumbers', userInfo.PhoneNumbers)
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
+        if (userInfo.ImageURI && userInfo.ImageURI.startsWith('file')){
+            bodyFormData.append('ImagePart', {uri: userInfo.ImageURI, name: 'image.jpg', type: 'image/jpeg'})
+
+        }
 
         // console.log(222, url, userInfo.ID)
         try {
@@ -147,6 +156,7 @@ const createUserInit = (userInfo) => {
                 })
             if (res.status == 200) {
                 const data = await res.json()
+                dispatch(updateUserImageData(userInfo.ImageURI))
                 dispatch(createUserSuccess(data))
                 showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
             } else if (res.status == 400) {
@@ -160,6 +170,9 @@ const createUserInit = (userInfo) => {
                 createbodyFormData.append('IdentifierCode', userInfo.IdentifierCode)
                 // createbodyFormData.append('Point', userInfo.Point)
                 createbodyFormData.append('UserId', userInfo.ID)
+                if (userInfo.ImageURI && userInfo.ImageURI.startsWith('file')){
+                    createbodyFormData.append('ImagePart', {uri: userInfo.ImageURI, name: 'image.jpg', type: 'image/jpeg'})
+                }
                 const resCreate = await fetch(url,
                     {
                         body: createbodyFormData,
@@ -168,6 +181,7 @@ const createUserInit = (userInfo) => {
                 if (resCreate.status == 200) {
                     // console.log(224)
                     const resCreateData = await res.json()
+                    dispatch(updateUserImageData(userInfo.ImageURI))
                     dispatch(createUserSuccess(resCreateData))
                     showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
                 } else {
@@ -209,22 +223,42 @@ const getUserInit = (uid) => {
             id: uid,
         })
         // console.log(222, url)
-        axios({
-            method: 'get',
-            url: url,
-        })
-            .then((res) => {
-                if (res.status == 200) {
+        try {
+            const res = await axios({
+                method: 'get',
+                url: url,
+            })
+            console.log(2349, url)
+
+            if (res.status == 200) {
+                const ImagePart = ""
+                if (res.data) {
+                    if (res.data.ImagePart) {
+                        // console.log(2345, res.data.ImagePart)
+                        const customUImageUrl = API.Host + API.Customer + "/Image?path=" + encodeURIComponent(res.data.ImagePart) 
+                        // console.log(2346, customUImageUrl)
+
+                        const resImage = await axios({
+                            method: 'get',
+                            url: customUImageUrl,
+                        })
+
+                        res.data.ImageData = resImage.data.FileContents || ""
+                    }
+                    dispatch(updateUserImageData(res.data.ImageData))
+
                     dispatch(getUserSuccess(res.data))
                 }
+            }
 
-                else {
-                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
-                }
-            }).catch(error => {
-                console.log('[ERROR][getUserInit] ' + error.message)
-                dispatch(getUserFail(error.response.request._response || error.message))
-            })
+            else {
+                throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+            }
+        } catch (error) {
+            console.log('[ERROR][getUserInit] ' + error.message)
+            dispatch(getUserFail(error.response.request._response || error.message))
+        }
+        
 
         // try {
         //     const docSnap = await getDoc(docRef)

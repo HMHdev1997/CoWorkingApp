@@ -18,9 +18,19 @@ import CustomButton from "../custom_component/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../consts/firebase";
 import { useSelector } from "react-redux";
+import CustomAvatar from "../custom_component/CustomAvatar";
+import { useEffect } from "react";
+import { useState } from "react";
+
 const Hearder = ({ isShowFunction, isShowMassage }) => {
   const navigation = useNavigation()
-  const {currentUser} = useSelector(state => state.user)
+  const { currentUser } = useSelector(state => state.user)
+  const [avatarUri, setAvatarUri] = useState("")
+  const { userImageData } = useSelector((state) => state.userInfo)
+  useEffect(()=> {
+      setAvatarUri(userImageData || "")
+
+  }, [userImageData])
   return (
     <View >
       <View style={style.navheader}>
@@ -37,7 +47,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
                 }}
               >
                 {/* {account} */}
-                Hello
+                Hello, {currentUser?.Name || ""}
               </Text>
             </View>
           </View>
@@ -51,7 +61,14 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
             navigation.navigate("LoginScreen")
           }
         }}>
-          <FontAwesomeIcon style={style.icon} size={50} icon={faUserCircle} color={Color.grey} />
+          <CustomAvatar isEdit={false} size={50} source1={avatarUri ? avatarUri : ""} onPress={() => {
+            if (currentUser) {
+              navigation.navigate("Profile")
+            } else {
+              navigation.navigate("LoginScreen")
+            }
+          }}></CustomAvatar>
+          {/* <FontAwesomeIcon style={style.icon} size={50} icon={faUserCircle} color={Color.grey} /> */}
         </TouchableOpacity>
       </View>
 
@@ -84,11 +101,11 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
         </View>
         {isShowFunction &&
           <View flexDirection="row" style={{ marginTop: 10 }}>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("BillScreen")}}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { navigation.navigate("BillScreen") }}>
               <FontAwesomeIcon style={{ ...style.icon }} size={30} icon={faBarcode} color={Color.lightblue} />
               <Text>Nhập mã</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("BookingHistoryScreen")}}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { navigation.navigate("BookingHistoryScreen") }}>
               <FontAwesomeIcon style={style.icon} size={30} icon={faChartColumn} color={Color.lightblue} />
               <Text>Lịch sử</Text>
 
@@ -98,7 +115,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
               <Text>Check-in nhanh</Text>
 
             </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={()=>{navigation.navigate("Bookings")}}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { navigation.navigate("Bookings") }}>
               <FontAwesomeIcon style={style.icon} size={30} icon={faBookBookmark} color={Color.lightblue} />
               <Text>Booking</Text>
             </TouchableOpacity>
@@ -115,29 +132,29 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
 
 export const HeaderBar = ({ navigation, title }) => {
   return (
-      <View style={{
-          height: 100,
-          backgroundColor: Color.white,
-          borderColor: Color.grey,
-          position: "absolute",
-          top: 20,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "center"
-      }}>
+    <View style={{
+      height: 100,
+      backgroundColor: Color.white,
+      borderColor: Color.grey,
+      position: "absolute",
+      top: 20,
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "center"
+    }}>
 
-          <View style={{ left: 20, top: 20, position: "absolute", }}>
-              <Icon
-                  name="arrow-back-ios"
-                  size={28}
-                  color={Color.lightblue}
-                  onPress={() => { navigation.goBack() }}
-              />
-          </View>
-          <View style={{}}>
-              <Text style={{ fontSize: 20, fontWeight: "600", color: Color.lightblue }}>{title}</Text>
-          </View>
+      <View style={{ left: 20, top: 20, position: "absolute", }}>
+        <Icon
+          name="arrow-back-ios"
+          size={28}
+          color={Color.lightblue}
+          onPress={() => { navigation.goBack() }}
+        />
       </View>
+      <View style={{}}>
+        <Text style={{ fontSize: 20, fontWeight: "600", color: Color.lightblue }}>{title}</Text>
+      </View>
+    </View>
   )
 }
 

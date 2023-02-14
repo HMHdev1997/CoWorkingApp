@@ -23,7 +23,7 @@ import { createUserInit } from "../redux/action/Actions";
 import CustomDatePicker from "../custom_component/CustomDatePicker";
 const Profile = () => {
   const navigation = useNavigation()
-  const { userInfo } = useSelector((state) => state.userInfo)
+  const { userInfo, userImageData } = useSelector((state) => state.userInfo)
   const { currentUser, phoneN } = useSelector((state) => state.user)
 
   const [pname, setPname] = useState("");
@@ -32,10 +32,11 @@ const Profile = () => {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [id, setID] = useState("");
+  const [imageData, setImageData] = useState("")
 
   const [loading, setLoading] = useState(false);
 
-  const [avatarUri, setAvatarUri] = useState(null)
+  const [avatarUri, setAvatarUri] = useState("")
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [date, setDate] = useState(userInfo?.DateOfBirth ? (new Date(userInfo?.DateOfBirth)) : new Date("2010-01-01"))
   const hideDatePicker = () => {
@@ -54,13 +55,20 @@ const Profile = () => {
       setEmail(currentUser?.Email || "")
     }
     if (userInfo != null) {
+      // console.log(userInfo.ImageData)
+
       setPname(userInfo?.FullName || "")
       setGender(userInfo?.Gender || "")
       setAddress(userInfo?.Address || "")
       setID(userInfo?.IdentifierCode?.toString() || "")
       setDate(new Date(userInfo?.DateOfBirth))
     }
-  }, [userInfo, phoneN, currentUser])
+    if (userImageData) {
+      if (userImageData.startsWith("file://"))
+        console.log(222, userImageData)
+      setAvatarUri(userImageData || "")
+    }
+  }, [userInfo, phoneN, currentUser, userImageData])
 
   const ProfileList = [
     {
@@ -124,11 +132,12 @@ const Profile = () => {
       Gender: gender,
       PhoneNumbers: phone,
       Email: email,
-      DateOfBirth: date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate(),
+      DateOfBirth: date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
       Address: address,
       IdentifierCode: id,
       Point: userInfo?.Point,
       IdentifierCode: 2,
+      ImageURI: avatarUri,
     }
 
     dispatch(createUserInit(userInfo))
@@ -140,7 +149,7 @@ const Profile = () => {
   }
 
   const onPhotoCallback = useCallback((data) => {
-
+    console.log(444, data)
     setAvatarUri(data);
   }, [])
   return (
