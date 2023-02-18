@@ -245,7 +245,7 @@ const getUserInit = (uid) => {
                         res.data.ImageData = resImage.data.FileContents || ""
                     }
                     dispatch(updateUserImageData(res.data.ImageData))
-                    console.log(2346, res.data)
+                    // console.log(2346, res.data)
 
                     dispatch(getUserSuccess(res.data))
                 }
@@ -418,7 +418,7 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
         bodyFormData.append('StartTime', startTime);
         bodyFormData.append('EndTime', endTime);
         bodyFormData.append('Total', 1)
-        console.log(3333, Point);
+        // console.log(3333, Point);
         try {
             const res = await fetch(url,
                 {
@@ -446,7 +446,7 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
 
                 if (resBookingDetail.status == 200) {
                     dispatch(bookingSuccess())
-                    dispatch(updatePointInit(customId, Point - price))
+                    dispatch(updatePointInit(customId, Point - price, false))
                     showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
                     dispatch(getBookingHistoryInit(customId))
                     const detailBody = await resBookingDetail.json()
@@ -466,14 +466,17 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
     }
 }
 
-const updatePointInit = (UserId, Point) => {
+const updatePointInit = (UserId, Point, isChange) => {
     return async function (dispatch) {
-
+        if (Point > 10000) {
+            showToast(TYPE_NOTI.ERROR, null, "Point quá nhiều")
+            return
+        } 
         const url = API.Host + API.Point + "?" + new URLSearchParams({
             UserId: UserId ? UserId : -1,
             Point: Point,
         })
-        console.log(2222, url)
+        // console.log(2222, url)
         try {
             const res = await fetch(url,
                 {
@@ -481,9 +484,13 @@ const updatePointInit = (UserId, Point) => {
                 })
             if (res.status == 200) {
                 const data = await res.json()
-                console.log(2223, data)
+                // console.log(2223, data)
 
                 dispatch(createUserSuccess(data))
+                if (isChange) {
+                    showToast(TYPE_NOTI.SUCCESS, null, "Nap point thanh cong")
+                }
+
             } else {
                 throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
             }
@@ -543,4 +550,15 @@ const getBookingHistoryInit = (userId) => {
     }
 }
 
-export { loginInit, logoutSuccess, registerInit, createUserInit, getUserInit, getOfficeListInit, bookingInit, getCategoryInit, getBookingHistoryInit }
+export {
+    loginInit,
+    logoutSuccess,
+    registerInit,
+    createUserInit,
+    getUserInit,
+    getOfficeListInit,
+    bookingInit,
+    getCategoryInit,
+    getBookingHistoryInit,
+    updatePointInit
+}

@@ -89,20 +89,20 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
               <View flexDirection="row">
                 <FontAwesomeIcon style={style.icon} size={50} icon={faWallet} color={Color.lightblue} />
                 <View style={{ paddingLeft: "5%", alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ fontSize: 20, fontWeight: "800" }}>{userInfo?.Point||0} P</Text>
+                  <Text style={{ fontSize: 20, fontWeight: "800", color: Color.lightblue }}>{userInfo?.Point||0} P</Text>
                 </View>
               </View>
               {/* <Text>Sử dụng tới 31/12/2022</Text> */}
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row-reverse", right: "5%" }}>
-            <CustomButton name={"Nạp"} onPress={() => { }} />
+            <CustomButton name={"Nạp"} onPress={() => { navigation.navigate("CharingScreen") }} />
           </View>
 
         </View>
         {isShowFunction &&
           <View flexDirection="row" style={{ marginTop: 10 }}>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { navigation.navigate("CharingScreen") }}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { }}>
               <FontAwesomeIcon style={{ ...style.icon }} size={30} icon={faBarcode} color={Color.lightblue} />
               <Text>Nhập mã</Text>
             </TouchableOpacity>
@@ -141,14 +141,14 @@ export const HeaderBar = ({ navigation, title }) => {
       justifyContent: "center"
     }}>
 
-      <View style={{ left: 20, top: 20, position: "absolute", }}>
+      <TouchableOpacity style={{ left: 20, top: 20, position: "absolute", }}>
         <Icon
           name="arrow-back-ios"
           size={28}
           color={Color.lightblue}
           onPress={() => { navigation.goBack() }}
         />
-      </View>
+      </TouchableOpacity>
       <View style={{}}>
         <Text style={{ fontSize: 20, fontWeight: "600", color: Color.lightblue }}>{title}</Text>
       </View>

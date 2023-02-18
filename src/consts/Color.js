@@ -1,4 +1,4 @@
-const Styles = {
+export const Styles = {
     white: '#FFF',
     dark: '#000',
     primary: "#04555c",
