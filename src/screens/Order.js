@@ -82,6 +82,7 @@ const OrderScreen = ({ navigation, route }) => {
     const [isShowMore, setShowMore] = useState(true)
     const [maxLine, setMaxLine] = useState(3)
     const { currentUser } = useSelector(state => state.user)
+    const { userInfo } = useSelector(state => state.userInfo)
     const dispatch = useDispatch()
     const [date, setDate] = useState(new Date())
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -254,7 +255,8 @@ const OrderScreen = ({ navigation, route }) => {
             </ScrollView>
             <View style={style.cardDetails}>
                 <View style={{ flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Tổng cộng:{`\n\t\t`} {item.Discount + nSeat} P</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Tổng cộng:{`\t`} {item.Discount + nSeat} P</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Số dư:{`\t`} {userInfo?.Point || 0} P</Text>
                 </View>
 
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>

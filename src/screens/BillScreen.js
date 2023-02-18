@@ -37,6 +37,7 @@ const Customer = () => {
 const BillScreen = ({ navigation, route }) => {
     const dispatch = useDispatch()
     const [showBox, setShowBox] = useState(true);
+    const { userInfo } = useSelector(state => state.userInfo);
     const [data, setData] = useState(
         {
             OfficeId: -1,
@@ -87,23 +88,30 @@ const BillScreen = ({ navigation, route }) => {
                 data.price,
                 data.nSeat,
                 data.seatPosition,
-                data.note
+                data.note,
+                userInfo?.Point || 0
             ))
-        navigation.goBack()    
+        navigation.goBack()
     }
 
     const showConfirmDialog = () => {
+        const condition = (userInfo?.Point && data.price <= userInfo.Point)
         return Alert.alert(
-            "Bạn muốn đặt phòng?",
-            `Bạn muốn đặt phòng ${data.NameOffice} với ${data.nSeat} chỗ ngồi\nGiá tổng cộng: ${data.price} P`,
+            `${condition ? "Bạn muốn đặt phòng?" : "Ban khong du so du"}`
+            ,
+            `${condition ? 
+                `Bạn muốn đặt phòng ${data.NameOffice} ${data.nSeat != 0 ? 
+                    `với ${data.nSeat} chỗ ngồi` 
+                    : ``
+                }\nGiá tổng cộng: ${data.price} P` 
+                : "Khong du so du"}`,
             [
-                // The "Yes" button
                 {
-                    text: "Đặt phòng",
-                    onPress: () => {
-                        onBooking()
+                    text: `${condition ? "Đặt phòng" : "Huy"}`,
+                    onPress: condition ? () => {
                         setShowBox(false);
-                    },
+                        onBooking()
+                    } : () => { },
                 },
                 // The "No" button
                 // Does nothing but dismiss the dialog when tapped
@@ -217,7 +225,8 @@ const BillScreen = ({ navigation, route }) => {
                 flexDirection: "row"
             }}>
                 <View style={{ flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Tổng cộng:{`\n\t\t`} {data.price} P</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Tổng cộng:{`\t`} {data.price} P</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 5 }}> Số dư:{`\t`} {userInfo?.Point || 0} P</Text>
                 </View>
 
                 <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>

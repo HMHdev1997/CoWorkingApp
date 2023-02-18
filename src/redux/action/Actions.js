@@ -142,8 +142,8 @@ const createUserInit = (userInfo) => {
         // bodyFormData.append('PhoneNumbers', userInfo.PhoneNumbers)
         bodyFormData.append('Point', userInfo.Point)
         bodyFormData.append('Id', userInfo.ID)
-        if (userInfo.ImageURI && userInfo.ImageURI.startsWith('file')){
-            bodyFormData.append('ImagePart', {uri: userInfo.ImageURI, name: 'image.jpg', type: 'image/jpeg'})
+        if (userInfo.ImageURI && userInfo.ImageURI.startsWith('file')) {
+            bodyFormData.append('ImagePart', { uri: userInfo.ImageURI, name: 'image.jpg', type: 'image/jpeg' })
 
         }
 
@@ -170,8 +170,8 @@ const createUserInit = (userInfo) => {
                 createbodyFormData.append('IdentifierCode', userInfo.IdentifierCode)
                 // createbodyFormData.append('Point', userInfo.Point)
                 createbodyFormData.append('UserId', userInfo.ID)
-                if (userInfo.ImageURI && userInfo.ImageURI.startsWith('file')){
-                    createbodyFormData.append('ImagePart', {uri: userInfo.ImageURI, name: 'image.jpg', type: 'image/jpeg'})
+                if (userInfo.ImageURI && userInfo.ImageURI.startsWith('file')) {
+                    createbodyFormData.append('ImagePart', { uri: userInfo.ImageURI, name: 'image.jpg', type: 'image/jpeg' })
                 }
                 const resCreate = await fetch(url,
                     {
@@ -186,13 +186,13 @@ const createUserInit = (userInfo) => {
                     showToast(TYPE_NOTI.SUCCESS, null, "Update thành công")
                 } else {
                     // console.log(225, resCreate.status)
-                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status +url);
+                    throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status + url);
                 }
             } else {
                 // console.log(226)
-                throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status +url);
+                throw new Error(`Lỗi! Vui lòng điền lại thông tin khác` + res.status + url);
             }
-        } catch (error ){
+        } catch (error) {
             showToast(TYPE_NOTI.ERROR, null, "Update không thành công")
             console.log('[ERROR][createUserInit] ' + error.message)
             dispatch(createUserFail(error.message))
@@ -235,8 +235,7 @@ const getUserInit = (uid) => {
                 if (res.data) {
                     if (res.data.ImagePart) {
                         // console.log(2345, res.data.ImagePart)
-                        const customUImageUrl = API.Host + API.Customer + "/Image?path=" + encodeURIComponent(res.data.ImagePart) 
-                        // console.log(2346, customUImageUrl)
+                        const customUImageUrl = API.Host + API.Customer + "/Image?path=" + encodeURIComponent(res.data.ImagePart)
 
                         const resImage = await axios({
                             method: 'get',
@@ -246,6 +245,7 @@ const getUserInit = (uid) => {
                         res.data.ImageData = resImage.data.FileContents || ""
                     }
                     dispatch(updateUserImageData(res.data.ImageData))
+                    console.log(2346, res.data)
 
                     dispatch(getUserSuccess(res.data))
                 }
@@ -258,7 +258,7 @@ const getUserInit = (uid) => {
             console.log('[ERROR][getUserInit] ' + error.message)
             dispatch(getUserFail(error.response.request._response || error.message))
         }
-        
+
 
         // try {
         //     const docSnap = await getDoc(docRef)
@@ -405,11 +405,11 @@ const bookingFail = (error) => ({
     payload: error
 })
 
-const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatPosition, note) => {
+const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatPosition, note, Point) => {
 
     return async function (dispatch) {
         dispatch(bookingStart())
-        const seatString = seatPosition?seatPosition.toString():""
+        const seatString = seatPosition ? seatPosition.toString() : ""
         const url = API.Host + API.Booking
         const BookingDetailUrl = API.Host + API.BookingDetail
         const bodyFormData = new FormData()
@@ -418,7 +418,7 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
         bodyFormData.append('StartTime', startTime);
         bodyFormData.append('EndTime', endTime);
         bodyFormData.append('Total', 1)
-        
+        console.log(3333, Point);
         try {
             const res = await fetch(url,
                 {
@@ -446,6 +446,7 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
 
                 if (resBookingDetail.status == 200) {
                     dispatch(bookingSuccess())
+                    dispatch(updatePointInit(customId, Point - price))
                     showToast(TYPE_NOTI.SUCCESS, null, "Booking thành công")
                     dispatch(getBookingHistoryInit(customId))
                     const detailBody = await resBookingDetail.json()
@@ -465,6 +466,35 @@ const bookingInit = (officeId, customId, startTime, endTime, price, nSeat, seatP
     }
 }
 
+const updatePointInit = (UserId, Point) => {
+    return async function (dispatch) {
+
+        const url = API.Host + API.Point + "?" + new URLSearchParams({
+            UserId: UserId ? UserId : -1,
+            Point: Point,
+        })
+        console.log(2222, url)
+        try {
+            const res = await fetch(url,
+                {
+                    method: "patch"
+                })
+            if (res.status == 200) {
+                const data = await res.json()
+                console.log(2223, data)
+
+                dispatch(createUserSuccess(data))
+            } else {
+                throw new Error(`Lỗi! Vui lòng điền lại thông tin khác`);
+            }
+        } catch (error) {
+            showToast(TYPE_NOTI.ERROR, null, "update Point không thành công")
+
+            console.log('[ERROR][updatePointInit] ' + error.message)
+            dispatch(bookingFail(error.message))
+        }
+    }
+}
 
 // Push Booking info
 const bookingHistoryStart = () => ({

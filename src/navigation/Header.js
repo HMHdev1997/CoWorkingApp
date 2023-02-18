@@ -25,10 +25,11 @@ import { useState } from "react";
 const Hearder = ({ isShowFunction, isShowMassage }) => {
   const navigation = useNavigation()
   const { currentUser } = useSelector(state => state.user)
+  const { userInfo } = useSelector(state => state.userInfo)
   const [avatarUri, setAvatarUri] = useState("")
   const { userImageData } = useSelector((state) => state.userInfo)
-  useEffect(()=> {
-      setAvatarUri(userImageData || "")
+  useEffect(() => {
+    setAvatarUri(userImageData || "")
 
   }, [userImageData])
   return (
@@ -88,10 +89,10 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
               <View flexDirection="row">
                 <FontAwesomeIcon style={style.icon} size={50} icon={faWallet} color={Color.lightblue} />
                 <View style={{ paddingLeft: "5%", alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ fontSize: 20, fontWeight: "800" }}>0P</Text>
+                  <Text style={{ fontSize: 20, fontWeight: "800" }}>{userInfo?.Point||0} P</Text>
                 </View>
               </View>
-              <Text>Sử dụng tới 31/12/2022</Text>
+              {/* <Text>Sử dụng tới 31/12/2022</Text> */}
             </View>
           </View>
           <View style={{ flex: 1, flexDirection: "row-reverse", right: "5%" }}>
@@ -101,7 +102,7 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
         </View>
         {isShowFunction &&
           <View flexDirection="row" style={{ marginTop: 10 }}>
-            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { navigation.navigate("BillScreen") }}>
+            <TouchableOpacity style={{ flex: 1, alignItems: "center" }} onPress={() => { navigation.navigate("CharingScreen") }}>
               <FontAwesomeIcon style={{ ...style.icon }} size={30} icon={faBarcode} color={Color.lightblue} />
               <Text>Nhập mã</Text>
             </TouchableOpacity>
@@ -124,9 +125,6 @@ const Hearder = ({ isShowFunction, isShowMassage }) => {
 
       </Pressable>
     </View>
-
-
-
   );
 };
 
